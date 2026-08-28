@@ -1,0 +1,47 @@
+{
+  "name": "aidep-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site institucional da AIDEP — Associação Internacional para o Desenvolvimento do Desporto e Paradesporto",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "images:preview": "node scripts/gen-preview-images.mjs",
+    "images:pexels": "node scripts/fetch-preview-images.mjs",
+    "docs:example": "node scripts/gen-example-documents.mjs",
+    "qa:pages": "node scripts/qa.mjs",
+    "qa:motion": "node scripts/qa-reduced-motion.mjs",
+    "qa:interactions": "node scripts/qa-interactions.mjs",
+    "qa:shots": "node scripts/shots.mjs"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@hookform/resolvers": "^5.9.1",
+    "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.34.0",
+    "motion": "^13.1.1",
+    "next": "^16.3.2",
+    "next-intl": "^4.13.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-hook-form": "^7.86.0",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.2",
+    "puppeteer-core": "^25.8.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3"
+  }
+}

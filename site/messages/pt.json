@@ -1,0 +1,661 @@
+{
+  "locale": {
+    "name": "Português",
+    "short": "PT",
+    "switchLabel": "Selecionar idioma",
+    "current": "Idioma atual"
+  },
+  "nav": {
+    "home": "Início",
+    "about": "A AIDEP",
+    "projects": "Projetos",
+    "impact": "Impacto",
+    "news": "Notícias",
+    "transparency": "Transparência",
+    "partners": "Parceiros",
+    "donate": "Doações",
+    "contact": "Contato",
+    "menu": "Menu",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "primaryLabel": "Navegação principal",
+    "mobileLabel": "Navegação do site",
+    "footerLabel": "Navegação do rodapé"
+  },
+  "actions": {
+    "knowAidep": "Conheça a AIDEP",
+    "supportProjects": "Apoie os projetos",
+    "seeProjects": "Ver todos os projetos",
+    "seeProject": "Conhecer o projeto",
+    "seeImpact": "Ver o impacto",
+    "seeNews": "Ver todas as notícias",
+    "seeTransparency": "Acessar a transparência",
+    "seePartners": "Ver parceiros",
+    "becomePartner": "Quero ser parceiro",
+    "donate": "Fazer uma doação",
+    "contact": "Falar com a AIDEP",
+    "readMore": "Ler notícia",
+    "back": "Voltar",
+    "backToProjects": "Voltar para projetos",
+    "backToNews": "Voltar para notícias",
+    "share": "Compartilhar",
+    "copyLink": "Copiar link",
+    "linkCopied": "Link copiado",
+    "download": "Baixar",
+    "view": "Visualizar",
+    "openInstagram": "Abrir o Instagram",
+    "sendEmail": "Escrever para a AIDEP",
+    "toTop": "Voltar ao topo"
+  },
+  "a11y": {
+    "skipToContent": "Ir para o conteúdo principal",
+    "logoHome": "AIDEP — ir para a página inicial",
+    "scrollProgress": "Progresso de leitura da página",
+    "imagePending": "Imagem institucional ainda não disponível",
+    "partnersMarquee": "Parceiros e apoiadores da AIDEP",
+    "externalLink": "abre em nova aba"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Associação Internacional",
+      "titleLines": [
+        "Transformamos vidas",
+        "por meio do esporte",
+        "e do paradesporto."
+      ],
+      "lead": "A AIDEP é uma plataforma internacional de desenvolvimento humano que reúne projetos, escolas, metodologias e iniciativas voltadas à formação, à inclusão e à transformação social.",
+      "statValue": "+40 mil",
+      "statLabel": "pessoas atendidas",
+      "reach": "Atuação em todo o território brasileiro",
+      "scroll": "Role para conhecer"
+    },
+    "about": {
+      "eyebrow": "A AIDEP",
+      "title": "Uma plataforma de desenvolvimento humano construída no território.",
+      "paragraphs": [
+        "Reunimos projetos, escolas, metodologias e iniciativas sob uma mesma estrutura institucional. O esporte e o paradesporto são o meio; a formação de pessoas é o objetivo.",
+        "Atuamos em todo o território brasileiro e nosso estatuto prevê atuação internacional."
+      ],
+      "highlights": [
+        {
+          "term": "Nome oficial",
+          "detail": "Associação Internacional para o Desenvolvimento do Desporto e Paradesporto"
+        },
+        {
+          "term": "Atuação",
+          "detail": "Todo o território brasileiro, com previsão estatutária de atuação internacional"
+        },
+        {
+          "term": "Público atendido",
+          "detail": "Crianças, adolescentes, jovens, adultos e comunidades em situação de vulnerabilidade"
+        }
+      ]
+    },
+    "metrics": {
+      "eyebrow": "Impacto",
+      "title": "Números que começam em uma quadra.",
+      "description": "Cada número abaixo representa pessoas alcançadas pelos projetos da associação."
+    },
+    "projects": {
+      "eyebrow": "Projetos",
+      "title": "Três frentes, um mesmo propósito.",
+      "description": "Cada projeto atua em um ponto diferente do percurso de quem atendemos: o território, a escola e o conhecimento."
+    },
+    "approach": {
+      "eyebrow": "Como atuamos",
+      "title": "Do polo esportivo à mesa de discussão.",
+      "description": "A atuação da AIDEP começa na comunidade e se organiza até chegar às instituições que decidem o futuro do esporte."
+    },
+    "sport": {
+      "eyebrow": "Esporte e paradesporto",
+      "title": "Ferramentas, não fins.",
+      "paragraphs": [
+        "Para a AIDEP, o esporte e o paradesporto não são o ponto de chegada. São o meio pelo qual formação, inclusão e transformação social acontecem — em comunidades, em escolas e em espaços de conhecimento.",
+        "É por isso que o desporto e o paradesporto estão juntos no nome da associação: a mesma estrutura, o mesmo cuidado e a mesma exigência técnica para todas as pessoas."
+      ],
+      "pillars": [
+        {
+          "title": "Formação",
+          "text": "Aprender dentro e fora da quadra, com continuidade e acompanhamento."
+        },
+        {
+          "title": "Inclusão",
+          "text": "Espaços em que ninguém precisa provar que merece estar."
+        },
+        {
+          "title": "Transformação social",
+          "text": "Resultado que aparece na comunidade, não apenas no placar."
+        }
+      ]
+    },
+    "reach": {
+      "eyebrow": "Alcance",
+      "title": "Atuação nacional, vocação internacional.",
+      "paragraphs": [
+        "Hoje a AIDEP atua em todo o território brasileiro. Seu estatuto prevê atuação em qualquer país.",
+        "Essa vocação já está inscrita na identidade da associação: o manual da marca define uma cor oficial para cada continente, e o verde — cor principal da AIDEP — é também a cor das Américas e da comunicação internacional."
+      ],
+      "nationalLabel": "Atuação atual",
+      "nationalValue": "Todo o território brasileiro",
+      "internationalLabel": "Previsão estatutária",
+      "internationalValue": "Atuação internacional",
+      "continentsLabel": "Sistema continental da marca"
+    },
+    "results": {
+      "eyebrow": "Resultados",
+      "title": "O impacto, projeto a projeto.",
+      "description": "Números informados pela associação para cada frente de atuação."
+    },
+    "partners": {
+      "eyebrow": "Parceiros",
+      "title": "Quem caminha junto.",
+      "description": "Instituições públicas e privadas que apoiam a estrutura e os projetos da AIDEP."
+    },
+    "news": {
+      "eyebrow": "Notícias",
+      "title": "O que está acontecendo.",
+      "description": "Acompanhe as atualizações da associação e dos projetos."
+    },
+    "instagram": {
+      "eyebrow": "Instagram",
+      "title": "Acompanhe o dia a dia dos projetos.",
+      "description": "Registros de treinos, escolas, eventos e encontros no perfil oficial da associação.",
+      "handle": "@aidep.oficial"
+    },
+    "partnershipCta": {
+      "eyebrow": "Parcerias",
+      "title": "Sua instituição pode ampliar esse alcance.",
+      "description": "Empresas, órgãos públicos, escolas e clubes podem se somar aos projetos da AIDEP. Conte o que você tem em mente e retornaremos o contato."
+    },
+    "donateCta": {
+      "eyebrow": "Doações",
+      "title": "Apoie quem já está em campo.",
+      "description": "Sua contribuição sustenta polos esportivos, materiais, formação e a continuidade dos projetos que atendem crianças e adolescentes."
+    }
+  },
+  "approach": {
+    "items": [
+      {
+        "title": "Polos esportivos na comunidade",
+        "text": "Espaços de desenvolvimento instalados em comunidades e regiões de vulnerabilidade social, onde o esporte organiza a rotina e cria vínculo."
+      },
+      {
+        "title": "Esporte dentro da escola",
+        "text": "O futsal entra no ambiente escolar como ferramenta educacional, promovendo o desenvolvimento integral de crianças e adolescentes."
+      },
+      {
+        "title": "Formação e conhecimento",
+        "text": "Congressos e encontros internacionais que reúnem profissionais, clubes, escolas, pesquisadores, gestores e treinadores."
+      },
+      {
+        "title": "Rede institucional",
+        "text": "Articulação com instituições públicas e privadas para sustentar e ampliar a atuação dos projetos."
+      },
+      {
+        "title": "Prestação de contas",
+        "text": "Documentos e relatórios preparados mensalmente e publicados na página de Transparência."
+      }
+    ]
+  },
+  "about": {
+    "hero": {
+      "eyebrow": "A AIDEP",
+      "title": "Uma associação construída para durar.",
+      "lead": "Associação Internacional para o Desenvolvimento do Desporto e Paradesporto."
+    },
+    "positioning": {
+      "eyebrow": "Posicionamento",
+      "title": "O que a AIDEP é.",
+      "paragraphs": [
+        "A AIDEP é uma plataforma internacional de desenvolvimento humano por meio do esporte e do paradesporto, que reúne projetos, escolas, metodologias e iniciativas voltadas à formação, inclusão e transformação social.",
+        "A associação não trabalha com ações isoladas: cada projeto integra uma mesma estrutura institucional, com acompanhamento, registro e prestação de contas."
+      ]
+    },
+    "purpose": {
+      "eyebrow": "Propósito",
+      "title": "Três compromissos.",
+      "items": [
+        {
+          "title": "Formação",
+          "text": "Desenvolver pessoas por meio da prática esportiva contínua, dentro e fora da quadra."
+        },
+        {
+          "title": "Inclusão",
+          "text": "Garantir que o esporte e o paradesporto alcancem quem normalmente fica de fora."
+        },
+        {
+          "title": "Transformação social",
+          "text": "Produzir efeitos que permaneçam na comunidade depois do treino."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Público atendido",
+      "title": "Quem a AIDEP atende.",
+      "description": "Mais de 40 mil pessoas já foram alcançadas pelos projetos da associação."
+    },
+    "reach": {
+      "eyebrow": "Atuação",
+      "title": "Onde a AIDEP está.",
+      "paragraphs": [
+        "A atuação atual da associação cobre todo o território brasileiro, com projetos em comunidades, escolas e espaços de formação.",
+        "O estatuto da AIDEP prevê atuação internacional, e a identidade da associação já foi construída com esse alcance em mente."
+      ]
+    },
+    "identity": {
+      "eyebrow": "Identidade",
+      "title": "Uma marca pensada para o mundo.",
+      "paragraphs": [
+        "O símbolo da AIDEP é formado por módulos que se organizam em trajetória — pessoas em movimento que, juntas, formam uma esfera.",
+        "O manual da marca define uma cor oficial para cada continente. O verde acumula duas funções: é a cor principal da associação e a cor das Américas, transitando entre a comunicação continental e a internacional."
+      ]
+    },
+    "governance": {
+      "eyebrow": "Governança",
+      "title": "Transparência como método.",
+      "paragraphs": [
+        "A prestação de contas da AIDEP é preparada mensalmente e publicada na página de Transparência, junto com documentos institucionais e de projetos."
+      ]
+    },
+    "cta": {
+      "title": "Conheça os projetos que fazem isso acontecer."
+    }
+  },
+  "projects": {
+    "hero": {
+      "eyebrow": "Projetos",
+      "title": "Onde a transformação acontece.",
+      "lead": "Três frentes complementares: o território, a escola e o conhecimento."
+    },
+    "labels": {
+      "objective": "Objetivo",
+      "audience": "Público atendido",
+      "locations": "Local de atuação",
+      "numbers": "Números",
+      "presentation": "Apresentação",
+      "methodology": "Metodologia",
+      "gallery": "Galeria",
+      "results": "Resultados",
+      "partners": "Parceiros do projeto",
+      "relatedNews": "Notícias relacionadas",
+      "category": "Categoria",
+      "allProjects": "Todos os projetos",
+      "nextProject": "Próximo projeto"
+    },
+    "cta": {
+      "title": "Apoie este projeto.",
+      "description": "Sua contribuição ajuda a manter e ampliar a estrutura que atende essas pessoas."
+    }
+  },
+  "impact": {
+    "hero": {
+      "eyebrow": "Impacto",
+      "title": "Mais de 40 mil pessoas.",
+      "lead": "O alcance da AIDEP medido pelos números informados pela associação."
+    },
+    "headline": {
+      "eyebrow": "Visão geral",
+      "title": "O retrato da atuação.",
+      "description": "Números consolidados de todos os projetos e iniciativas."
+    },
+    "narrative": {
+      "eyebrow": "Como o impacto se constrói",
+      "title": "Três escalas de atuação.",
+      "steps": [
+        {
+          "title": "A comunidade",
+          "text": "Polos esportivos em comunidades e regiões de vulnerabilidade social, onde o Coração Valente atende 1.800 crianças em Aracaju e 700 no Distrito Federal.",
+          "metric": "2.500",
+          "metricLabel": "crianças atendidas"
+        },
+        {
+          "title": "A escola",
+          "text": "O Futsal na Escola leva a prática esportiva para dentro do ambiente escolar, presente em 12 cidades.",
+          "metric": "12",
+          "metricLabel": "cidades"
+        },
+        {
+          "title": "O conhecimento",
+          "text": "O FutEdu Summit reúne, na Arena da Baixada, profissionais e instituições de futebol, futsal e beach soccer.",
+          "metric": "7 mil",
+          "metricLabel": "participantes"
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Público",
+      "title": "Quem está por trás dos números."
+    },
+    "byProject": {
+      "eyebrow": "Por projeto",
+      "title": "O impacto de cada frente."
+    }
+  },
+  "news": {
+    "hero": {
+      "eyebrow": "Notícias",
+      "title": "Notícias da AIDEP.",
+      "lead": "Atualizações da associação, dos projetos e dos eventos."
+    },
+    "empty": {
+      "title": "Ainda não há notícias publicadas.",
+      "description": "Esta página já está preparada para receber as publicações da associação. Enquanto isso, acompanhe as novidades pelo Instagram oficial."
+    },
+    "labels": {
+      "published": "Publicado em",
+      "updated": "Atualizado em",
+      "author": "Por",
+      "category": "Categoria",
+      "related": "Notícias relacionadas",
+      "relatedProjects": "Projetos relacionados",
+      "readingList": "Lista de notícias",
+      "allNews": "Todas as notícias"
+    },
+    "notFound": {
+      "title": "Notícia não encontrada.",
+      "description": "O endereço acessado não corresponde a nenhuma notícia publicada."
+    }
+  },
+  "transparency": {
+    "hero": {
+      "eyebrow": "Transparência",
+      "title": "Contas abertas.",
+      "lead": "Relatórios, documentos institucionais e prestação de contas da AIDEP, atualizados mensalmente."
+    },
+    "filters": {
+      "search": "Buscar documento",
+      "searchPlaceholder": "Buscar por título",
+      "year": "Ano",
+      "category": "Categoria",
+      "all": "Todos",
+      "allYears": "Todos os anos",
+      "clear": "Limpar filtros",
+      "resultsCount": "{count, plural, =0 {Nenhum documento} one {# documento} other {# documentos}}"
+    },
+    "empty": {
+      "title": "Nenhum documento publicado até o momento.",
+      "description": "A prestação de contas da AIDEP é preparada mensalmente. Assim que os documentos forem disponibilizados, eles aparecerão nesta página, com filtros por ano e por categoria, busca, visualização e download.",
+      "noResults": "Nenhum documento corresponde aos filtros aplicados."
+    },
+    "labels": {
+      "lastUpdate": "Última atualização",
+      "pendingUpdate": "Sem publicações até o momento",
+      "frequency": "Frequência de atualização",
+      "frequencyValue": "Mensal",
+      "format": "Formato",
+      "year": "Ano"
+    },
+    "commitment": {
+      "eyebrow": "Compromisso",
+      "title": "O que será publicado aqui.",
+      "items": [
+        "Relatórios de atividades",
+        "Documentos institucionais",
+        "Prestação de contas",
+        "Documentos dos projetos"
+      ]
+    }
+  },
+  "partners": {
+    "hero": {
+      "eyebrow": "Parceiros",
+      "title": "Instituições que sustentam a AIDEP.",
+      "lead": "Parcerias públicas e privadas que viabilizam a estrutura e a continuidade dos projetos."
+    },
+    "list": {
+      "eyebrow": "Parceiros e apoiadores",
+      "title": "Quem apoia a associação.",
+      "logoPending": "Logomarca oficial ainda não fornecida",
+      "kinds": {
+        "public": "Instituição pública",
+        "private": "Iniciativa privada",
+        "government": "Governo",
+        "support": "Apoio institucional"
+      }
+    },
+    "support": {
+      "eyebrow": "Apoio institucional",
+      "title": "Apoiadores sem logomarca associada."
+    },
+    "why": {
+      "eyebrow": "Por que apoiar",
+      "title": "O que uma parceria com a AIDEP viabiliza.",
+      "items": [
+        {
+          "title": "Estrutura em campo",
+          "text": "Polos esportivos, materiais e condições de treino para crianças e adolescentes."
+        },
+        {
+          "title": "Continuidade",
+          "text": "Projetos que permanecem no território, com acompanhamento e registro."
+        },
+        {
+          "title": "Prestação de contas",
+          "text": "Documentos preparados mensalmente e publicados na página de Transparência."
+        }
+      ]
+    },
+    "form": {
+      "eyebrow": "Seja parceiro",
+      "title": "Vamos conversar sobre uma parceria.",
+      "description": "Preencha os dados abaixo. A equipe da AIDEP retornará o contato pelo e-mail informado."
+    }
+  },
+  "donate": {
+    "hero": {
+      "eyebrow": "Doações",
+      "title": "Apoie quem já está em campo.",
+      "lead": "Cada contribuição sustenta a estrutura que atende crianças, adolescentes, jovens, adultos e comunidades em situação de vulnerabilidade."
+    },
+    "impact": {
+      "eyebrow": "O que sua doação sustenta",
+      "title": "Do treino à continuidade do projeto.",
+      "items": [
+        {
+          "title": "Polos esportivos",
+          "text": "Espaços de desenvolvimento em comunidades e regiões de vulnerabilidade social."
+        },
+        {
+          "title": "Presença na escola",
+          "text": "O futsal dentro do ambiente escolar, em 12 cidades."
+        },
+        {
+          "title": "Formação",
+          "text": "Encontros que desenvolvem profissionais e ampliam o conhecimento sobre o esporte."
+        }
+      ]
+    },
+    "projects": {
+      "eyebrow": "Projetos apoiados",
+      "title": "Para onde vai o apoio."
+    },
+    "transparency": {
+      "eyebrow": "Transparência",
+      "title": "Você acompanha o destino do recurso.",
+      "description": "A prestação de contas da AIDEP é preparada mensalmente e publicada na página de Transparência."
+    },
+    "faq": {
+      "eyebrow": "Perguntas frequentes",
+      "title": "Dúvidas sobre apoiar a AIDEP."
+    },
+    "channels": {
+      "eyebrow": "Como doar",
+      "title": "Canais de doação em definição.",
+      "description": "Os dados oficiais para doação ainda não foram divulgados pela associação. Enquanto isso, fale diretamente com a equipe da AIDEP para combinar a melhor forma de contribuir.",
+      "pending": "Dados de doação ainda não disponíveis"
+    }
+  },
+  "faq": {
+    "items": [
+      {
+        "question": "Para onde vai a minha doação?",
+        "answer": "Para os projetos da associação: o Projeto Social Coração Valente, o Futsal na Escola e o FutEdu Summit. Os recursos sustentam polos esportivos, a presença do esporte nas escolas e as ações de formação."
+      },
+      {
+        "question": "A AIDEP presta contas do que recebe?",
+        "answer": "Sim. A prestação de contas é preparada mensalmente e publicada na página de Transparência, junto com relatórios e documentos institucionais."
+      },
+      {
+        "question": "Quem é atendido pelos projetos?",
+        "answer": "Crianças, adolescentes, jovens, adultos e comunidades em situação de vulnerabilidade. Mais de 40 mil pessoas já foram alcançadas."
+      },
+      {
+        "question": "Onde a AIDEP atua?",
+        "answer": "Em todo o território brasileiro. O estatuto da associação também prevê atuação internacional."
+      },
+      {
+        "question": "Como faço para doar agora?",
+        "answer": "Os canais oficiais de doação ainda não foram divulgados. Escreva para a associação e a equipe indicará a forma de contribuir."
+      },
+      {
+        "question": "Minha empresa pode apoiar a AIDEP?",
+        "answer": "Sim. A AIDEP mantém parcerias com instituições públicas e privadas. Use o formulário de parcerias para iniciar a conversa."
+      }
+    ]
+  },
+  "contact": {
+    "hero": {
+      "eyebrow": "Contato",
+      "title": "Fale com a AIDEP.",
+      "lead": "Dúvidas, propostas de parceria, imprensa ou apoio aos projetos."
+    },
+    "info": {
+      "eyebrow": "Canais",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "address": "Localização",
+      "social": "Redes sociais",
+      "pending": "Ainda não disponível"
+    },
+    "form": {
+      "eyebrow": "Formulário",
+      "title": "Envie uma mensagem."
+    }
+  },
+  "forms": {
+    "fields": {
+      "name": "Nome",
+      "namePlaceholder": "Como podemos chamar você",
+      "email": "E-mail",
+      "emailPlaceholder": "seu@email.com",
+      "phone": "Telefone",
+      "phoneOptional": "Telefone (opcional)",
+      "phonePlaceholder": "(00) 00000-0000",
+      "subject": "Assunto",
+      "subjectPlaceholder": "Resumo do contato",
+      "message": "Mensagem",
+      "messagePlaceholder": "Conte o que você precisa",
+      "interest": "Tipo de interesse",
+      "interestPlaceholder": "Selecione uma opção",
+      "organization": "Instituição",
+      "organizationPlaceholder": "Nome da empresa ou órgão",
+      "role": "Cargo",
+      "rolePlaceholder": "Sua função na instituição",
+      "consent": "Autorizo a AIDEP a utilizar os dados enviados para responder a este contato.",
+      "optional": "opcional",
+      "required": "obrigatório"
+    },
+    "interests": {
+      "partnership": "Parceria institucional",
+      "donation": "Doação e apoio",
+      "projects": "Projetos",
+      "press": "Imprensa",
+      "other": "Outro assunto"
+    },
+    "partnerTypes": {
+      "company": "Empresa",
+      "public": "Órgão público",
+      "school": "Escola ou instituição de ensino",
+      "club": "Clube ou entidade esportiva",
+      "other": "Outro"
+    },
+    "labels": {
+      "partnerType": "Tipo de instituição",
+      "proposal": "Como imagina a parceria"
+    },
+    "errors": {
+      "name": "Informe seu nome completo.",
+      "email": "Informe um e-mail válido.",
+      "phone": "Informe um telefone válido.",
+      "subject": "Informe o assunto do contato.",
+      "message": "Escreva uma mensagem com pelo menos 20 caracteres.",
+      "interest": "Selecione o tipo de interesse.",
+      "organization": "Informe o nome da instituição.",
+      "partnerType": "Selecione o tipo de instituição.",
+      "consent": "É necessário autorizar o uso dos dados para enviar.",
+      "summary": "Revise os campos destacados abaixo."
+    },
+    "submit": {
+      "send": "Enviar mensagem",
+      "sendPartnership": "Enviar proposta",
+      "sending": "Enviando…",
+      "successTitle": "Mensagem enviada.",
+      "successDescription": "Recebemos seu contato e retornaremos pelo e-mail informado.",
+      "errorTitle": "Não foi possível enviar.",
+      "errorDescription": "Tente novamente em instantes ou escreva diretamente para o e-mail da associação.",
+      "unconfiguredTitle": "Envio ainda não habilitado.",
+      "unconfiguredDescription": "O serviço de envio deste formulário ainda não foi configurado, por isso a mensagem não foi transmitida. Seus dados foram validados e podem ser enviados agora por e-mail, com um clique.",
+      "mailtoAction": "Enviar por e-mail",
+      "newMessage": "Enviar outra mensagem"
+    }
+  },
+  "footer": {
+    "tagline": "Desenvolvimento humano por meio do esporte e do paradesporto.",
+    "sitemap": "Navegação",
+    "institutional": "Institucional",
+    "contactTitle": "Contato",
+    "followTitle": "Acompanhe",
+    "rights": "Todos os direitos reservados.",
+    "legalName": "Associação Internacional para o Desenvolvimento do Desporto e Paradesporto",
+    "pendingData": "Dados institucionais complementares serão publicados assim que disponibilizados pela associação."
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Página não encontrada.",
+    "description": "O endereço acessado não existe ou foi movido.",
+    "action": "Ir para a página inicial"
+  },
+  "error": {
+    "title": "Algo deu errado.",
+    "description": "Ocorreu um erro inesperado ao carregar esta página.",
+    "action": "Tentar novamente"
+  },
+  "seo": {
+    "home": {
+      "title": "AIDEP — Desenvolvimento humano por meio do esporte e do paradesporto",
+      "description": "A AIDEP é uma plataforma internacional de desenvolvimento humano por meio do esporte e do paradesporto, com projetos de formação, inclusão e transformação social em todo o Brasil."
+    },
+    "about": {
+      "title": "A AIDEP",
+      "description": "Conheça a Associação Internacional para o Desenvolvimento do Desporto e Paradesporto: posicionamento, propósito, público atendido e alcance."
+    },
+    "projects": {
+      "title": "Projetos",
+      "description": "Projeto Social Coração Valente, Futsal na Escola e FutEdu Summit: as três frentes de atuação da AIDEP."
+    },
+    "impact": {
+      "title": "Impacto",
+      "description": "Mais de 40 mil pessoas atendidas pelos projetos da AIDEP em todo o território brasileiro."
+    },
+    "news": {
+      "title": "Notícias",
+      "description": "Atualizações da AIDEP, dos projetos e dos eventos da associação."
+    },
+    "transparency": {
+      "title": "Transparência",
+      "description": "Relatórios, documentos institucionais e prestação de contas da AIDEP, atualizados mensalmente."
+    },
+    "partners": {
+      "title": "Parceiros",
+      "description": "Instituições públicas e privadas que apoiam a estrutura e os projetos da AIDEP."
+    },
+    "donate": {
+      "title": "Doações",
+      "description": "Apoie os projetos da AIDEP e ajude a sustentar polos esportivos, presença nas escolas e ações de formação."
+    },
+    "contact": {
+      "title": "Contato",
+      "description": "Fale com a AIDEP sobre projetos, parcerias, imprensa ou apoio."
+    }
+  }
+}

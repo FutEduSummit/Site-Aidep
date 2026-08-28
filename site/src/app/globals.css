@@ -1,0 +1,554 @@
+@import "tailwindcss";
+
+/* Variante para efeitos que só devem existir com ponteiro preciso.
+   Garante que nada no site dependa de hover em telas de toque. */
+@custom-variant fine (@media (hover: hover) and (pointer: fine));
+
+/* =========================================================================
+   AIDEP — DESIGN SYSTEM
+   Fonte da verdade: Manual de Marca AIDEP (março/2024) + arquivos oficiais
+   de logotipo. As cores institucionais foram extraídas dos próprios
+   arquivos de marca, não recriadas.
+   ========================================================================= */
+
+@theme {
+  /* ---------------------------------------------------------------------
+     1. CORES — INSTITUCIONAIS
+     Verde AIDEP #10963E é a cor principal (comunicação internacional e
+     Américas, conforme manual). Preto e branco completam as três cores
+     principais sobre as quais a marca pode ser aplicada.
+     --------------------------------------------------------------------- */
+  --color-brand-50: #f0faf4;
+  --color-brand-100: #dcf4e5;
+  --color-brand-200: #b3e7c7;
+  --color-brand-300: #79d49e;
+  --color-brand-400: #30c069;
+  --color-brand-500: #10963e; /* VERDE AIDEP — oficial */
+  --color-brand-600: #0d7d33;
+  --color-brand-700: #0a6127;
+  --color-brand-800: #084a1e;
+  --color-brand-900: #053315;
+
+  /* Cores continentais oficiais — uso restrito, conforme manual: apenas
+     na comunicação referente ao continente correspondente. */
+  --color-continent-americas: #10963e;
+  --color-continent-oceania: #001e58;
+  --color-continent-asia: #ffc200;
+  --color-continent-europe: #e0342b;
+  --color-continent-antarctica: #dd2f76;
+  --color-continent-africa: #f38d23;
+
+  /* ---------------------------------------------------------------------
+     2. CORES — NEUTROS
+     --------------------------------------------------------------------- */
+  --color-ink-950: #0a0a0a;
+  --color-ink-900: #111111;
+  --color-ink-800: #1c1c1c;
+  --color-ink-700: #2e2e2e;
+  --color-ink-600: #4a4a4a;
+  --color-ink-500: #6b6b6b;
+  --color-ink-400: #8f8f8f;
+  --color-ink-300: #bdbdbd;
+  --color-ink-200: #dcdcdc;
+  --color-ink-100: #ebebeb;
+  --color-ink-50: #f6f6f6;
+  --color-paper: #ffffff;
+  --color-paper-2: #f6f6f6;
+  --color-paper-3: #f0f0f0; /* cinza do grafismo oficial da papelaria */
+
+  /* ---------------------------------------------------------------------
+     3. CORES — FUNCIONAIS (interface; não pertencem à marca)
+     --------------------------------------------------------------------- */
+  --color-danger: #b22318;
+  --color-danger-soft: #fdecea;
+  --color-success: #0d7d33;
+  --color-success-soft: #e8f6ed;
+
+  /* ---------------------------------------------------------------------
+     4. TIPOGRAFIA
+     Sora — tipografia de apoio oficial definida no manual da marca.
+     --------------------------------------------------------------------- */
+  --font-sans: var(--font-sora), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.2;
+  --text-micro--letter-spacing: 0.18em;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.25;
+  --text-label--letter-spacing: 0.14em;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.55;
+  --text-body: clamp(0.9375rem, 0.905rem + 0.145vw, 1.0625rem);
+  --text-body--line-height: 1.7;
+  --text-lead: clamp(1.0625rem, 0.96rem + 0.46vw, 1.375rem);
+  --text-lead--line-height: 1.55;
+
+  --text-h4: clamp(1.125rem, 1.04rem + 0.36vw, 1.4375rem);
+  --text-h4--line-height: 1.35;
+  --text-h3: clamp(1.375rem, 1.19rem + 0.8vw, 2rem);
+  --text-h3--line-height: 1.25;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.55vw, 3rem);
+  --text-h2--line-height: 1.14;
+  --text-h1: clamp(2.25rem, 1.72rem + 2.35vw, 4.125rem);
+  --text-h1--line-height: 1.06;
+  --text-display: clamp(2.25rem, 1.4rem + 3.4vw, 4.5rem);
+  --text-display--line-height: 0.98;
+  --text-display-xl: clamp(2rem, 1.05rem + 4.4vw, 5rem);
+  --text-display-xl--line-height: 0.94;
+  --text-metric: clamp(2.75rem, 1.7rem + 4.65vw, 6.25rem);
+  --text-metric--line-height: 0.9;
+
+  /* ---------------------------------------------------------------------
+     5. ESPAÇAMENTO / GRID / CONTAINER
+     --------------------------------------------------------------------- */
+  --spacing-gutter: clamp(1.25rem, 3.6vw, 5rem);
+  --spacing-section: clamp(4.5rem, 9vw, 10rem);
+  --spacing-section-sm: clamp(3rem, 6vw, 6rem);
+  --spacing-stack: clamp(2rem, 4vw, 4rem);
+
+  --container-site: 96rem;
+  --container-wide: 110rem;
+  --container-text: 46rem;
+  --container-narrow: 34rem;
+
+  /* ---------------------------------------------------------------------
+     6. BORDAS / RAIOS / SOMBRAS
+     Linguagem editorial: cantos praticamente retos, como os módulos do
+     símbolo. Sombra apenas em elementos flutuantes (menu, seletor).
+     --------------------------------------------------------------------- */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-pill: 999px;
+
+  --shadow-float: 0 1px 2px rgb(10 10 10 / 0.06),
+    0 12px 32px -12px rgb(10 10 10 / 0.22);
+  --shadow-menu: 0 24px 64px -24px rgb(10 10 10 / 0.35);
+
+  /* ---------------------------------------------------------------------
+     7. MOVIMENTO
+     --------------------------------------------------------------------- */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-brand-in: cubic-bezier(0.64, 0, 0.78, 0);
+  --duration-fast: 200ms;
+  --duration-base: 420ms;
+  --duration-slow: 720ms;
+
+  /* ---------------------------------------------------------------------
+     8. BREAKPOINTS
+     --------------------------------------------------------------------- */
+  --breakpoint-xs: 390px;
+  --breakpoint-3xl: 1728px;
+}
+
+/* =========================================================================
+   TOKENS SEMÂNTICOS POR SUPERFÍCIE
+   Cada seção declara data-surface="light|muted|dark|brand".
+   Os componentes leem apenas tokens semânticos — nunca a cor bruta.
+   ========================================================================= */
+@layer base {
+  :root,
+  [data-surface="light"] {
+    --bg: var(--color-paper);
+    --bg-raised: var(--color-paper-2);
+    --fg: var(--color-ink-950);
+    --fg-strong: #000000;
+    --fg-muted: var(--color-ink-600);
+    --fg-subtle: var(--color-ink-500);
+    --border: var(--color-ink-200);
+    --border-strong: var(--color-ink-300);
+    --rule: var(--color-ink-200);
+    --accent: var(--color-brand-500);
+    --accent-text: var(--color-brand-700);
+    --accent-contrast: var(--color-ink-950);
+    --focus: var(--color-brand-700);
+    --grafismo: var(--color-paper-3);
+    --overlay: rgb(10 10 10 / 0.06);
+  }
+
+  [data-surface="muted"] {
+    --bg: var(--color-paper-2);
+    --bg-raised: var(--color-paper);
+    --fg: var(--color-ink-950);
+    --fg-strong: #000000;
+    --fg-muted: var(--color-ink-600);
+    --fg-subtle: var(--color-ink-500);
+    --border: var(--color-ink-200);
+    --border-strong: var(--color-ink-300);
+    --rule: var(--color-ink-200);
+    --accent: var(--color-brand-500);
+    --accent-text: var(--color-brand-700);
+    --accent-contrast: var(--color-ink-950);
+    --focus: var(--color-brand-700);
+    --grafismo: #e8e8e8;
+    --overlay: rgb(10 10 10 / 0.06);
+  }
+
+  [data-surface="dark"] {
+    --bg: var(--color-ink-950);
+    --bg-raised: var(--color-ink-900);
+    --fg: var(--color-paper);
+    --fg-strong: #ffffff;
+    --fg-muted: var(--color-ink-300);
+    --fg-subtle: var(--color-ink-400);
+    --border: rgb(255 255 255 / 0.16);
+    --border-strong: rgb(255 255 255 / 0.32);
+    --rule: rgb(255 255 255 / 0.16);
+    --accent: var(--color-brand-400);
+    --accent-text: var(--color-brand-400);
+    --accent-contrast: var(--color-ink-950);
+    --focus: var(--color-brand-300);
+    --grafismo: rgb(255 255 255 / 0.045);
+    --overlay: rgb(255 255 255 / 0.08);
+  }
+
+  [data-surface="brand"] {
+    --bg: var(--color-brand-500);
+    --bg-raised: var(--color-brand-600);
+    --fg: var(--color-ink-950);
+    --fg-strong: #000000;
+    /* Alphas calibrados para manter no mínimo 4,5:1 sobre o verde AIDEP. */
+    --fg-muted: rgb(10 10 10 / 0.84);
+    --fg-subtle: rgb(10 10 10 / 0.8);
+    --border: rgb(10 10 10 / 0.22);
+    --border-strong: rgb(10 10 10 / 0.42);
+    --rule: rgb(10 10 10 / 0.22);
+    --accent: var(--color-ink-950);
+    --accent-text: var(--color-ink-950);
+    --accent-contrast: var(--color-brand-500);
+    --focus: var(--color-ink-950);
+    --grafismo: rgb(255 255 255 / 0.16);
+    --overlay: rgb(10 10 10 / 0.1);
+  }
+}
+
+/* =========================================================================
+   BASE
+   ========================================================================= */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.7;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    min-height: 100svh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-500);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  [data-focus-custom]:focus-visible {
+    outline: none;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* =========================================================================
+   UTILITÁRIOS DO SISTEMA
+   ========================================================================= */
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility surface {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2vw, 2rem);
+}
+
+@layer components {
+  /* Micro-rótulo institucional: módulo gráfico + texto em caixa alta */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: var(--text-label);
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--fg-muted);
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: block;
+    inline-size: 1.5rem;
+    block-size: 0.375rem;
+    background-color: var(--accent);
+    transform: skewX(-12deg);
+    flex: none;
+  }
+
+  /* Módulo — elemento gráfico derivado das barras do símbolo AIDEP */
+  .modulo {
+    display: block;
+    inline-size: 1.125rem;
+    block-size: 0.3125rem;
+    background-color: var(--accent);
+    transform: skewX(-12deg);
+    flex: none;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--duration-base) var(--ease-brand);
+  }
+
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    transform: translateY(-200%);
+    background: var(--color-ink-950);
+    color: #ffffff;
+    padding: 0.75rem 1.25rem;
+    font-size: var(--text-small);
+    font-weight: 600;
+    transition: transform var(--duration-fast) var(--ease-brand);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* Texto rico das notícias e páginas editoriais */
+  .prose-aidep > * + * {
+    margin-top: 1.5em;
+  }
+
+  .prose-aidep h2 {
+    font-size: var(--text-h3);
+    line-height: 1.25;
+    margin-top: 2em;
+  }
+
+  .prose-aidep h3 {
+    font-size: var(--text-h4);
+    line-height: 1.35;
+    margin-top: 1.75em;
+  }
+
+  .prose-aidep ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .prose-aidep li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+
+  .prose-aidep li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    inline-size: 1.125rem;
+    block-size: 0.25rem;
+    background-color: var(--accent);
+    transform: skewX(-12deg);
+  }
+
+  .prose-aidep strong {
+    font-weight: 600;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+}
+
+/* =========================================================================
+   MARQUEE (parceiros)
+   ========================================================================= */
+@keyframes aidep-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@layer components {
+  .marquee {
+    /* As bordas desaparecem, o movimento não “bate” no limite da seção. */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+  }
+
+  .marquee-track {
+    animation: aidep-marquee linear infinite;
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .marquee:hover .marquee-track,
+    .marquee:focus-within .marquee-track {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* =========================================================================
+   ACESSIBILIDADE — MOVIMENTO REDUZIDO
+   Remove parallax, tilt, marquee e scroll suave; todo o conteúdo permanece
+   visível e legível.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-motion="parallax"],
+  [data-motion="tilt"],
+  [data-motion="spotlight"] {
+    transform: none !important;
+  }
+
+  [data-motion="marquee"] > * {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* =========================================================================
+   PRÉ-VISUALIZAÇÃO DE IMAGENS — ferramenta de trabalho, não é o site.
+   Enquanto as fotografias oficiais não chegam, a moldura exibe o painel
+   institucional. Com o interruptor ligado (data-media-preview="on" em
+   <html>), o painel dá lugar à imagem de exemplo carregada junto — assim dá
+   para avaliar o layout preenchido sem publicar imagem inventada.
+   Ver `lib/preview.ts` e `components/ui/preview-toggle.tsx`.
+   ========================================================================= */
+[data-preview-layer] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 260ms var(--ease-brand, ease);
+}
+
+[data-preview-panel] {
+  transition: opacity 260ms var(--ease-brand, ease);
+}
+
+html[data-media-preview="on"] [data-preview-layer] {
+  opacity: 1;
+  visibility: visible;
+}
+
+html[data-media-preview="on"] [data-preview-panel] {
+  opacity: 0;
+}
