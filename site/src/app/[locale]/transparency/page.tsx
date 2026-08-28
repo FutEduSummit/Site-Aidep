@@ -106,8 +106,8 @@ export default async function TransparencyPage({ params }: Props) {
         id="transparency-cta"
         surface="dark"
         title={t('hero.title')}
-        primary={{ href: '/contact', label: tActions('contact') }}
-        secondary={{ href: '/donate', label: tActions('donate') }}
+        primary={{ href: '/donate', label: tActions('donate') }}
+        secondary={{ href: '/partners', label: tActions('seePartners') }}
       />
     </>
   )

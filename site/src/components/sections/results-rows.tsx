@@ -41,7 +41,7 @@ export function ResultsRows({
   const t = useTranslations('home.results')
 
   return (
-    <Section surface={surface} ariaLabelledby={`${id}-title`}>
+    <Section id={id} surface={surface} ariaLabelledby={`${id}-title`}>
       <Container className="flex flex-col gap-stack">
         <SectionHeader
           id={`${id}-title`}

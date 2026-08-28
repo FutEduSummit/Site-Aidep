@@ -86,6 +86,7 @@ export function ContentBlock({
 
   return (
     <Section
+      id={id}
       surface={surface}
       ariaLabelledby={`${id}-title`}
       className={className}
@@ -99,7 +100,6 @@ export function ContentBlock({
               <ParallaxImage distance={56}>
                 <MediaFrame
                   media={media}
-                  mediaKey={mediaKey}
                   locale={locale}
                   ratio={mediaRatio}
                   tone={surface === 'dark' ? 'dark' : 'light'}
@@ -116,7 +116,6 @@ export function ContentBlock({
               <ParallaxImage distance={56}>
                 <MediaFrame
                   media={media}
-                  mediaKey={mediaKey}
                   locale={locale}
                   ratio={mediaRatio}
                   tone={surface === 'dark' ? 'dark' : 'light'}

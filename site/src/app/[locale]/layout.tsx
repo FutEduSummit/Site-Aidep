@@ -7,12 +7,12 @@ import type { ReactNode } from "react";
 import { CursorInteraction } from "@/components/motion/cursor-interaction";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { ScrollReset } from "@/components/motion/scroll-reset";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { site } from "@/content/site";
 import { routing, type Locale } from "@/i18n/routing";
 import { brandColors } from "@/lib/brand";
-import { previewBootScript, previewImagesEnabled } from "@/lib/preview";
 import {
   buildLanguageAlternates,
   absoluteUrl,
@@ -105,23 +105,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={sora.variable} suppressHydrationWarning>
       <body data-surface="light" className="antialiased">
-        {/* Ferramenta de trabalho: restaura o interruptor de pré-visualização
-            de imagens antes da primeira pintura, para não piscar entre o
-            painel institucional e a imagem de exemplo. Some da build assim
-            que NEXT_PUBLIC_PREVIEW_IMAGES sai do ar. */}
-        {previewImagesEnabled ? (
-          <script
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: previewBootScript }}
-          />
-        ) : null}
-
         <NextIntlClientProvider>
           <MotionProvider>
             <a className="skip-link" href="#conteudo">
               {t("skipToContent")}
             </a>
 
+            <ScrollReset />
             <ScrollProgress label={t("scrollProgress")} />
             <Header />
 

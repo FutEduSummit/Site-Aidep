@@ -9,7 +9,8 @@
  *
  * ATENÇÃO — os arquivos gerados NÃO são documentos oficiais da AIDEP:
  * cada página traz a marca EXEMPLO e um aviso de conteúdo fictício. Eles
- * só aparecem no site na build de pré-visualização (ver `lib/preview.ts`).
+ * aparecem no site enquanto o conteúdo de exemplo estiver ligado (ver
+ * `src/lib/example-content.ts`).
  * Quando os documentos reais chegarem, apague a pasta, cadastre-os em
  * `src/content/documents.ts` e o gerador deixa de ser necessário.
  *
@@ -148,7 +149,7 @@ function composePages(doc) {
     /* Rodapé do aviso, em todas as páginas. */
     content += `${RULE} rg ${PAGE.margin} 82 ${USABLE} 0.7 re f\n`
     content += textOp(
-      'Documento de exemplo gerado para a pré-visualização do site institucional.',
+      'Documento de exemplo gerado para a demonstração do site institucional.',
       PAGE.margin,
       66,
       7.6,
@@ -338,9 +339,9 @@ function renderRegistry(entries) {
  * como prestação de contas.
  *
  * Eles só chegam à página de Transparência quando o conteúdo de exemplo
- * está ligado (\`lib/preview.ts\` — \`next dev\` ou
- * \`NEXT_PUBLIC_PREVIEW_IMAGES=1\`). Na build pública, a lista volta a ser
- * vazia e a página exibe o estado vazio institucional.
+ * está ligado — o padrão, ver \`lib/example-content.ts\`. Com
+ * \`NEXT_PUBLIC_EXAMPLE_CONTENT=0\` a lista volta a ser vazia e a página
+ * exibe o estado vazio institucional.
  */
 export const exampleDocuments: InstitutionalDocument[] = [
 ${items}

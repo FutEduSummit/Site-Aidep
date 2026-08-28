@@ -526,29 +526,4 @@
   }
 }
 
-/* =========================================================================
-   PRÉ-VISUALIZAÇÃO DE IMAGENS — ferramenta de trabalho, não é o site.
-   Enquanto as fotografias oficiais não chegam, a moldura exibe o painel
-   institucional. Com o interruptor ligado (data-media-preview="on" em
-   <html>), o painel dá lugar à imagem de exemplo carregada junto — assim dá
-   para avaliar o layout preenchido sem publicar imagem inventada.
-   Ver `lib/preview.ts` e `components/ui/preview-toggle.tsx`.
-   ========================================================================= */
-[data-preview-layer] {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 260ms var(--ease-brand, ease);
-}
 
-[data-preview-panel] {
-  transition: opacity 260ms var(--ease-brand, ease);
-}
-
-html[data-media-preview="on"] [data-preview-layer] {
-  opacity: 1;
-  visibility: visible;
-}
-
-html[data-media-preview="on"] [data-preview-panel] {
-  opacity: 0;
-}

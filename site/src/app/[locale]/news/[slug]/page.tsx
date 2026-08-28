@@ -152,7 +152,6 @@ export default async function ArticlePage({ params }: Props) {
           <ImageReveal>
             <MediaFrame
               media={getMedia(article.coverKey)}
-              mediaKey={article.coverKey}
               locale={locale}
               ratio="16 / 9"
               tone="light"

@@ -7,20 +7,23 @@
   },
   "nav": {
     "home": "Home",
-    "about": "About AIDEP",
     "projects": "Projects",
-    "impact": "Impact",
     "news": "News",
     "transparency": "Transparency",
     "partners": "Partners",
     "donate": "Donate",
-    "contact": "Contact",
     "menu": "Menu",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "primaryLabel": "Primary navigation",
     "mobileLabel": "Site navigation",
-    "footerLabel": "Footer navigation"
+    "footerLabel": "Footer navigation",
+    "currentPage": "Current page",
+    "sectionsLabel": "On this page",
+    "aboutSection": "About AIDEP",
+    "audienceSection": "People served",
+    "impactSection": "Impact",
+    "contactSection": "Contact"
   },
   "actions": {
     "knowAidep": "About AIDEP",
@@ -28,6 +31,7 @@
     "seeProjects": "See all projects",
     "seeProject": "Explore the project",
     "seeImpact": "See the impact",
+    "seeAudience": "See who we serve",
     "seeNews": "See all news",
     "seeTransparency": "Go to transparency",
     "seePartners": "See partners",
@@ -84,10 +88,6 @@
         {
           "term": "Operation",
           "detail": "The whole Brazilian territory, with statutory provision for international operation"
-        },
-        {
-          "term": "People served",
-          "detail": "Children, teenagers, young people, adults and communities in situations of vulnerability"
         }
       ]
     },
@@ -127,19 +127,6 @@
           "text": "Results that show up in the community, not only on the scoreboard."
         }
       ]
-    },
-    "reach": {
-      "eyebrow": "Reach",
-      "title": "National operation, international vocation.",
-      "paragraphs": [
-        "Today AIDEP operates across the whole of Brazil. Its statute allows for operation in any country.",
-        "That vocation is already written into the identity of the association: the brand manual defines an official colour for each continent, and green — the main colour of AIDEP — is also the colour of the Americas and of international communication."
-      ],
-      "nationalLabel": "Current operation",
-      "nationalValue": "The whole Brazilian territory",
-      "internationalLabel": "Statutory provision",
-      "internationalValue": "International operation",
-      "continentsLabel": "Continental system of the brand"
     },
     "results": {
       "eyebrow": "Results",
@@ -198,11 +185,6 @@
     ]
   },
   "about": {
-    "hero": {
-      "eyebrow": "About AIDEP",
-      "title": "An association built to last.",
-      "lead": "International Sports and Parasports Development Association."
-    },
     "positioning": {
       "eyebrow": "Positioning",
       "title": "What AIDEP is.",
@@ -232,14 +214,28 @@
     "audience": {
       "eyebrow": "People served",
       "title": "Who AIDEP serves.",
-      "description": "More than 40 thousand people have already been reached by the projects of the association."
-    },
-    "reach": {
-      "eyebrow": "Operation",
-      "title": "Where AIDEP is.",
-      "paragraphs": [
-        "The current work of the association covers the whole Brazilian territory, with projects in communities, schools and spaces of learning.",
-        "The statute of AIDEP provides for international operation, and the identity of the association was built with that reach in mind."
+      "description": "More than 40 thousand people have already been reached by the projects of the association. Each group calls for its own way of welcoming, teaching and following up.",
+      "groups": [
+        {
+          "title": "Children",
+          "text": "A first contact with sports practice at community hubs and in schools, with equipment, space and follow-up guaranteed."
+        },
+        {
+          "title": "Teenagers",
+          "text": "Continuity at the very moment most people drop out of sport: regular training, companionship and an adult to look up to."
+        },
+        {
+          "title": "Young people",
+          "text": "A path that goes beyond being an athlete — refereeing, organisation, mentoring and the learning spaces of the association."
+        },
+        {
+          "title": "Adults",
+          "text": "Teachers, coaches and professionals who go through the training programmes and carry the methodology into their own work."
+        },
+        {
+          "title": "Communities in situations of vulnerability",
+          "text": "The whole territory counts: families, schools and public facilities around every sports hub."
+        }
       ]
     },
     "identity": {
@@ -257,42 +253,16 @@
         "The accountability of AIDEP is prepared every month and published on the Transparency page, together with institutional and project documents."
       ]
     },
-    "cta": {
-      "title": "Meet the projects that make it happen."
-    }
-  },
-  "projects": {
-    "hero": {
-      "eyebrow": "Projects",
-      "title": "Where transformation happens.",
-      "lead": "Three complementary fronts: the neighbourhood, the school and knowledge."
-    },
-    "labels": {
-      "objective": "Objective",
-      "audience": "People served",
-      "locations": "Where it operates",
-      "numbers": "Numbers",
-      "presentation": "Overview",
-      "methodology": "Methodology",
-      "gallery": "Gallery",
-      "results": "Results",
-      "partners": "Project partners",
-      "relatedNews": "Related news",
-      "category": "Category",
-      "allProjects": "All projects",
-      "nextProject": "Next project"
-    },
-    "cta": {
-      "title": "Support this project.",
-      "description": "Your contribution helps to sustain and widen the structure that serves these people."
+    "presence": {
+      "eyebrow": "Operation",
+      "title": "Where AIDEP is.",
+      "paragraphs": [
+        "The current work of the association covers the whole Brazilian territory, with projects in communities, schools and spaces of learning.",
+        "The statute of AIDEP provides for international operation, and the identity of the association was built with that reach in mind."
+      ]
     }
   },
   "impact": {
-    "hero": {
-      "eyebrow": "Impact",
-      "title": "More than 40 thousand people.",
-      "lead": "The reach of AIDEP measured by the figures reported by the association."
-    },
     "headline": {
       "eyebrow": "Overview",
       "title": "The picture of the work.",
@@ -322,13 +292,35 @@
         }
       ]
     },
-    "audience": {
-      "eyebrow": "Audience",
-      "title": "Who stands behind the numbers."
-    },
     "byProject": {
       "eyebrow": "By project",
       "title": "The impact of each front."
+    }
+  },
+  "projects": {
+    "hero": {
+      "eyebrow": "Projects",
+      "title": "Where transformation happens.",
+      "lead": "Three complementary fronts: the neighbourhood, the school and knowledge."
+    },
+    "labels": {
+      "objective": "Objective",
+      "audience": "People served",
+      "locations": "Where it operates",
+      "numbers": "Numbers",
+      "presentation": "Overview",
+      "methodology": "Methodology",
+      "gallery": "Gallery",
+      "results": "Results",
+      "partners": "Project partners",
+      "relatedNews": "Related news",
+      "category": "Category",
+      "allProjects": "All projects",
+      "nextProject": "Next project"
+    },
+    "cta": {
+      "title": "Support this project.",
+      "description": "Your contribution helps to sustain and widen the structure that serves these people."
     }
   },
   "news": {
@@ -625,17 +617,9 @@
       "title": "AIDEP — Human development through sport and parasport",
       "description": "AIDEP is an international platform for human development through sport and parasport, running education, inclusion and social transformation projects across Brazil."
     },
-    "about": {
-      "title": "About AIDEP",
-      "description": "Get to know the International Sports and Parasports Development Association: positioning, purpose, people served and reach."
-    },
     "projects": {
       "title": "Projects",
       "description": "Coração Valente Social Project, Futsal na Escola and FutEdu Summit: the three fronts of work of AIDEP."
-    },
-    "impact": {
-      "title": "Impact",
-      "description": "More than 40 thousand people reached by AIDEP projects across the Brazilian territory."
     },
     "news": {
       "title": "News",
@@ -652,10 +636,6 @@
     "donate": {
       "title": "Donate",
       "description": "Support AIDEP projects and help sustain sports hubs, presence in schools and training activities."
-    },
-    "contact": {
-      "title": "Contact",
-      "description": "Talk to AIDEP about projects, partnerships, press or support."
     }
   }
 }

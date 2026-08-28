@@ -1,4 +1,4 @@
-import { exampleContentEnabled } from '@/lib/preview'
+import { exampleContentEnabled } from '@/lib/example-content'
 import { exampleDocuments, exampleLastUpdatedAt } from './documents-example'
 import type { DocumentCategory, InstitutionalDocument, Localized } from './types'
 
@@ -10,10 +10,11 @@ import type { DocumentCategory, InstitutionalDocument, Localized } from './types
  * estado vazio institucional, com todo o sistema de filtros, busca e
  * download pronto para receber os arquivos.
  *
- * Na build de pré-visualização entram os documentos de exemplo de
+ * Por padrão entram os documentos de exemplo de
  * `documents-example.ts` — arquivos de demonstração, marcados com a
  * palavra EXEMPLO em cada página, para avaliar a lista, os filtros, a
  * busca, a visualização e o download funcionando.
+ * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` desliga.
  *
  * O briefing informa que a prestação de contas é preparada mensalmente. A
  * data de última atualização só é preenchida quando houver publicação real.

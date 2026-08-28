@@ -1,17 +1,24 @@
+import { getStockMedia } from './media-stock'
 import type { MediaAsset } from './types'
 
 /**
  * REGISTRO DE IMAGENS
  * ===================
- * Nenhuma fotografia foi entregue junto com o material de identidade.
- * Todas as chaves abaixo estão reservadas com `null`: a interface exibe o
- * quadro institucional (grafismo oficial da marca) na proporção correta,
- * sem deformação e sem deslocamento de layout.
+ * Esta é a fonte da verdade das fotografias oficiais da AIDEP.
  *
- * Para publicar uma foto:
+ * Nenhuma fotografia foi entregue junto com o material de identidade, por
+ * isso todas as chaves abaixo estão reservadas com `null`. Enquanto uma
+ * chave é `null`, `getMedia()` cai na fotografia de banco equivalente em
+ * `media-stock.ts` (Pexels, com crédito do fotógrafo) — assim o site pode
+ * ser avaliado preenchido, sem nenhuma imagem inventada e sem nenhuma
+ * imagem gerada por IA.
+ *
+ * Para publicar a foto oficial de uma chave:
  *   1. coloque o arquivo em `public/images/...` (WebP ou AVIF, quando possível);
- *   2. troque o `null` da chave por um objeto MediaAsset com src, width,
- *      height e o texto alternativo nos três idiomas.
+ *   2. troque o `null` por um objeto MediaAsset com src, width, height e o
+ *      texto alternativo nos três idiomas.
+ *
+ * A partir daí a foto oficial vale sempre, e a de banco deixa de aparecer.
  *
  * Exemplo:
  *   'home.hero': {
@@ -26,32 +33,24 @@ import type { MediaAsset } from './types'
  *   },
  */
 export const media: Record<string, MediaAsset | null> = {
+  /* Página inicial */
   'home.hero': null,
   'home.about': null,
+  'home.positioning': null,
+  'home.audience': null,
   'home.sport': null,
   'home.parasport': null,
-  'home.impact': null,
-  'home.reach': null,
+  'home.presence': null,
+  'home.identity': null,
+  'home.governance': null,
+  'home.contact': null,
 
-  'about.hero': null,
-  'about.history': null,
-  'about.method': null,
-
-  'impact.hero': null,
-  'impact.story': null,
-
+  /* Projetos */
   'project.coracao-valente.cover': null,
-  'project.coracao-valente.hero': null,
   'project.futsal-na-escola.cover': null,
-  'project.futsal-na-escola.hero': null,
   'project.futedu-summit.cover': null,
-  'project.futedu-summit.hero': null,
 
-  'partners.hero': null,
-  'donate.hero': null,
-  'contact.hero': null,
-  'transparency.hero': null,
-  'news.hero': null,
+  /* Notícias */
   'news.futedu-summit-2026-inscricoes': null,
   'news.prestacao-de-contas-primeiro-semestre-2026': null,
   'news.coracao-valente-nova-turma-aracaju': null,
@@ -60,8 +59,13 @@ export const media: Record<string, MediaAsset | null> = {
   'news.articulacao-internacional-2027': null,
 }
 
+/**
+ * Imagem de uma chave: a fotografia oficial se já houver, senão a de banco.
+ * `null` só quando a chave não existe em nenhum dos dois registros — aí a
+ * moldura exibe o painel institucional da marca.
+ */
 export function getMedia(key: string): MediaAsset | null {
-  return media[key] ?? null
+  return media[key] ?? getStockMedia(key)
 }
 
 /**

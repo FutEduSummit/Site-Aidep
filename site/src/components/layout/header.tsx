@@ -6,12 +6,11 @@ import { Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/layout/language-switcher'
-import { ButtonLink } from '@/components/ui/button'
 import { Link, usePathname } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { getLockup } from '@/lib/brand'
 import { DURATION, EASE, STAGGER } from '@/lib/motion'
-import { ctaNav, primaryNav } from '@/lib/nav'
+import { homeSections, isActivePath, primaryNav } from '@/lib/nav'
 import { cn } from '@/lib/utils'
 
 export function Header() {
@@ -28,6 +27,10 @@ export function Header() {
 
   const lockupColor = getLockup(locale, 'horizontalColor')
   const lockupWhite = getLockup(locale, 'horizontalWhite')
+
+  /* A Página inicial reúne várias seções: quando o visitante está nela, o
+     menu mobile oferece os atalhos internos em vez de mandá-lo para fora. */
+  const onHome = isActivePath(pathname, '/')
 
   /* Estado sólido do header — uma única troca de estado, sem re-render por frame. */
   useEffect(() => {
@@ -147,32 +150,46 @@ export function Header() {
             </span>
           </Link>
 
+          {/* A página atual é marcada com `aria-current` para leitores de
+              tela e com um traço sob o rótulo para quem vê — nunca só pela
+              cor, que sozinha não é sinal acessível. */}
           <nav
             aria-label={t('primaryLabel')}
             className="hidden xl:flex xl:items-center xl:gap-1"
           >
-            {primaryNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="link-underline px-3 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-(--fg) transition-colors duration-200 ease-brand hover:text-(--accent-text)"
-              >
-                {t(item.key)}
-              </Link>
-            ))}
+            {primaryNav.map((item) => {
+              const active = isActivePath(pathname, item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'relative px-3 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 ease-brand',
+                    active
+                      ? 'text-(--accent-text)'
+                      : 'link-underline text-(--fg) hover:text-(--accent-text)',
+                  )}
+                >
+                  {t(item.key)}
+                  {active ? (
+                    <>
+                      <motion.span
+                        aria-hidden="true"
+                        layoutId="nav-active"
+                        transition={{ duration: DURATION.fast, ease: EASE }}
+                        className="absolute inset-x-3 -bottom-px block h-0.5 bg-(--accent)"
+                      />
+                      <span className="sr-only"> ({t('currentPage')})</span>
+                    </>
+                  ) : null}
+                </Link>
+              )
+            })}
           </nav>
 
           <div className="flex items-center gap-2 lg:gap-4">
             <LanguageSwitcher className="hidden md:block" />
-
-            <ButtonLink
-              href={ctaNav.href}
-              variant="accent"
-              icon="none"
-              className="hidden md:inline-flex"
-            >
-              {t(ctaNav.key)}
-            </ButtonLink>
 
             <button
               ref={toggleRef}
@@ -219,9 +236,51 @@ export function Header() {
               }}
               className="container-site flex flex-col pt-6"
             >
-              {primaryNav.map((item, index) => (
+              {primaryNav.map((item, index) => {
+                const active = isActivePath(pathname, item.href)
+                return (
+                  <motion.div
+                    key={item.href}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { duration: DURATION.fast, ease: EASE },
+                      },
+                    }}
+                  >
+                    <Link
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'flex items-baseline gap-4 border-b py-5 text-h3 font-semibold tracking-[-0.03em] transition-colors duration-200 ease-brand',
+                        active
+                          ? 'border-(--accent) text-(--accent)'
+                          : 'border-(--border) text-(--fg)',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'text-micro font-semibold uppercase tracking-[0.18em]',
+                          active ? 'text-(--accent)' : 'text-(--fg-subtle)',
+                        )}
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      {t(item.key)}
+                      {active ? (
+                        <span className="sr-only"> ({t('currentPage')})</span>
+                      ) : null}
+                    </Link>
+                  </motion.div>
+                )
+              })}
+
+              {/* Na Página inicial, o menu leva às seções dela — sem
+                  simular uma troca de página que não acontece. */}
+              {onHome ? (
                 <motion.div
-                  key={item.href}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: {
@@ -230,18 +289,26 @@ export function Header() {
                       transition: { duration: DURATION.fast, ease: EASE },
                     },
                   }}
+                  className="mt-10 flex flex-col gap-4"
                 >
-                  <Link
-                    href={item.href}
-                    className="flex items-baseline gap-4 border-b border-(--border) py-5 text-h3 font-semibold tracking-[-0.03em]"
-                  >
-                    <span className="text-micro font-semibold uppercase tracking-[0.18em] text-(--accent)">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    {t(item.key)}
-                  </Link>
+                  <h2 className="text-micro font-semibold uppercase tracking-[0.18em] text-(--fg-subtle)">
+                    {t('sectionsLabel')}
+                  </h2>
+                  <ul className="flex flex-wrap gap-2">
+                    {homeSections.map((section) => (
+                      <li key={section.id}>
+                        <a
+                          href={`#${section.id}`}
+                          onClick={() => setOpen(false)}
+                          className="inline-flex min-h-11 items-center border border-(--border-strong) px-4 py-2 text-small font-medium transition-colors duration-200 ease-brand hover:border-(--accent) hover:text-(--accent)"
+                        >
+                          {t(section.key)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </motion.div>
-              ))}
+              ) : null}
 
               <motion.div
                 variants={{
@@ -254,9 +321,6 @@ export function Header() {
                 }}
                 className="mt-10 flex flex-col gap-8"
               >
-                <ButtonLink href={ctaNav.href} variant="accent" size="lg">
-                  {t(ctaNav.key)}
-                </ButtonLink>
                 <LanguageSwitcher variant="list" />
               </motion.div>
             </motion.nav>

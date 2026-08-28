@@ -58,7 +58,6 @@ export function ProjectsIndex({
                   <ParallaxImage distance={48}>
                     <MediaFrame
                       media={getMedia(project.coverKey)}
-                      mediaKey={project.coverKey}
                       locale={locale}
                       ratio="16 / 11"
                       tone="light"

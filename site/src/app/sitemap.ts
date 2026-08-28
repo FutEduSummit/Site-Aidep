@@ -6,14 +6,11 @@ import { absoluteUrl, localizedPath, type PageHref } from '@/lib/seo'
 
 const staticRoutes: { href: PageHref; priority: number; changeFrequency: 'daily' | 'weekly' | 'monthly' }[] = [
   { href: '/', priority: 1, changeFrequency: 'weekly' },
-  { href: '/about', priority: 0.8, changeFrequency: 'monthly' },
   { href: '/projects', priority: 0.9, changeFrequency: 'monthly' },
-  { href: '/impact', priority: 0.8, changeFrequency: 'monthly' },
   { href: '/news', priority: 0.7, changeFrequency: 'weekly' },
   { href: '/transparency', priority: 0.7, changeFrequency: 'monthly' },
   { href: '/partners', priority: 0.6, changeFrequency: 'monthly' },
   { href: '/donate', priority: 0.8, changeFrequency: 'monthly' },
-  { href: '/contact', priority: 0.6, changeFrequency: 'monthly' },
 ]
 
 function languagesFor(href: PageHref) {

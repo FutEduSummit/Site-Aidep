@@ -1,32 +1,35 @@
 /**
- * IMAGENS DE PRÉ-VISUALIZAÇÃO — BANCO PEXELS
- * ==========================================
- * Baixa uma fotografia do Pexels para cada chave do registro de mídia e
- * escreve `src/content/media-preview.ts`.
+ * FOTOGRAFIAS DE BANCO — PEXELS
+ * =============================
+ * Baixa uma fotografia do Pexels para cada chave da direção de arte
+ * (`lib/media-plan.mjs`) e escreve `src/content/media-stock.ts`.
  *
- * ATENÇÃO — são fotografias de BANCO, não são registros da AIDEP. Servem
- * só para ver o site com as molduras preenchidas. Nunca aparecem por
- * padrão: só com o interruptor de pré-visualização ligado.
+ * ATENÇÃO — são fotografias de BANCO, não são registros da AIDEP. Ficam no
+ * ar enquanto a fotografia oficial não é entregue, sempre com o crédito do
+ * fotógrafo. Assim que a foto real for cadastrada na mesma chave em
+ * `src/content/media.ts`, ela passa a valer.
+ *
+ * Nenhuma imagem deste projeto é gerada por IA.
  *
  * Chave de API (grátis, sem cartão): https://www.pexels.com/api/
  * Guarde em `.env.local` como PEXELS_API_KEY=...
  *
- *   npm run images:pexels                        # baixa o que falta
- *   npm run images:pexels -- --force             # rebaixa tudo
- *   npm run images:pexels -- --only home.hero
- *   npm run images:pexels -- --pick home.hero=3  # troca por outra foto da busca
- *   npm run images:pexels -- --list home.hero    # mostra as opções da busca
+ *   npm run images:stock                        # baixa o que falta
+ *   npm run images:stock -- --force             # rebaixa tudo
+ *   npm run images:stock -- --only home.hero
+ *   npm run images:stock -- --pick home.hero=3  # troca por outra foto da busca
+ *   npm run images:stock -- --list home.hero    # mostra as opções da busca
  */
 
 import { mkdir, readFile, writeFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PLAN, orientationOf } from './lib/media-plan.mjs'
-import { jpegSize, renderRegistry, sleep } from './lib/preview-registry.mjs'
+import { jpegSize, renderRegistry, sleep } from './lib/image-registry.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const outDir = path.join(root, 'public', 'images', 'preview')
-const registryFile = path.join(root, 'src', 'content', 'media-preview.ts')
+const outDir = path.join(root, 'public', 'images', 'stock')
+const registryFile = path.join(root, 'src', 'content', 'media-stock.ts')
 
 const SEARCH = 'https://api.pexels.com/v1/search'
 const PER_PAGE = 12
@@ -168,7 +171,7 @@ async function main() {
       'PEXELS_API_KEY não encontrada.\n\n' +
         '  1. pegue a chave grátis em https://www.pexels.com/api/ (sem cartão)\n' +
         '  2. escreva em site/.env.local:  PEXELS_API_KEY=sua-chave\n\n' +
-        'Alternativa sem chave nenhuma: npm run images:preview (gera por IA).',
+        'Sem a chave, as molduras exibem o painel institucional da marca.',
     )
     process.exitCode = 1
     return
@@ -197,7 +200,7 @@ async function main() {
         `${marker} ${String(index).padStart(2)}  ${photo.photographer.padEnd(24)} ${photo.url}`,
       )
     })
-    console.log(`\nPara trocar:  npm run images:pexels -- --force --only ${listKey} --pick ${listKey}=N`)
+    console.log(`\nPara trocar:  npm run images:stock -- --force --only ${listKey} --pick ${listKey}=N`)
     return
   }
 
@@ -215,7 +218,7 @@ async function main() {
 
   for (const key of keys) {
     const file = path.join(outDir, `${key}.jpg`)
-    const relative = `/images/preview/${key}.jpg`
+    const relative = `/images/stock/${key}.jpg`
     let buffer
 
     if (!force && (await exists(file)) && credits[key]) {
@@ -260,7 +263,7 @@ async function main() {
     if (!(await exists(file))) continue
     const { width, height } = jpegSize(await readFile(file))
     assets[key] = {
-      src: `/images/preview/${key}.jpg`,
+      src: `/images/stock/${key}.jpg`,
       width,
       height,
       alt: PLAN[key].alt,
@@ -285,14 +288,14 @@ async function main() {
     registryFile,
     renderRegistry(ordered, {
       origin: 'fotografias de banco do Pexels (licença Pexels — uso comercial livre)',
-      command: 'npm run images:pexels',
+      command: 'npm run images:stock',
     }),
     'utf8',
   )
   await writeFile(creditsFile, JSON.stringify(credits, null, 2), 'utf8')
   await writeFile(picksFile, JSON.stringify(picks, null, 2), 'utf8')
 
-  console.log(`\n${Object.keys(ordered).length} imagem(ns) no registro → src/content/media-preview.ts`)
+  console.log(`\n${Object.keys(ordered).length} imagem(ns) no registro → src/content/media-stock.ts`)
 
   if (failures.length) {
     console.error(`\n${failures.length} falha(s):\n${failures.join('\n')}`)

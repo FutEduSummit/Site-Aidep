@@ -6,7 +6,7 @@ import { GrowLine } from '@/components/motion/grow-line'
 import { ParallaxImage } from '@/components/motion/parallax'
 import { Reveal } from '@/components/motion/reveal'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
-import { ArrowLink } from '@/components/ui/arrow-link'
+import { ArrowAnchor } from '@/components/ui/anchor-link'
 import { MediaFrame } from '@/components/ui/media-frame'
 import { Container, Section } from '@/components/ui/section'
 import { getMedia } from '@/content/media'
@@ -22,7 +22,7 @@ export function HomeAbout({ locale }: { locale: Locale }) {
   const highlights = t.raw('highlights') as Highlight[]
 
   return (
-    <Section surface="light" ariaLabelledby="home-about-title">
+    <Section id="a-aidep" surface="light" ariaLabelledby="home-about-title">
       <Container className="flex flex-col gap-stack">
         <GrowLine />
 
@@ -47,7 +47,9 @@ export function HomeAbout({ locale }: { locale: Locale }) {
             </div>
 
             <Reveal delay={0.2} distance={24} className="mt-10">
-              <ArrowLink href="/about">{tActions('knowAidep')}</ArrowLink>
+              <ArrowAnchor href="#publico-atendido">
+                {tActions('seeAudience')}
+              </ArrowAnchor>
             </Reveal>
           </div>
 
@@ -55,7 +57,6 @@ export function HomeAbout({ locale }: { locale: Locale }) {
             <ParallaxImage distance={56} className="w-full">
               <MediaFrame
                 media={getMedia('home.about')}
-                mediaKey="home.about"
                 locale={locale}
                 ratio="4 / 5"
                 tone="light"

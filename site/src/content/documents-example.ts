@@ -13,10 +13,10 @@ import type { InstitutionalDocument } from './types'
  * com a palavra EXEMPLO. Não são documentos oficiais da AIDEP e não valem
  * como prestação de contas.
  *
- * Eles só chegam à página de Transparência quando o conteúdo de exemplo
- * está ligado (`lib/preview.ts` — `next dev` ou
- * `NEXT_PUBLIC_PREVIEW_IMAGES=1`). Na build pública, a lista volta a ser
- * vazia e a página exibe o estado vazio institucional.
+ * Estão na página de Transparência enquanto o conteúdo de exemplo
+ * estiver ligado — o padrão, ver `lib/example-content.ts`. Com
+ * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` a lista volta a ser vazia e a página
+ * exibe o estado vazio institucional.
  */
 export const exampleDocuments: InstitutionalDocument[] = [
   {

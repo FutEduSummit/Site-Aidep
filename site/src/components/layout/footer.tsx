@@ -7,7 +7,7 @@ import { site } from '@/content/site'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { getLockup, symbolMark } from '@/lib/brand'
-import { footerInstitutional, primaryNav } from '@/lib/nav'
+import { footerInstitutional, homeSections, primaryNav } from '@/lib/nav'
 
 export function Footer() {
   const t = useTranslations('footer')
@@ -88,6 +88,18 @@ export function Footer() {
                     className="link-underline text-small text-(--fg-muted) transition-colors duration-200 ease-brand hover:text-(--fg)"
                   >
                     {tNav(item.key)}
+                  </Link>
+                </li>
+              ))}
+              {/* Seções da Página inicial: um link direto poupa o visitante
+                  de abrir a Home e procurar. */}
+              {homeSections.map((section) => (
+                <li key={section.id}>
+                  <Link
+                    href={{ pathname: '/', hash: section.id }}
+                    className="link-underline text-small text-(--fg-muted) transition-colors duration-200 ease-brand hover:text-(--fg)"
+                  >
+                    {tNav(section.key)}
                   </Link>
                 </li>
               ))}

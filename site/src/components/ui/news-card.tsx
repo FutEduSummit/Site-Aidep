@@ -31,7 +31,6 @@ export function NewsCard({
         <div className="overflow-hidden">
           <MediaFrame
             media={getMedia(article.coverKey)}
-            mediaKey={article.coverKey}
             locale={locale}
             ratio="16 / 10"
             tone="light"

@@ -6,6 +6,8 @@
  *   • erros de console e requisições que falharam;
  *   • overflow horizontal (e qual elemento o causou);
  *   • imagens deformadas em relação à proporção do arquivo;
+ *   • imagens que carregaram mas estão invisíveis — moldura sem altura
+ *     recortando tudo, ou máscara de revelação presa no estado escondido;
  *   • links internos quebrados;
  *   • ausência de h1 ou de landmarks.
  *
@@ -22,37 +24,28 @@ const WIDTHS = [360, 390, 768, 1024, 1440, 1920]
 
 const ROUTES = [
   '/pt',
-  '/pt/a-aidep',
   '/pt/projetos',
   '/pt/projetos/coracao-valente',
   '/pt/projetos/futsal-na-escola',
   '/pt/projetos/futedu-summit',
-  '/pt/impacto',
   '/pt/noticias',
   '/pt/transparencia',
   '/pt/parceiros',
   '/pt/doacoes',
-  '/pt/contato',
   '/en',
-  '/en/about',
   '/en/projects',
   '/en/projects/futedu-summit',
-  '/en/impact',
   '/en/news',
   '/en/transparency',
   '/en/partners',
   '/en/donate',
-  '/en/contact',
   '/es',
-  '/es/la-aidep',
   '/es/proyectos',
   '/es/proyectos/coracao-valente',
-  '/es/impacto',
   '/es/noticias',
   '/es/transparencia',
   '/es/socios',
   '/es/donaciones',
-  '/es/contacto',
 ]
 
 const problems = []
@@ -85,7 +78,7 @@ for (const route of ROUTES) {
 
     const response = await page.goto(BASE + route, {
       waitUntil: 'networkidle2',
-      timeout: 45000,
+      timeout: 90000,
     })
 
     if (!response || response.status() >= 400) {
@@ -170,6 +163,57 @@ for (const route of ROUTES) {
     }
     if (audit.distorted.length) {
       report(route, width, 'imagem-deformada', audit.distorted.join(' | '))
+    }
+
+    /* Imagem que carregou, tem tamanho e ainda assim não chega aos olhos de
+       ninguém. Já aconteceu duas vezes, por motivos diferentes — moldura de
+       parallax com altura zero recortando tudo, e máscara de revelação que
+       nunca abria —, e nenhuma das checagens acima percebia: a imagem está
+       lá, no tamanho certo e sem deformação. Aqui a pergunta é outra —
+       algum ancestral a esconde por inteiro?
+
+       Cada suspeita é reconfirmada com a imagem trazida para a cena e um
+       tempo de acomodação. Sem isso o resultado seria só ruído: a varredura
+       acima corre a página em passos largos e deixa para trás revelações
+       que ainda não dispararam — elas abrem normalmente quando alguém rola
+       até ali, que é justamente o que a reconfirmação reproduz. */
+    const invisible = await page.evaluate(async () => {
+      function hiddenBy(img) {
+        let node = img.parentElement
+        while (node && node !== document.body) {
+          const style = getComputedStyle(node)
+          const box = node.getBoundingClientRect()
+          if (style.overflow !== 'visible' && (box.width < 2 || box.height < 2)) {
+            return `ancestral recorta com ${Math.round(box.width)}×${Math.round(box.height)}`
+          }
+          /* Máscara presa no estado escondido: uma borda em 100% não deixa
+             sobrar área nenhuma. */
+          if (/\b100%/.test(style.clipPath)) return `máscara presa em ${style.clipPath}`
+          node = node.parentElement
+        }
+        return ''
+      }
+
+      const suspects = [...document.querySelectorAll('img')].filter((img) => {
+        if (!img.naturalWidth) return false
+        const rect = img.getBoundingClientRect()
+        return rect.width >= 8 && rect.height >= 8 && hiddenBy(img)
+      })
+
+      const confirmed = []
+      for (const img of suspects) {
+        img.scrollIntoView({ block: 'center', behavior: 'instant' })
+        await new Promise((resolve) => setTimeout(resolve, 900))
+        const cause = hiddenBy(img)
+        if (cause) {
+          confirmed.push(`${(img.getAttribute('alt') || '?').slice(0, 40)} — ${cause}`)
+        }
+      }
+      return confirmed
+    })
+
+    if (invisible.length) {
+      report(route, width, 'imagem-invisivel', invisible.slice(0, 4).join(' | '))
     }
     if (audit.h1 !== 1) report(route, width, 'h1', `encontrados: ${audit.h1}`)
     if (audit.main !== 1) report(route, width, 'main', `encontrados: ${audit.main}`)

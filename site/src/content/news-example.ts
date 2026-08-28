@@ -10,10 +10,10 @@ import type { NewsArticle } from './types'
  * relatam fato ocorrido, não trazem números de atendimento e não atribuem
  * fala a nenhuma pessoa real.
  *
- * Só chegam ao site quando o conteúdo de exemplo está ligado
- * (`lib/preview.ts` — `next dev` ou `NEXT_PUBLIC_PREVIEW_IMAGES=1`). Na
- * build pública, a lista volta a ser vazia: a página de Notícias exibe o
- * estado vazio institucional e a Home não renderiza a seção.
+ * Estão no ar enquanto o conteúdo de exemplo estiver ligado — o padrão,
+ * ver `lib/example-content.ts`. Com `NEXT_PUBLIC_EXAMPLE_CONTENT=0` a lista
+ * volta a ser vazia: a página de Notícias exibe o estado vazio
+ * institucional e a Home não renderiza a seção.
  *
  * Para publicar notícia real: cadastre em `content/news.ts` — a estrutura
  * é a mesma daqui — e apague este arquivo quando ele não fizer mais falta.

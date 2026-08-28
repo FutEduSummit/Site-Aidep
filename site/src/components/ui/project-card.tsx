@@ -61,7 +61,6 @@ export function ProjectCard({
         <div className="relative overflow-hidden">
           <MediaFrame
             media={getMedia(project.coverKey)}
-            mediaKey={project.coverKey}
             locale={locale}
             ratio={variant === 'feature' ? '4 / 3' : '16 / 10'}
             tone="light"

@@ -6,21 +6,24 @@
     "current": "Idioma actual"
   },
   "nav": {
-    "home": "Inicio",
-    "about": "La AIDEP",
+    "home": "Página de inicio",
     "projects": "Proyectos",
-    "impact": "Impacto",
     "news": "Noticias",
     "transparency": "Transparencia",
     "partners": "Socios",
     "donate": "Donaciones",
-    "contact": "Contacto",
     "menu": "Menú",
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
     "primaryLabel": "Navegación principal",
     "mobileLabel": "Navegación del sitio",
-    "footerLabel": "Navegación del pie de página"
+    "footerLabel": "Navegación del pie de página",
+    "currentPage": "Página actual",
+    "sectionsLabel": "En esta página",
+    "aboutSection": "La AIDEP",
+    "audienceSection": "Público atendido",
+    "impactSection": "Impacto",
+    "contactSection": "Contacto"
   },
   "actions": {
     "knowAidep": "Conoce la AIDEP",
@@ -28,6 +31,7 @@
     "seeProjects": "Ver todos los proyectos",
     "seeProject": "Conocer el proyecto",
     "seeImpact": "Ver el impacto",
+    "seeAudience": "Ver el público atendido",
     "seeNews": "Ver todas las noticias",
     "seeTransparency": "Ir a transparencia",
     "seePartners": "Ver socios",
@@ -84,10 +88,6 @@
         {
           "term": "Actuación",
           "detail": "Todo el territorio brasileño, con previsión estatutaria de actuación internacional"
-        },
-        {
-          "term": "Público atendido",
-          "detail": "Niños, adolescentes, jóvenes, adultos y comunidades en situación de vulnerabilidad"
         }
       ]
     },
@@ -127,19 +127,6 @@
           "text": "Resultados que aparecen en la comunidad, no solo en el marcador."
         }
       ]
-    },
-    "reach": {
-      "eyebrow": "Alcance",
-      "title": "Actuación nacional, vocación internacional.",
-      "paragraphs": [
-        "Hoy la AIDEP actúa en todo el territorio brasileño. Su estatuto prevé la actuación en cualquier país.",
-        "Esa vocación ya está inscrita en la identidad de la asociación: el manual de marca define un color oficial para cada continente, y el verde — color principal de la AIDEP — es también el color de las Américas y de la comunicación internacional."
-      ],
-      "nationalLabel": "Actuación actual",
-      "nationalValue": "Todo el territorio brasileño",
-      "internationalLabel": "Previsión estatutaria",
-      "internationalValue": "Actuación internacional",
-      "continentsLabel": "Sistema continental de la marca"
     },
     "results": {
       "eyebrow": "Resultados",
@@ -198,11 +185,6 @@
     ]
   },
   "about": {
-    "hero": {
-      "eyebrow": "La AIDEP",
-      "title": "Una asociación construida para durar.",
-      "lead": "Asociación Internacional para el Desarrollo del Deporte y el Paradeporte."
-    },
     "positioning": {
       "eyebrow": "Posicionamiento",
       "title": "Qué es la AIDEP.",
@@ -232,14 +214,28 @@
     "audience": {
       "eyebrow": "Público atendido",
       "title": "A quién atiende la AIDEP.",
-      "description": "Más de 40 mil personas ya fueron alcanzadas por los proyectos de la asociación."
-    },
-    "reach": {
-      "eyebrow": "Actuación",
-      "title": "Dónde está la AIDEP.",
-      "paragraphs": [
-        "La actuación actual de la asociación cubre todo el territorio brasileño, con proyectos en comunidades, escuelas y espacios de formación.",
-        "El estatuto de la AIDEP prevé la actuación internacional, y la identidad de la asociación ya fue construida pensando en ese alcance."
+      "description": "Más de 40 mil personas ya fueron alcanzadas por los proyectos de la asociación. Cada grupo exige una forma propia de acoger, enseñar y acompañar.",
+      "groups": [
+        {
+          "title": "Niños",
+          "text": "Primer contacto con la práctica deportiva en los polos de las comunidades y en las escuelas, con material, espacio y acompañamiento garantizados."
+        },
+        {
+          "title": "Adolescentes",
+          "text": "Continuidad justo cuando la mayoría abandona el deporte: entrenamiento regular, convivencia y una referencia adulta cerca."
+        },
+        {
+          "title": "Jóvenes",
+          "text": "Un camino de formación más allá de ser atleta — arbitraje, organización, monitoría y los espacios de conocimiento de la asociación."
+        },
+        {
+          "title": "Adultos",
+          "text": "Profesores, entrenadores y profesionales que pasan por las formaciones y llevan la metodología a su propio trabajo."
+        },
+        {
+          "title": "Comunidades en situación de vulnerabilidad",
+          "text": "Todo el territorio entra en la cuenta: familias, escuelas y equipamientos públicos alrededor de cada polo deportivo."
+        }
       ]
     },
     "identity": {
@@ -257,42 +253,16 @@
         "La rendición de cuentas de la AIDEP se prepara mensualmente y se publica en la página de Transparencia, junto con documentos institucionales y de proyectos."
       ]
     },
-    "cta": {
-      "title": "Conoce los proyectos que lo hacen posible."
-    }
-  },
-  "projects": {
-    "hero": {
-      "eyebrow": "Proyectos",
-      "title": "Donde ocurre la transformación.",
-      "lead": "Tres frentes complementarios: el territorio, la escuela y el conocimiento."
-    },
-    "labels": {
-      "objective": "Objetivo",
-      "audience": "Público atendido",
-      "locations": "Lugar de actuación",
-      "numbers": "Números",
-      "presentation": "Presentación",
-      "methodology": "Metodología",
-      "gallery": "Galería",
-      "results": "Resultados",
-      "partners": "Socios del proyecto",
-      "relatedNews": "Noticias relacionadas",
-      "category": "Categoría",
-      "allProjects": "Todos los proyectos",
-      "nextProject": "Siguiente proyecto"
-    },
-    "cta": {
-      "title": "Apoya este proyecto.",
-      "description": "Tu aporte ayuda a mantener y ampliar la estructura que atiende a estas personas."
+    "presence": {
+      "eyebrow": "Actuación",
+      "title": "Dónde está la AIDEP.",
+      "paragraphs": [
+        "La actuación actual de la asociación cubre todo el territorio brasileño, con proyectos en comunidades, escuelas y espacios de formación.",
+        "El estatuto de la AIDEP prevé la actuación internacional, y la identidad de la asociación ya fue construida pensando en ese alcance."
+      ]
     }
   },
   "impact": {
-    "hero": {
-      "eyebrow": "Impacto",
-      "title": "Más de 40 mil personas.",
-      "lead": "El alcance de la AIDEP medido por los números informados por la asociación."
-    },
     "headline": {
       "eyebrow": "Visión general",
       "title": "El retrato de la actuación.",
@@ -322,13 +292,35 @@
         }
       ]
     },
-    "audience": {
-      "eyebrow": "Público",
-      "title": "Quiénes están detrás de los números."
-    },
     "byProject": {
       "eyebrow": "Por proyecto",
       "title": "El impacto de cada frente."
+    }
+  },
+  "projects": {
+    "hero": {
+      "eyebrow": "Proyectos",
+      "title": "Donde ocurre la transformación.",
+      "lead": "Tres frentes complementarios: el territorio, la escuela y el conocimiento."
+    },
+    "labels": {
+      "objective": "Objetivo",
+      "audience": "Público atendido",
+      "locations": "Lugar de actuación",
+      "numbers": "Números",
+      "presentation": "Presentación",
+      "methodology": "Metodología",
+      "gallery": "Galería",
+      "results": "Resultados",
+      "partners": "Socios del proyecto",
+      "relatedNews": "Noticias relacionadas",
+      "category": "Categoría",
+      "allProjects": "Todos los proyectos",
+      "nextProject": "Siguiente proyecto"
+    },
+    "cta": {
+      "title": "Apoya este proyecto.",
+      "description": "Tu aporte ayuda a mantener y ampliar la estructura que atiende a estas personas."
     }
   },
   "news": {
@@ -625,17 +617,9 @@
       "title": "AIDEP — Desarrollo humano a través del deporte y el paradeporte",
       "description": "La AIDEP es una plataforma internacional de desarrollo humano a través del deporte y el paradeporte, con proyectos de formación, inclusión y transformación social en todo Brasil."
     },
-    "about": {
-      "title": "La AIDEP",
-      "description": "Conoce la Asociación Internacional para el Desarrollo del Deporte y el Paradeporte: posicionamiento, propósito, público atendido y alcance."
-    },
     "projects": {
       "title": "Proyectos",
       "description": "Proyecto Social Coração Valente, Futsal na Escola y FutEdu Summit: los tres frentes de actuación de la AIDEP."
-    },
-    "impact": {
-      "title": "Impacto",
-      "description": "Más de 40 mil personas atendidas por los proyectos de la AIDEP en todo el territorio brasileño."
     },
     "news": {
       "title": "Noticias",
@@ -652,10 +636,6 @@
     "donate": {
       "title": "Donaciones",
       "description": "Apoya los proyectos de la AIDEP y ayuda a sostener polos deportivos, presencia en las escuelas y acciones de formación."
-    },
-    "contact": {
-      "title": "Contacto",
-      "description": "Habla con la AIDEP sobre proyectos, alianzas, prensa o apoyo."
     }
   }
 }

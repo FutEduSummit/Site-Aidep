@@ -7,6 +7,7 @@ import { ArrowDown } from 'lucide-react'
 import { ImageReveal } from '@/components/motion/image-reveal'
 import { MagneticButton } from '@/components/motion/magnetic'
 import { SplitTextReveal } from '@/components/motion/animated-text'
+import { ButtonAnchor } from '@/components/ui/anchor-link'
 import { ButtonLink } from '@/components/ui/button'
 import { MediaFrame } from '@/components/ui/media-frame'
 import { Container, Section } from '@/components/ui/section'
@@ -97,9 +98,9 @@ export function HomeHero({ locale }: { locale: Locale }) {
                 {...enter(0.68)}
               >
                 <MagneticButton>
-                  <ButtonLink href="/about" variant="accent" size="lg">
+                  <ButtonAnchor href="#a-aidep" variant="accent" size="lg">
                     {tActions('knowAidep')}
-                  </ButtonLink>
+                  </ButtonAnchor>
                 </MagneticButton>
                 <MagneticButton>
                   <ButtonLink href="/donate" variant="outline" size="lg">
@@ -136,7 +137,6 @@ export function HomeHero({ locale }: { locale: Locale }) {
               <ImageReveal animateOnMount delay={0.3} duration={DURATION.slow}>
                 <MediaFrame
                   media={getMedia('home.hero')}
-                  mediaKey="home.hero"
                   locale={locale}
                   ratio="3 / 4"
                   tone="dark"

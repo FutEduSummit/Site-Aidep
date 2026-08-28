@@ -47,25 +47,33 @@ export function ImageReveal({
       } as const)
 
   return (
-    <motion.div
-      className={cn('relative overflow-hidden', className)}
-      {...orchestration}
-      variants={{
-        hidden: { clipPath: clipFrom[direction] },
-        visible: {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          transition: transition(duration, delay),
-        },
-      }}
-    >
+    /* A máscara NÃO pode ficar neste elemento — o que carrega o gatilho.
+       `clip-path` entra na conta da área que o IntersectionObserver mede, e
+       o estado escondido recorta a moldura a zero: o observador passa a ver
+       `intersectionRatio: 0` (mesmo com o elemento em cena), `amount` nunca
+       é alcançado e a revelação que tiraria a máscara nunca dispara — a
+       imagem fica invisível para sempre. Por isso o gatilho mora aqui, sem
+       recorte, e a máscara desce uma camada por propagação de variantes. */
+    <motion.div className={cn('relative', className)} {...orchestration}>
       <motion.div
-        className="h-full w-full"
+        className="overflow-hidden"
         variants={{
-          hidden: { scale: scaleFrom },
-          visible: { scale: 1, transition: transition(duration + 0.2, delay) },
+          hidden: { clipPath: clipFrom[direction] },
+          visible: {
+            clipPath: 'inset(0% 0% 0% 0%)',
+            transition: transition(duration, delay),
+          },
         }}
       >
-        {children}
+        <motion.div
+          className="h-full w-full"
+          variants={{
+            hidden: { scale: scaleFrom },
+            visible: { scale: 1, transition: transition(duration + 0.2, delay) },
+          }}
+        >
+          {children}
+        </motion.div>
       </motion.div>
     </motion.div>
   )

@@ -18,14 +18,12 @@ export const routing = defineRouting({
   localePrefix: 'always',
   pathnames: {
     '/': '/',
-    '/about': { pt: '/a-aidep', en: '/about', es: '/la-aidep' },
     '/projects': { pt: '/projetos', en: '/projects', es: '/proyectos' },
     '/projects/[slug]': {
       pt: '/projetos/[slug]',
       en: '/projects/[slug]',
       es: '/proyectos/[slug]',
     },
-    '/impact': { pt: '/impacto', en: '/impact', es: '/impacto' },
     '/news': { pt: '/noticias', en: '/news', es: '/noticias' },
     '/news/[slug]': {
       pt: '/noticias/[slug]',
@@ -39,7 +37,6 @@ export const routing = defineRouting({
     },
     '/partners': { pt: '/parceiros', en: '/partners', es: '/socios' },
     '/donate': { pt: '/doacoes', en: '/donate', es: '/donaciones' },
-    '/contact': { pt: '/contato', en: '/contact', es: '/contacto' },
   },
 })
 

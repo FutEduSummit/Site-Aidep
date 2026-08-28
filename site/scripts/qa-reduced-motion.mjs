@@ -12,14 +12,11 @@ const CHROME =
 
 const ROUTES = [
   '/pt',
-  '/pt/a-aidep',
   '/pt/projetos',
   '/pt/projetos/coracao-valente',
-  '/pt/impacto',
   '/pt/transparencia',
   '/pt/parceiros',
   '/pt/doacoes',
-  '/pt/contato',
   '/pt/noticias',
 ]
 

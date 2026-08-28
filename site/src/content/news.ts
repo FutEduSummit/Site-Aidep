@@ -1,4 +1,4 @@
-import { exampleContentEnabled } from '@/lib/preview'
+import { exampleContentEnabled } from '@/lib/example-content'
 import { exampleNews } from './news-example'
 import type { NewsArticle } from './types'
 
@@ -9,10 +9,10 @@ import type { NewsArticle } from './types'
  * completa e pronta para receber conteúdo — manualmente ou por um CMS
  * futuro: basta que a fonte devolva objetos no formato `NewsArticle`.
  *
- * Enquanto isso, a build de pré-visualização carrega as notícias de
- * exemplo de `news-example.ts` — conteúdo de demonstração, para avaliar a
- * lista, a página de leitura e a seção da Home preenchidas. Na build
- * pública a lista é vazia e, com ela:
+ * Enquanto isso, o site carrega as notícias de exemplo de
+ * `news-example.ts` — conteúdo de demonstração, para avaliar a lista, a
+ * página de leitura e a seção da Home preenchidas. Com
+ * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` a lista é vazia e, com ela:
  *   • a seção de notícias da Home não é renderizada;
  *   • a página de Notícias exibe o estado vazio institucional;
  *   • o sitemap não gera URLs de notícia.

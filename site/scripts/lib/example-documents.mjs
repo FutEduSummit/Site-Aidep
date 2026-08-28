@@ -9,7 +9,8 @@
  * demonstração, com conteúdo fictício e a palavra EXEMPLO marcada em cada
  * página, para que a página de Transparência possa ser avaliada com a
  * lista, os filtros, a busca, a visualização e o download funcionando.
- * Só entram na build de pré-visualização (ver `src/lib/preview.ts`).
+ * Entram enquanto o conteúdo de exemplo estiver ligado (ver
+ * `src/lib/example-content.ts`).
  *
  * Campos:
  *   id           identificador estável, usado como chave de lista

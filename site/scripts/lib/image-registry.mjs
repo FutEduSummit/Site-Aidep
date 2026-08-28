@@ -1,6 +1,5 @@
 /**
- * Pedaços comuns aos dois geradores de imagem de pré-visualização
- * (`gen-preview-images.mjs`, por IA, e `fetch-preview-images.mjs`, do Pexels).
+ * Pedaços comuns ao gerador de imagens de banco (`fetch-stock-images.mjs`).
  */
 
 /** Lê largura e altura direto do JPEG (marcadores SOF). */
@@ -29,7 +28,7 @@ export function jpegSize(buffer) {
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
- * Escreve `src/content/media-preview.ts`.
+ * Escreve `src/content/media-stock.ts`.
  *
  * @param assets  chave → { src, width, height, alt: {pt,en,es}, credit? }
  * @param origin  texto que descreve de onde vieram as imagens
@@ -57,28 +56,31 @@ export function renderRegistry(assets, { origin, command }) {
   return `import type { MediaAsset } from './types'
 
 /**
- * IMAGENS DE PRÉ-VISUALIZAÇÃO — ARQUIVO GERADO
- * ============================================
+ * FOTOGRAFIAS DE BANCO — ARQUIVO GERADO
+ * =====================================
  * NÃO EDITE À MÃO. Gere de novo com:
  *
  *     ${command}
  *
  * Origem: ${origin}
  *
- * São imagens de EXEMPLO. Não retratam pessoas, projetos ou eventos reais
- * da AIDEP e não podem ser publicadas como registro institucional.
+ * São fotografias de BANCO, exibidas enquanto o registro oficial de imagens
+ * não estiver completo. Não retratam pessoas, projetos ou eventos reais da
+ * AIDEP e não podem ser apresentadas como registro institucional — o
+ * crédito do fotógrafo acompanha cada arquivo.
  *
- * Elas nunca aparecem por padrão: o site só as exibe com o interruptor de
- * pré-visualização ligado (ver \`components/ui/preview-toggle.tsx\`).
- * Quando a fotografia real chegar, cadastre-a em \`content/media.ts\` — ela
- * passa a valer sempre, com ou sem o interruptor.
+ * Nenhuma imagem deste projeto é gerada por IA.
+ *
+ * Assim que a fotografia real da AIDEP for cadastrada na mesma chave em
+ * \`content/media.ts\`, ela passa a valer e a foto de banco deixa de ser
+ * usada — ver \`getMedia()\`.
  */
-export const previewMedia: Record<string, MediaAsset> = {
+export const stockMedia: Record<string, MediaAsset> = {
 ${entries}
 }
 
-export function getPreviewMedia(key: string): MediaAsset | null {
-  return previewMedia[key] ?? null
+export function getStockMedia(key: string): MediaAsset | null {
+  return stockMedia[key] ?? null
 }
 `
 }

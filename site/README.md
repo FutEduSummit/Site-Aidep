@@ -25,10 +25,9 @@ Scripts disponíveis:
 | `npm start` | serve o build |
 | `npm run lint` | ESLint (flat config, `eslint-config-next`) |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm run images:pexels` | baixa fotos de banco para a pré-visualização das molduras |
-| `npm run images:preview` | gera por IA as imagens de pré-visualização (sem chave de API) |
+| `npm run images:stock` | baixa do Pexels as fotos de banco que preenchem as molduras |
 | `npm run docs:example` | gera os documentos de exemplo da Transparência (PDF/CSV) |
-| `npm run qa:pages <url>` | percorre todas as rotas nos 3 idiomas em 6 larguras e reporta overflow, erros de console, imagens deformadas, links quebrados e problemas de estrutura |
+| `npm run qa:pages <url>` | percorre todas as rotas nos 3 idiomas em 6 larguras e reporta overflow, erros de console, imagens deformadas ou invisíveis, links quebrados e problemas de estrutura |
 | `npm run qa:motion <url>` | audita o site com `prefers-reduced-motion: reduce` |
 | `npm run qa:interactions <url>` | testa menu mobile, troca de idioma, formulário e skip link |
 | `npm run qa:shots <url> <pasta>` | captura telas para revisão visual |
@@ -44,14 +43,61 @@ Os scripts de QA usam `puppeteer-core` com o Chrome instalado na máquina
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | URL pública, usada em canonical, hreflang, sitemap e Open Graph. Padrão: `https://aidepoficial.com` |
 | `CONTACT_WEBHOOK_URL` | Endpoint que recebe os formulários. **Enquanto não estiver definida, os formulários validam os dados, informam que o envio não está habilitado e oferecem o e-mail institucional — nunca exibem sucesso falso.** |
+| `NEXT_PUBLIC_EXAMPLE_CONTENT` | `0` desliga as notícias e os documentos de exemplo. Ligado por padrão. |
+| `PEXELS_API_KEY` | Só para rodar `npm run images:stock`. As fotos já baixadas estão versionadas. |
 
 ---
+
+## Navegação
+
+O menu lista **apenas destinos que são página de verdade**:
+
+| Item | Rota |
+| --- | --- |
+| Página inicial | `/` |
+| Projetos | `/projects` |
+| Notícias | `/news` |
+| Transparência | `/transparency` |
+| Parceiros | `/partners` |
+| Doações | `/donate` |
+
+Doações é um item de menu como os outros — não é mais um botão destacado no
+header —, e continua sendo uma página.
+
+**A Página inicial reúne o que antes eram três páginas.** “A AIDEP”,
+“Impacto” e “Contato” deixaram de existir como rota: o conteúdo inteiro das
+três virou seção da Home, na ordem em que as perguntas do visitante
+aparecem. As âncoras ficam em `src/lib/nav.ts` e são usadas pelo menu
+mobile, pelo rodapé e pelos botões da própria Home:
+
+| Âncora | Seção |
+| --- | --- |
+| `#a-aidep` | apresentação da associação, posicionamento e propósito |
+| `#publico-atendido` | público atendido — seção própria, uma faixa por público |
+| `#impacto` | números consolidados e as três escalas de atuação |
+| `#contato` | formulário e canais, no fim da página |
+
+Duas regras de navegação valem em todo o site:
+
+- **Onde estou.** O item da página atual recebe `aria-current="page"`, um
+  traço na cor institucional no desktop e a borda destacada no mobile —
+  nunca só a cor, que sozinha não é sinal acessível. Ver `isActivePath()`
+  em `src/lib/nav.ts`.
+- **Toda página abre no começo.** `ScrollReset`
+  (`src/components/motion/scroll-reset.tsx`) garante a primeira seção a cada
+  troca de rota, sem atropelar âncoras nem o voltar do navegador. Links para
+  seção da mesma página usam `ButtonAnchor`/`ArrowAnchor`
+  (`src/components/ui/anchor-link.tsx`), com seta para baixo, para não
+  parecer que toda seção é uma página nova.
+
 
 ## Estrutura
 
 ```
 messages/                 pt.json · en.json · es.json  (todo o texto do site)
 public/brand/             logotipos oficiais, por idioma e por versão
+public/images/stock/      fotografias de banco (Pexels) — nenhuma gerada por IA
+public/documentos/        documentos da Transparência
 public/og/                imagens Open Graph compostas a partir da marca
 src/
   app/[locale]/           uma pasta por rota do App Router
@@ -85,6 +131,7 @@ Nada de texto ou dado institucional mora dentro de componentes.
 | Documentos de transparência | `src/content/documents.ts` |
 | Fotografias e posts do Instagram | `src/content/media.ts` |
 | Rotas e URLs por idioma | `src/i18n/routing.ts` |
+| Itens do menu, seções da Home e página ativa | `src/lib/nav.ts` |
 | Tokens do design system | `src/app/globals.css` |
 | Curvas, durações e distâncias de animação | `src/lib/motion.ts` |
 
@@ -94,75 +141,68 @@ Nada de texto ou dado institucional mora dentro de componentes.
 2. Em `src/content/media.ts`, troque o `null` da chave por um objeto com
    `src`, `width`, `height` e `alt` nos três idiomas.
 
-Enquanto a chave estiver `null`, a moldura exibe o painel institucional
-construído com o grafismo oficial da marca — na proporção certa, sem
-deslocamento de layout e sem imagem inventada.
+Enquanto a chave estiver `null`, `getMedia()` entrega a fotografia de banco
+equivalente (ver abaixo). Sem nenhuma das duas, a moldura exibe o painel
+institucional construído com o grafismo oficial da marca — na proporção
+certa, sem deslocamento de layout e sem imagem inventada.
 
-### Ver o site com as imagens no lugar (pré-visualização)
+### As fotografias que estão no ar hoje
 
-Para avaliar o layout preenchido antes das fotografias oficiais chegarem,
-existe um jogo de **imagens de exemplo geradas por IA** e um **interruptor**
-no canto inferior direito que alterna entre elas e o painel institucional.
+**Nenhuma imagem deste projeto é gerada por IA.** O que preenche as molduras
+são **fotografias de banco do [Pexels](https://www.pexels.com/api/)**
+(licença de uso comercial livre), baixadas para `public/images/stock/` e
+versionadas junto com o código, cada uma com o crédito do fotógrafo.
 
-Há dois caminhos para preencher as molduras. A direção de arte das 28 chaves
-— proporção, termo de busca, prompt e texto alternativo nos três idiomas —
-é a mesma para os dois e mora em `scripts/lib/media-plan.mjs`. Os dois
-escrevem `src/content/media-preview.ts`, que **não deve ser editado à mão**.
+Elas aparecem sempre, sem interruptor e sem variável de ambiente: é assim
+que o site pode ser navegado e apresentado com todas as imagens no lugar
+antes de a fotografia oficial chegar.
 
-**1. Fotografia de banco — recomendado.** Fotos reais do
-[Pexels](https://www.pexels.com/api/), licença de uso comercial livre.
-Precisa de uma chave de API gratuita (sem cartão), em `.env.local`:
+A ponte entre os dois registros é `getMedia(chave)`, em
+`src/content/media.ts`:
+
+1. se a chave tiver fotografia oficial cadastrada em `media.ts`, é ela;
+2. senão, a fotografia de banco de mesma chave em `media-stock.ts`;
+3. sem nenhuma das duas, o painel institucional da marca.
+
+Ou seja: **cadastrar a foto real em `media.ts` já basta** — a de banco sai
+de cena sozinha, sem mexer em componente nenhum.
+
+| Arquivo | O que é |
+| --- | --- |
+| `src/content/media.ts` | registro oficial — **é aqui que você mexe** |
+| `src/content/media-stock.ts` | registro das fotos de banco — **gerado**, não edite |
+| `scripts/lib/media-plan.mjs` | direção de arte: proporção, termo de busca e texto alternativo de cada chave |
+| `public/images/stock/` | os arquivos JPEG e os créditos (`.credits.json`) |
+
+#### Trocar ou rebaixar uma foto de banco
+
+Precisa da chave gratuita do Pexels (sem cartão) em `.env.local`:
 
 ```bash
 PEXELS_API_KEY=sua-chave
 ```
 
 ```bash
-npm run images:pexels                              # baixa o que faltar
-npm run images:pexels -- --list home.hero          # mostra as opções da busca
-npm run images:pexels -- --force --only home.hero --pick home.hero=4
+npm run images:stock                              # baixa o que faltar
+npm run images:stock -- --list home.hero          # mostra as opções da busca
+npm run images:stock -- --force --only home.hero --pick home.hero=4
 ```
 
 Não gostou de uma foto? `--list` mostra as doze primeiras da busca com o
 nome do fotógrafo e o link; `--pick chave=N` fixa outra. A escolha fica
-guardada em `public/images/preview/.picks.json` e sobrevive ao `--force`.
-O crédito do fotógrafo vai para o campo `credit` de cada imagem.
+guardada em `public/images/stock/.picks.json` e sobrevive ao `--force`.
 
-**2. Geração por IA — sem chave nenhuma.** [Pollinations.ai](https://pollinations.ai),
-grátis e sem cadastro, também registrada como MCP em `.mcp.json`
-(`pollinations`) para ajustar uma imagem avulsa em conversa com o agente.
-
-```bash
-npm run images:preview                             # gera o que faltar
-npm run images:preview -- --force --only home.hero
-npm run images:preview -- --seed v2                # outra safra
-```
-
-O acesso anônimo só entrega o modelo `sana` e é limitado por tempo: as
-gerações saem uma a uma, e as 28 levam cerca de doze minutos. Cenas com
-muitos rostos em plano médio costumam sair deformadas — funciona bem em
-silhueta, contraluz, movimento e plano aberto.
-
-| Onde | Comportamento |
-| --- | --- |
-| `npm run dev` | interruptor sempre disponível, desligado por padrão |
-| build com `NEXT_PUBLIC_PREVIEW_IMAGES=1` | interruptor disponível — use para apresentar ao cliente |
-| build pública | interruptor não é renderizado; nenhuma página referencia imagem de exemplo |
-
-Os arquivos em `public/images/preview/` continuam sendo publicados como
-estáticos em qualquer build — nada os aponta, mas se quiser que não subam,
-apague a pasta antes do deploy.
-
-> As imagens de exemplo não retratam pessoas, projetos ou eventos reais da
-> AIDEP e não podem ser publicadas como registro institucional. Assim que a
-> fotografia real for cadastrada em `content/media.ts`, ela passa a valer
-> sempre — com ou sem o interruptor.
+> As fotografias de banco não retratam pessoas, projetos ou eventos reais da
+> AIDEP e não podem ser apresentadas como registro institucional. Assim que
+> a fotografia real for cadastrada em `content/media.ts`, ela passa a valer
+> sempre.
 
 ### Ver o site com notícias e documentos no lugar
 
-O mesmo interruptor de build que liga as imagens de exemplo liga o
+A AIDEP ainda não entregou notícias nem documentos. Para que as páginas
+possam ser avaliadas preenchidas, o site carrega **por padrão** um
 **conteúdo de exemplo**: seis notícias e doze documentos de transparência,
-nos três idiomas.
+nos três idiomas. Para desligar: `NEXT_PUBLIC_EXAMPLE_CONTENT=0`.
 
 | Arquivo | O que é |
 | --- | --- |
@@ -181,8 +221,8 @@ vazio institucional e o sitemap não gera URLs de notícia.
 > Nada disso é conteúdo da AIDEP. As notícias não relatam fato ocorrido,
 > não trazem números de atendimento e não atribuem fala a pessoa real; cada
 > documento tem a palavra EXEMPLO marcada na página e um aviso de conteúdo
-> fictício. **Nenhum dos dois chega à build pública** — o gate é o mesmo das
-> imagens (`NEXT_PUBLIC_PREVIEW_IMAGES`, ver `src/lib/preview.ts`).
+> fictício. O gate é `NEXT_PUBLIC_EXAMPLE_CONTENT` — ver
+> `src/lib/example-content.ts`.
 
 Quando o conteúdo real chegar: escreva as notícias na lista `published` de
 `src/content/news.ts` e os documentos na lista `published` de

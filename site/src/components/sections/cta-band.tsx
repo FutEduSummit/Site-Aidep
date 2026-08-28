@@ -5,17 +5,21 @@ import type { ReactNode } from 'react'
 import { MaskedWords } from '@/components/motion/animated-text'
 import { MagneticButton } from '@/components/motion/magnetic'
 import { Reveal } from '@/components/motion/reveal'
+import { ButtonAnchor, isHashHref, type HashHref } from '@/components/ui/anchor-link'
 import { ButtonLink } from '@/components/ui/button'
 import { Container, Section, type Surface } from '@/components/ui/section'
 import type { StaticPathname } from '@/i18n/routing'
 import { symbolMark } from '@/lib/brand'
 
+/** Destino de um botão: outra página do site ou uma seção desta página. */
+type CtaTarget = { href: StaticPathname | HashHref; label: string }
+
 type CtaBandProps = {
   eyebrow?: string
   title: string
   description?: string
-  primary: { href: StaticPathname; label: string }
-  secondary?: { href: StaticPathname; label: string }
+  primary: CtaTarget
+  secondary?: CtaTarget
   surface?: Surface
   id: string
   children?: ReactNode
@@ -34,6 +38,8 @@ export function CtaBand({
 }: CtaBandProps) {
   const symbol =
     surface === 'dark' ? symbolMark.white : symbolMark.black
+
+  const primaryVariant = surface === 'brand' ? 'primary' : 'accent'
 
   return (
     <Section surface={surface} ariaLabelledby={`${id}-title`}>
@@ -79,20 +85,40 @@ export function CtaBand({
             className="flex flex-col gap-4 sm:flex-row sm:flex-wrap lg:col-span-4 lg:col-start-9 lg:justify-end"
           >
             <MagneticButton>
-              <ButtonLink
-                href={primary.href}
-                variant={surface === 'brand' ? 'primary' : 'accent'}
-                size="lg"
-              >
-                {primary.label}
-              </ButtonLink>
+              {isHashHref(primary.href) ? (
+                <ButtonAnchor
+                  href={primary.href}
+                  variant={primaryVariant}
+                  size="lg"
+                >
+                  {primary.label}
+                </ButtonAnchor>
+              ) : (
+                <ButtonLink
+                  href={primary.href}
+                  variant={primaryVariant}
+                  size="lg"
+                >
+                  {primary.label}
+                </ButtonLink>
+              )}
             </MagneticButton>
 
             {secondary ? (
               <MagneticButton>
-                <ButtonLink href={secondary.href} variant="outline" size="lg">
-                  {secondary.label}
-                </ButtonLink>
+                {isHashHref(secondary.href) ? (
+                  <ButtonAnchor
+                    href={secondary.href}
+                    variant="outline"
+                    size="lg"
+                  >
+                    {secondary.label}
+                  </ButtonAnchor>
+                ) : (
+                  <ButtonLink href={secondary.href} variant="outline" size="lg">
+                    {secondary.label}
+                  </ButtonLink>
+                )}
               </MagneticButton>
             ) : null}
           </Reveal>

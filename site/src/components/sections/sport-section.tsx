@@ -31,7 +31,6 @@ export function SportSection({ locale }: { locale: Locale }) {
             <ParallaxImage distance={64} className="w-full">
               <MediaFrame
                 media={getMedia('home.sport')}
-                mediaKey="home.sport"
                 locale={locale}
                 ratio="5 / 6"
                 tone="light"

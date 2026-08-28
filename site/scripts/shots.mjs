@@ -12,11 +12,10 @@ const CHROME =
 mkdirSync(OUT, { recursive: true })
 
 const jobs = [
-  { route: '/pt', width: 1440, height: 900, offsets: [0, 900, 1900, 3200, 4600, 6200, 7600, 9000] },
+  { route: '/pt', width: 1440, height: 900, offsets: [0, 900, 1900, 3200, 4600, 6200, 7600, 9000, 10400, 11800, 13200, 14600] },
   { route: '/pt', width: 390, height: 844, offsets: [0, 800, 1700, 2800] },
   { route: '/pt/projetos/coracao-valente', width: 1440, height: 900, offsets: [0, 950, 1900] },
-  { route: '/pt/impacto', width: 1440, height: 900, offsets: [0, 900, 1800, 2700] },
-  { route: '/pt/contato', width: 1440, height: 900, offsets: [0, 850] },
+  { route: '/pt/doacoes', width: 1440, height: 900, offsets: [0, 900, 1800] },
   { route: '/pt/transparencia', width: 1440, height: 900, offsets: [0, 850] },
   { route: '/en/partners', width: 1024, height: 900, offsets: [0, 900] },
 ]

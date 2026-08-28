@@ -190,7 +190,6 @@ function StickyProject({
             <div className="col-span-7 overflow-hidden">
               <MediaFrame
                 media={getMedia(project.coverKey)}
-                mediaKey={project.coverKey}
                 locale={locale}
                 ratio="4 / 3"
                 tone="light"
