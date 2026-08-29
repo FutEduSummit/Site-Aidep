@@ -1,13 +1,10 @@
 {
-  "home.hero": "Foto: Sami  Abdullah / Pexels — https://www.pexels.com/photo/people-playing-soccer-11906365/",
+  "home.hero": "Foto: César O'neill / Pexels — https://www.pexels.com/photo/youth-soccer-match-during-golden-hour-31422302/",
   "home.about": "Foto: Марина  Шишкина / Pexels — https://www.pexels.com/photo/football-team-having-a-meeting-10347865/",
-  "home.positioning": "Foto: Tim Mossholder / Pexels — https://www.pexels.com/photo/a-man-with-headphones-holding-a-tablet-beside-a-man-wearing-a-football-uniform-9539098/",
   "home.audience": "Foto: Antonius Ferret / Pexels — https://www.pexels.com/photo/little-girls-playing-superheros-outdoors-on-a-court-in-city-5275833/",
   "home.sport": "Foto: Jean-Daniel Francoeur / Pexels — https://www.pexels.com/photo/men-playing-football-on-a-sports-hall-14690053/",
   "home.parasport": "Foto: Kampus Production / Pexels — https://www.pexels.com/photo/men-on-wheelchairs-playing-basketball-6763747/",
   "home.presence": "Foto: Josh Sorenson / Pexels — https://www.pexels.com/photo/little-big-planet-photography-of-brown-concrete-buildings-1311155/",
-  "home.identity": "Foto: Anastasia  Shuraeva / Pexels — https://www.pexels.com/photo/group-of-people-in-black-and-white-uniform-on-green-grass-field-9442069/",
-  "home.governance": "Foto: MART  PRODUCTION / Pexels — https://www.pexels.com/photo/photo-of-papers-on-table-7605981/",
   "home.contact": "Foto: olia danilevich / Pexels — https://www.pexels.com/photo/people-working-together-at-the-office-6326260/",
   "project.coracao-valente.cover": "Foto: RDNE Stock project / Pexels — https://www.pexels.com/photo/kids-playing-basketball-with-their-coach-8336951/",
   "project.futsal-na-escola.cover": "Foto: cottonbro studio / Pexels — https://www.pexels.com/photo/class-of-students-at-a-school-gym-7396377/",
@@ -17,5 +14,13 @@
   "news.coracao-valente-nova-turma-aracaju": "Foto: cottonbro studio / Pexels — https://www.pexels.com/photo/children-lined-up-beside-their-teacher-7207560/",
   "news.futsal-na-escola-formacao-de-professores": "Foto: cottonbro studio / Pexels — https://www.pexels.com/photo/a-male-coach-talking-to-his-students-7207366/",
   "news.oficinas-de-paradesporto-nos-polos": "Foto: Kampus Production / Pexels — https://www.pexels.com/photo/men-playing-basketball-in-a-court-6763766/",
-  "news.articulacao-internacional-2027": "Foto: fauxels / Pexels — https://www.pexels.com/photo/group-of-people-sitting-indoors-3184319/"
+  "news.articulacao-internacional-2027": "Foto: fauxels / Pexels — https://www.pexels.com/photo/group-of-people-sitting-indoors-3184319/",
+  "home.impact.banner": "Foto: Thirdman / Pexels — https://www.pexels.com/photo/children-having-fun-playing-soccer-8927016/",
+  "home.partnership.banner": "Foto: Anastasia  Shuraeva / Pexels — https://www.pexels.com/photo/team-of-football-players-together-with-their-coach-9501968/",
+  "home.donate.banner": "Foto: Pew Nguyen / Pexels — https://www.pexels.com/photo/children-playing-soccer-in-lush-outdoor-setting-36871452/",
+  "page.projects.banner": "Foto: Ridwan Nugraha / Pexels — https://www.pexels.com/photo/tennis-coaching-lesson-on-outdoor-court-35214649/",
+  "page.news.banner": "Foto: Rodolfo Quirós / Pexels — https://www.pexels.com/photo/black-conference-journalism-news-2040015/",
+  "page.transparency.banner": "Foto: RDNE Stock project / Pexels — https://www.pexels.com/photo/a-person-wearing-white-long-sleeves-holding-a-piece-of-paper-on-a-wooden-table-9034223/",
+  "page.partners.banner": "Foto: George Morina / Pexels — https://www.pexels.com/photo/business-people-doing-handshake-6918529/",
+  "page.donate.banner": "Foto: Long Bà Mùi / Pexels — https://www.pexels.com/photo/smiling-boys-in-soccer-t-shirts-21033099/"
 }

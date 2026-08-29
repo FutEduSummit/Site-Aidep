@@ -7,7 +7,6 @@ import { ContentBlock } from '@/components/sections/content-block'
 import { CtaBand } from '@/components/sections/cta-band'
 import { HomeAbout } from '@/components/sections/home-about'
 import { HomeHero } from '@/components/sections/home-hero'
-import { ImpactNarrative } from '@/components/sections/impact-narrative'
 import { InstagramSection } from '@/components/sections/instagram-section'
 import { MetricsBand } from '@/components/sections/metrics-band'
 import { NewsPreview } from '@/components/sections/news-preview'
@@ -67,22 +66,11 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <HomeHero locale={locale} />
+      <HomeHero />
 
       {/* ---- Quem somos ------------------------------------------- */}
 
       <HomeAbout locale={locale} />
-
-      <ContentBlock
-        id="a-aidep-posicionamento"
-        locale={locale}
-        surface="muted"
-        eyebrow={tAbout('positioning.eyebrow')}
-        title={tAbout('positioning.title')}
-        paragraphs={tAbout.raw('positioning.paragraphs') as string[]}
-        mediaKey="home.positioning"
-        mediaRatio="4 / 5"
-      />
 
       <PurposeSection />
 
@@ -100,9 +88,8 @@ export default async function HomePage({ params }: Props) {
         eyebrow={tImpact('headline.eyebrow')}
         title={tImpact('headline.title')}
         description={tImpact('headline.description')}
+        mediaKey="home.impact.banner"
       />
-
-      <ImpactNarrative />
 
       <ResultsRows
         id="home-results"
@@ -136,29 +123,6 @@ export default async function HomePage({ params }: Props) {
         mediaSide="left"
       />
 
-      <ContentBlock
-        id="a-aidep-identidade"
-        locale={locale}
-        surface="light"
-        eyebrow={tAbout('identity.eyebrow')}
-        title={tAbout('identity.title')}
-        paragraphs={tAbout.raw('identity.paragraphs') as string[]}
-        mediaKey="home.identity"
-        mediaRatio="4 / 5"
-      />
-
-      <ContentBlock
-        id="a-aidep-governanca"
-        locale={locale}
-        surface="muted"
-        eyebrow={tAbout('governance.eyebrow')}
-        title={tAbout('governance.title')}
-        paragraphs={tAbout.raw('governance.paragraphs') as string[]}
-        mediaKey="home.governance"
-        mediaRatio="4 / 3"
-        mediaSide="left"
-      />
-
       {/* ---- Quem caminha junto, e o que está acontecendo --------- */}
 
       <PartnersStrip partners={partners} locale={locale} surface="light" />
@@ -171,12 +135,13 @@ export default async function HomePage({ params }: Props) {
 
       <CtaBand
         id="home-partnership"
-        surface="light"
+        surface="dark"
         eyebrow={t('partnershipCta.eyebrow')}
         title={t('partnershipCta.title')}
         description={t('partnershipCta.description')}
         primary={{ href: '/partners', label: tActions('becomePartner') }}
         secondary={{ href: '#contato', label: tActions('contact') }}
+        mediaKey="home.partnership.banner"
       />
 
       <CtaBand
@@ -187,6 +152,7 @@ export default async function HomePage({ params }: Props) {
         description={t('donateCta.description')}
         primary={{ href: '/donate', label: tActions('donate') }}
         secondary={{ href: '/transparency', label: tActions('seeTransparency') }}
+        mediaKey="home.donate.banner"
       />
 
       <ContactSection locale={locale} />

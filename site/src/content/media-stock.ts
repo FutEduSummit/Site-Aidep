@@ -23,14 +23,14 @@ import type { MediaAsset } from './types'
 export const stockMedia: Record<string, MediaAsset> = {
   'home.hero': {
     src: '/images/stock/home.hero.jpg',
-    width: 867,
-    height: 1300,
+    width: 1880,
+    height: 1253,
     alt: {
-      pt: "Jovem atleta em uma quadra comunitária ao entardecer",
-      en: "Young athlete on a community court at dusk",
-      es: "Joven atleta en una cancha comunitaria al atardecer",
+      pt: "Jovens em treino de futebol em uma quadra comunitária ao entardecer",
+      en: "Young players training football on a community pitch at dusk",
+      es: "Jóvenes entrenando fútbol en una cancha comunitaria al atardecer",
     },
-    credit: "Foto: Sami  Abdullah / Pexels — https://www.pexels.com/photo/people-playing-soccer-11906365/",
+    credit: "Foto: César O'neill / Pexels — https://www.pexels.com/photo/youth-soccer-match-during-golden-hour-31422302/",
   },
   'home.about': {
     src: '/images/stock/home.about.jpg',
@@ -42,17 +42,6 @@ export const stockMedia: Record<string, MediaAsset> = {
       es: "Entrenador hablando con niños antes del entrenamiento",
     },
     credit: "Foto: Марина  Шишкина / Pexels — https://www.pexels.com/photo/football-team-having-a-meeting-10347865/",
-  },
-  'home.positioning': {
-    src: '/images/stock/home.positioning.jpg',
-    width: 867,
-    height: 1300,
-    alt: {
-      pt: "Educador esportivo acompanhando um treino à beira da quadra",
-      en: "Sports educator watching a session from the sideline",
-      es: "Educador deportivo siguiendo un entrenamiento junto a la cancha",
-    },
-    credit: "Foto: Tim Mossholder / Pexels — https://www.pexels.com/photo/a-man-with-headphones-holding-a-tablet-beside-a-man-wearing-a-football-uniform-9539098/",
   },
   'home.audience': {
     src: '/images/stock/home.audience.jpg',
@@ -98,28 +87,6 @@ export const stockMedia: Record<string, MediaAsset> = {
     },
     credit: "Foto: Josh Sorenson / Pexels — https://www.pexels.com/photo/little-big-planet-photography-of-brown-concrete-buildings-1311155/",
   },
-  'home.identity': {
-    src: '/images/stock/home.identity.jpg',
-    width: 867,
-    height: 1300,
-    alt: {
-      pt: "Time reunido em círculo no centro da quadra",
-      en: "Team gathered in a circle at the centre of the court",
-      es: "Equipo reunido en círculo en el centro de la cancha",
-    },
-    credit: "Foto: Anastasia  Shuraeva / Pexels — https://www.pexels.com/photo/group-of-people-in-black-and-white-uniform-on-green-grass-field-9442069/",
-  },
-  'home.governance': {
-    src: '/images/stock/home.governance.jpg',
-    width: 1880,
-    height: 1253,
-    alt: {
-      pt: "Relatórios impressos organizados sobre uma mesa",
-      en: "Printed reports organised on a table",
-      es: "Informes impresos organizados sobre una mesa",
-    },
-    credit: "Foto: MART  PRODUCTION / Pexels — https://www.pexels.com/photo/photo-of-papers-on-table-7605981/",
-  },
   'home.contact': {
     src: '/images/stock/home.contact.jpg',
     width: 1880,
@@ -130,6 +97,94 @@ export const stockMedia: Record<string, MediaAsset> = {
       es: "Equipo en una reunión de trabajo en una oficina luminosa",
     },
     credit: "Foto: olia danilevich / Pexels — https://www.pexels.com/photo/people-working-together-at-the-office-6326260/",
+  },
+  'home.impact.banner': {
+    src: '/images/stock/home.impact.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Crianças comemorando juntas em um campo esportivo",
+      en: "Children celebrating together on a sports field",
+      es: "Niños celebrando juntos en un campo deportivo",
+    },
+    credit: "Foto: Thirdman / Pexels — https://www.pexels.com/photo/children-having-fun-playing-soccer-8927016/",
+  },
+  'home.partnership.banner': {
+    src: '/images/stock/home.partnership.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Treinadores reunidos com o time à beira da quadra",
+      en: "Coaches meeting with the team at the side of the court",
+      es: "Entrenadores reunidos con el equipo junto a la cancha",
+    },
+    credit: "Foto: Anastasia  Shuraeva / Pexels — https://www.pexels.com/photo/team-of-football-players-together-with-their-coach-9501968/",
+  },
+  'home.donate.banner': {
+    src: '/images/stock/home.donate.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Crianças jogando futebol juntas em um campo comunitário",
+      en: "Children playing football together on a community field",
+      es: "Niños jugando fútbol juntos en un campo comunitario",
+    },
+    credit: "Foto: Pew Nguyen / Pexels — https://www.pexels.com/photo/children-playing-soccer-in-lush-outdoor-setting-36871452/",
+  },
+  'page.projects.banner': {
+    src: '/images/stock/page.projects.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Treino esportivo com jovens em quadra ao ar livre",
+      en: "Youth sports session on an outdoor court",
+      es: "Entrenamiento deportivo con jóvenes en cancha al aire libre",
+    },
+    credit: "Foto: Ridwan Nugraha / Pexels — https://www.pexels.com/photo/tennis-coaching-lesson-on-outdoor-court-35214649/",
+  },
+  'page.news.banner': {
+    src: '/images/stock/page.news.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Registro de bastidores durante um evento esportivo",
+      en: "Behind-the-scenes record during a sports event",
+      es: "Registro de bastidores durante un evento deportivo",
+    },
+    credit: "Foto: Rodolfo Quirós / Pexels — https://www.pexels.com/photo/black-conference-journalism-news-2040015/",
+  },
+  'page.transparency.banner': {
+    src: '/images/stock/page.transparency.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Documentos e relatórios organizados sobre uma mesa de trabalho",
+      en: "Documents and reports organised on a working desk",
+      es: "Documentos e informes organizados sobre una mesa de trabajo",
+    },
+    credit: "Foto: RDNE Stock project / Pexels — https://www.pexels.com/photo/a-person-wearing-white-long-sleeves-holding-a-piece-of-paper-on-a-wooden-table-9034223/",
+  },
+  'page.partners.banner': {
+    src: '/images/stock/page.partners.banner.jpg',
+    width: 1880,
+    height: 1255,
+    alt: {
+      pt: "Reunião entre parceiros institucionais em um escritório claro",
+      en: "Meeting between institutional partners in a bright office",
+      es: "Reunión entre socios institucionales en una oficina luminosa",
+    },
+    credit: "Foto: George Morina / Pexels — https://www.pexels.com/photo/business-people-doing-handshake-6918529/",
+  },
+  'page.donate.banner': {
+    src: '/images/stock/page.donate.banner.jpg',
+    width: 1880,
+    height: 1253,
+    alt: {
+      pt: "Crianças sorrindo durante uma atividade esportiva comunitária",
+      en: "Children smiling during a community sports activity",
+      es: "Niños sonriendo durante una actividad deportiva comunitaria",
+    },
+    credit: "Foto: Long Bà Mùi / Pexels — https://www.pexels.com/photo/smiling-boys-in-soccer-t-shirts-21033099/",
   },
   'project.coracao-valente.cover': {
     src: '/images/stock/project.coracao-valente.cover.jpg',

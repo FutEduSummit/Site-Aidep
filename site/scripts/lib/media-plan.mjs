@@ -23,12 +23,12 @@ export const PLAN = {
   /* ---------------------------------------------------------------- */
 
   'home.hero': {
-    ratio: [3, 4],
-    query: 'young football player standing on street court sunset',
+    ratio: [21, 9],
+    query: 'youth football team training community pitch sunset wide',
     alt: {
-      pt: 'Jovem atleta em uma quadra comunitária ao entardecer',
-      en: 'Young athlete on a community court at dusk',
-      es: 'Joven atleta en una cancha comunitaria al atardecer',
+      pt: 'Jovens em treino de futebol em uma quadra comunitária ao entardecer',
+      en: 'Young players training football on a community pitch at dusk',
+      es: 'Jóvenes entrenando fútbol en una cancha comunitaria al atardecer',
     },
   },
   'home.about': {
@@ -38,15 +38,6 @@ export const PLAN = {
       pt: 'Treinador conversando com crianças antes do treino',
       en: 'Coach talking with children before training',
       es: 'Entrenador hablando con niños antes del entrenamiento',
-    },
-  },
-  'home.positioning': {
-    ratio: [4, 5],
-    query: 'sports educator watching youth training session sideline',
-    alt: {
-      pt: 'Educador esportivo acompanhando um treino à beira da quadra',
-      en: 'Sports educator watching a session from the sideline',
-      es: 'Educador deportivo siguiendo un entrenamiento junto a la cancha',
     },
   },
   'home.audience': {
@@ -85,24 +76,6 @@ export const PLAN = {
       es: 'Vista aérea de una cancha entre casas',
     },
   },
-  'home.identity': {
-    ratio: [4, 5],
-    query: 'football team huddle circle on pitch',
-    alt: {
-      pt: 'Time reunido em círculo no centro da quadra',
-      en: 'Team gathered in a circle at the centre of the court',
-      es: 'Equipo reunido en círculo en el centro de la cancha',
-    },
-  },
-  'home.governance': {
-    ratio: [4, 3],
-    query: 'printed reports organised on table office',
-    alt: {
-      pt: 'Relatórios impressos organizados sobre uma mesa',
-      en: 'Printed reports organised on a table',
-      es: 'Informes impresos organizados sobre una mesa',
-    },
-  },
   'home.contact': {
     ratio: [4, 3],
     query: 'team working meeting bright office',
@@ -110,6 +83,84 @@ export const PLAN = {
       pt: 'Equipe em reunião de trabalho em um escritório claro',
       en: 'Team in a working meeting in a bright office',
       es: 'Equipo en una reunión de trabajo en una oficina luminosa',
+    },
+  },
+
+  'home.impact.banner': {
+    ratio: [21, 9],
+    query: 'children celebrating together on sports field wide',
+    alt: {
+      pt: 'Crianças comemorando juntas em um campo esportivo',
+      en: 'Children celebrating together on a sports field',
+      es: 'Niños celebrando juntos en un campo deportivo',
+    },
+  },
+  'home.partnership.banner': {
+    ratio: [21, 9],
+    query: 'sport coaches planning meeting youth team court',
+    alt: {
+      pt: 'Treinadores reunidos com o time à beira da quadra',
+      en: 'Coaches meeting with the team at the side of the court',
+      es: 'Entrenadores reunidos con el equipo junto a la cancha',
+    },
+  },
+  'home.donate.banner': {
+    ratio: [21, 9],
+    query: 'children playing football together community field wide',
+    alt: {
+      pt: 'Crianças jogando futebol juntas em um campo comunitário',
+      en: 'Children playing football together on a community field',
+      es: 'Niños jugando fútbol juntos en un campo comunitario',
+    },
+  },
+
+  /* ---------------------------------------------------------------- */
+  /* Faixas das páginas internas                                      */
+  /* ---------------------------------------------------------------- */
+
+  'page.projects.banner': {
+    ratio: [21, 9],
+    query: 'youth sports training session outdoor court wide',
+    alt: {
+      pt: 'Treino esportivo com jovens em quadra ao ar livre',
+      en: 'Youth sports session on an outdoor court',
+      es: 'Entrenamiento deportivo con jóvenes en cancha al aire libre',
+    },
+  },
+  'page.news.banner': {
+    ratio: [21, 9],
+    query: 'sports journalist notebook stadium press wide',
+    alt: {
+      pt: 'Registro de bastidores durante um evento esportivo',
+      en: 'Behind-the-scenes record during a sports event',
+      es: 'Registro de bastidores durante un evento deportivo',
+    },
+  },
+  'page.transparency.banner': {
+    ratio: [21, 9],
+    query: 'documents reports desk office wide',
+    alt: {
+      pt: 'Documentos e relatórios organizados sobre uma mesa de trabalho',
+      en: 'Documents and reports organised on a working desk',
+      es: 'Documentos e informes organizados sobre una mesa de trabajo',
+    },
+  },
+  'page.partners.banner': {
+    ratio: [21, 9],
+    query: 'business partners meeting handshake bright office wide',
+    alt: {
+      pt: 'Reunião entre parceiros institucionais em um escritório claro',
+      en: 'Meeting between institutional partners in a bright office',
+      es: 'Reunión entre socios institucionales en una oficina luminosa',
+    },
+  },
+  'page.donate.banner': {
+    ratio: [21, 9],
+    query: 'community sports children smiling field wide',
+    alt: {
+      pt: 'Crianças sorrindo durante uma atividade esportiva comunitária',
+      en: 'Children smiling during a community sports activity',
+      es: 'Niños sonriendo durante una actividad deportiva comunitaria',
     },
   },
 

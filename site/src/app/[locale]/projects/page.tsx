@@ -35,6 +35,7 @@ export default async function ProjectsPage({ params }: Props) {
         eyebrow={t('hero.eyebrow')}
         title={t('hero.title')}
         lead={t('hero.lead')}
+        mediaKey="page.projects.banner"
         aside={
           <p className="border-t border-(--border) pt-6 text-micro uppercase leading-relaxed tracking-[0.14em] text-(--fg-subtle)">
             {tHome('projects.description')}
@@ -47,6 +48,7 @@ export default async function ProjectsPage({ params }: Props) {
       <CtaBand
         id="projects-cta"
         surface="brand"
+        mediaKey="home.donate.banner"
         eyebrow={tHome('donateCta.eyebrow')}
         title={tHome('donateCta.title')}
         description={tHome('donateCta.description')}

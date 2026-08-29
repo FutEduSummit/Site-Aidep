@@ -39,6 +39,7 @@ export default async function PartnersPage({ params }: Props) {
         eyebrow={t('hero.eyebrow')}
         title={t('hero.title')}
         lead={t('hero.lead')}
+        mediaKey="page.partners.banner"
       />
 
       <Section surface="light" ariaLabelledby="partners-list-title">

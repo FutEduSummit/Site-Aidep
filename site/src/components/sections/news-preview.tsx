@@ -46,7 +46,6 @@ export function NewsPreview({
               <NewsCard
                 article={article}
                 locale={locale}
-                cursorLabel={tActions('readMore')}
               />
             </StaggerItem>
           ))}

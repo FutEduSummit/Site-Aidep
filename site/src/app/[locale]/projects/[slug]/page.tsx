@@ -90,6 +90,7 @@ export default async function ProjectPage({ params }: Props) {
         eyebrow={project.category[locale]}
         title={project.name}
         lead={project.summary[locale]}
+        mediaKey={project.coverKey}
         aside={
           <dl className="flex flex-col gap-6">
             {project.metrics.slice(0, 2).map((metric) => (
@@ -125,8 +126,6 @@ export default async function ProjectPage({ params }: Props) {
         eyebrow={t('labels.presentation')}
         title={project.summary[locale]}
         paragraphs={project.description[locale]}
-        mediaKey={project.coverKey}
-        mediaRatio="4 / 5"
       />
 
       <Section surface="muted" ariaLabelledby="project-details-title">
@@ -323,7 +322,6 @@ export default async function ProjectPage({ params }: Props) {
                   <NewsCard
                     article={article}
                     locale={locale}
-                    cursorLabel={tActions('readMore')}
                   />
                 </StaggerItem>
               ))}
@@ -335,6 +333,7 @@ export default async function ProjectPage({ params }: Props) {
       <CtaBand
         id="project-cta"
         surface="brand"
+        mediaKey="home.donate.banner"
         title={t('cta.title')}
         description={t('cta.description')}
         primary={{ href: '/donate', label: tActions('donate') }}

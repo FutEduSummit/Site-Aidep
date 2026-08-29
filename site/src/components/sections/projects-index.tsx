@@ -45,7 +45,6 @@ export function ProjectsIndex({
                   pathname: '/projects/[slug]',
                   params: { slug: project.slug },
                 }}
-                data-cursor-label={tActions('seeProject')}
                 className="group/item flex flex-col gap-8 outline-offset-8 lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8"
               >
                 <ImageReveal

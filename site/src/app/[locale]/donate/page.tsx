@@ -52,6 +52,7 @@ export default async function DonatePage({ params }: Props) {
         eyebrow={t('hero.eyebrow')}
         title={t('hero.title')}
         lead={t('hero.lead')}
+        mediaKey="page.donate.banner"
       />
 
       <Section surface="light" ariaLabelledby="donate-impact-title">

@@ -217,7 +217,6 @@ export default async function ArticlePage({ params }: Props) {
                   <NewsCard
                     article={item}
                     locale={locale}
-                    cursorLabel={tActions('readMore')}
                   />
                 </StaggerItem>
               ))}

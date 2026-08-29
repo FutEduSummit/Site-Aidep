@@ -39,6 +39,7 @@ export default async function NewsPage({ params }: Props) {
         eyebrow={t('hero.eyebrow')}
         title={t('hero.title')}
         lead={t('hero.lead')}
+        mediaKey="page.news.banner"
       />
 
       <Section surface="light" ariaLabel={t('labels.readingList')}>
@@ -53,7 +54,6 @@ export default async function NewsPage({ params }: Props) {
                   <NewsCard
                     article={article}
                     locale={locale}
-                    cursorLabel={tActions('readMore')}
                   />
                 </StaggerItem>
               ))}

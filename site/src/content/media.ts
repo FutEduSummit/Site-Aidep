@@ -23,8 +23,8 @@ import type { MediaAsset } from './types'
  * Exemplo:
  *   'home.hero': {
  *     src: '/images/home/hero.webp',
- *     width: 2400,
- *     height: 1600,
+ *     width: 2560,
+ *     height: 1100,
  *     alt: {
  *       pt: 'Crianças em treino de futebol em um polo esportivo da AIDEP',
  *       en: 'Children training football at an AIDEP sports hub',
@@ -36,14 +36,23 @@ export const media: Record<string, MediaAsset | null> = {
   /* Página inicial */
   'home.hero': null,
   'home.about': null,
-  'home.positioning': null,
   'home.audience': null,
   'home.sport': null,
   'home.parasport': null,
   'home.presence': null,
-  'home.identity': null,
-  'home.governance': null,
   'home.contact': null,
+
+  /* Faixas de fundo — fotografia sangrada atrás de uma seção inteira.
+     Pedem imagem larga (21/9) e com espaço livre à esquerda, onde entra o
+     texto. Ver `components/ui/section-banner.tsx`. */
+  'home.impact.banner': null,
+  'home.partnership.banner': null,
+  'home.donate.banner': null,
+  'page.projects.banner': null,
+  'page.news.banner': null,
+  'page.transparency.banner': null,
+  'page.partners.banner': null,
+  'page.donate.banner': null,
 
   /* Projetos */
   'project.coracao-valente.cover': null,

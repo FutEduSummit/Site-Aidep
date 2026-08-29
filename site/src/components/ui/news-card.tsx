@@ -15,17 +15,14 @@ const localeTag: Record<Locale, string> = {
 export function NewsCard({
   article,
   locale,
-  cursorLabel,
 }: {
   article: NewsArticle
   locale: Locale
-  cursorLabel: string
 }) {
   return (
     <article className="h-full">
       <Link
         href={{ pathname: '/news/[slug]', params: { slug: article.slug } }}
-        data-cursor-label={cursorLabel}
         className="group/news flex h-full flex-col gap-5 outline-offset-8"
       >
         <div className="overflow-hidden">

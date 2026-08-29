@@ -19,7 +19,6 @@ type ProjectCardProps = {
   project: Project
   locale: Locale
   index: number
-  cursorLabel: string
   className?: string
   /** `feature` usa composição editorial grande; `list` é a versão compacta. */
   variant?: 'feature' | 'list'
@@ -29,7 +28,6 @@ export function ProjectCard({
   project,
   locale,
   index,
-  cursorLabel,
   className,
   variant = 'feature',
 }: ProjectCardProps) {
@@ -46,7 +44,6 @@ export function ProjectCard({
     >
       <Link
         href={{ pathname: '/projects/[slug]', params: { slug: project.slug } }}
-        data-cursor-label={cursorLabel}
         className="group/card flex h-full flex-col gap-6 outline-offset-8"
       >
         <div className="flex items-baseline justify-between gap-4">

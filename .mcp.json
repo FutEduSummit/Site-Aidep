@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "pollinations": {
-      "command": "npx",
-      "args": ["-y", "@pollinations/mcp"],
-      "env": {}
-    }
-  }
-}

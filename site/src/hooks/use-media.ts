@@ -25,7 +25,7 @@ export function useMediaQuery(query: string) {
 
 /**
  * `true` apenas em dispositivos com ponteiro preciso (mouse/trackpad).
- * Todos os efeitos de mouse — magnético, spotlight, tilt, cursor — dependem
+ * Todos os efeitos de mouse — magnético, spotlight, tilt — dependem
  * disto, garantindo que nada no site dependa de hover em telas de toque.
  */
 export function usePointerFine() {

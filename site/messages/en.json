@@ -78,6 +78,7 @@
       "title": "A human development platform built on the ground.",
       "paragraphs": [
         "We bring projects, schools, methodologies and initiatives together under a single institutional structure. Sport and parasport are the means; developing people is the goal.",
+        "We do not work through isolated actions: every project enters this structure with follow-up, records and accountability.",
         "We operate across the whole of Brazil, and our statute provides for international operation."
       ],
       "highlights": [
@@ -185,14 +186,6 @@
     ]
   },
   "about": {
-    "positioning": {
-      "eyebrow": "Positioning",
-      "title": "What AIDEP is.",
-      "paragraphs": [
-        "AIDEP is an international platform for human development through sport and parasport, bringing together projects, schools, methodologies and initiatives dedicated to education, inclusion and social transformation.",
-        "The association does not work through isolated actions: every project is part of the same institutional structure, with follow-up, records and accountability."
-      ]
-    },
     "purpose": {
       "eyebrow": "Purpose",
       "title": "Three commitments.",
@@ -238,21 +231,6 @@
         }
       ]
     },
-    "identity": {
-      "eyebrow": "Identity",
-      "title": "A brand designed for the world.",
-      "paragraphs": [
-        "The AIDEP symbol is made of modules organised along a trajectory — people in movement who, together, form a sphere.",
-        "The brand manual defines an official colour for each continent. Green carries two roles: it is the main colour of the association and the colour of the Americas, moving between continental and international communication."
-      ]
-    },
-    "governance": {
-      "eyebrow": "Governance",
-      "title": "Transparency as method.",
-      "paragraphs": [
-        "The accountability of AIDEP is prepared every month and published on the Transparency page, together with institutional and project documents."
-      ]
-    },
     "presence": {
       "eyebrow": "Operation",
       "title": "Where AIDEP is.",
@@ -267,30 +245,6 @@
       "eyebrow": "Overview",
       "title": "The picture of the work.",
       "description": "Consolidated figures across every project and initiative."
-    },
-    "narrative": {
-      "eyebrow": "How the impact is built",
-      "title": "Three scales of action.",
-      "steps": [
-        {
-          "title": "The community",
-          "text": "Sports hubs in communities and regions of social vulnerability, where Coração Valente serves 1,800 children in Aracaju and 700 in the Federal District.",
-          "metric": "2,500",
-          "metricLabel": "children reached"
-        },
-        {
-          "title": "The school",
-          "text": "Futsal na Escola brings sports practice inside the school environment, present in 12 cities.",
-          "metric": "12",
-          "metricLabel": "cities"
-        },
-        {
-          "title": "Knowledge",
-          "text": "FutEdu Summit gathers professionals and institutions of football, futsal and beach soccer at Arena da Baixada.",
-          "metric": "7k",
-          "metricLabel": "participants"
-        }
-      ]
     },
     "byProject": {
       "eyebrow": "By project",

@@ -7,6 +7,8 @@ import { MagneticButton } from '@/components/motion/magnetic'
 import { Reveal } from '@/components/motion/reveal'
 import { ButtonAnchor, isHashHref, type HashHref } from '@/components/ui/anchor-link'
 import { ButtonLink } from '@/components/ui/button'
+import { SectionBanner } from '@/components/ui/section-banner'
+import { getMedia } from '@/content/media'
 import { Container, Section, type Surface } from '@/components/ui/section'
 import type { StaticPathname } from '@/i18n/routing'
 import { symbolMark } from '@/lib/brand'
@@ -23,6 +25,8 @@ type CtaBandProps = {
   surface?: Surface
   id: string
   children?: ReactNode
+  /** Faixa de fotografia ao fundo — chave do registro de mídia. */
+  mediaKey?: string
 }
 
 /** Chamada institucional de fim de página, com o grafismo oficial ao fundo. */
@@ -35,23 +39,31 @@ export function CtaBand({
   surface = 'light',
   id,
   children,
+  mediaKey,
 }: CtaBandProps) {
   const symbol =
     surface === 'dark' ? symbolMark.white : symbolMark.black
 
   const primaryVariant = surface === 'brand' ? 'primary' : 'accent'
 
+  const bannerTone = surface === 'brand' ? 'brand' : surface === 'dark' ? 'dark' : 'light'
+  const hasBanner = Boolean(mediaKey && getMedia(mediaKey))
+
   return (
     <Section surface={surface} ariaLabelledby={`${id}-title`}>
-      <Image
-        src={symbol.src}
-        alt=""
-        aria-hidden="true"
-        width={symbol.width}
-        height={symbol.height}
-        sizes="(max-width: 768px) 100vw, 50vw"
-        className="pointer-events-none absolute -right-[14%] -top-[30%] -z-10 h-[170%] w-auto max-w-none object-contain opacity-[0.06]"
-      />
+      {hasBanner && mediaKey ? (
+        <SectionBanner mediaKey={mediaKey} tone={bannerTone} />
+      ) : (
+        <Image
+          src={symbol.src}
+          alt=""
+          aria-hidden="true"
+          width={symbol.width}
+          height={symbol.height}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="pointer-events-none absolute -right-[14%] -top-[30%] -z-10 h-[170%] w-auto max-w-none object-contain opacity-[0.06]"
+        />
+      )}
 
       <Container>
         <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:items-end lg:gap-8">

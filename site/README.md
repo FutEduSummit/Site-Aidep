@@ -4,7 +4,7 @@ Site institucional da **Associação Internacional para o Desenvolvimento do
 Desporto e Paradesporto (AIDEP)**, em português, inglês e espanhol.
 
 Next.js (App Router) · React · TypeScript · Tailwind CSS v4 · Motion for React ·
-GSAP/ScrollTrigger · next-intl · React Hook Form + Zod.
+next-intl · React Hook Form + Zod.
 
 ---
 
@@ -72,9 +72,9 @@ mobile, pelo rodapé e pelos botões da própria Home:
 
 | Âncora | Seção |
 | --- | --- |
-| `#a-aidep` | apresentação da associação, posicionamento e propósito |
+| `#a-aidep` | apresentação da associação e propósito |
 | `#publico-atendido` | público atendido — seção própria, uma faixa por público |
-| `#impacto` | números consolidados e as três escalas de atuação |
+| `#impacto` | números consolidados e resultados por projeto |
 | `#contato` | formulário e canais, no fim da página |
 
 Duas regras de navegação valem em todo o site:
@@ -145,6 +145,30 @@ Enquanto a chave estiver `null`, `getMedia()` entrega a fotografia de banco
 equivalente (ver abaixo). Sem nenhuma das duas, a moldura exibe o painel
 institucional construído com o grafismo oficial da marca — na proporção
 certa, sem deslocamento de layout e sem imagem inventada.
+
+### Faixas de fundo (banners)
+
+Algumas seções não têm moldura ao lado do texto: a fotografia ocupa a seção
+inteira, sangrada, com o conteúdo por cima — o Hero da Home, a faixa de
+números, as chamadas de parceria e doação, a abertura de cada página interna
+e a capa de cada projeto. Quem cuida disso é
+`src/components/ui/section-banner.tsx`.
+
+| Chave | Onde aparece |
+| --- | --- |
+| `home.hero` | abertura da Página inicial |
+| `home.impact.banner` | faixa de números consolidados |
+| `home.partnership.banner` | chamada de parceria |
+| `home.donate.banner` | chamada de doação (Home, Projetos, Transparência) |
+| `page.projects.banner` … `page.donate.banner` | abertura das páginas internas |
+| `project.<slug>.cover` | abertura da página do projeto |
+
+Duas regras valem para essas fotos: **largas** (por volta de 21/9, porque
+sangram na largura toda) e com **espaço livre à esquerda**, onde entra o
+título. Um véu escuro (ou verde, na superfície da marca) é aplicado por cima
+para o texto continuar legível sobre qualquer fotografia — sem ele o
+contraste dependeria da imagem que estivesse no ar. Sem foto cadastrada, a
+seção volta ao fundo sólido da superfície, sem buraco visual.
 
 ### As fotografias que estão no ar hoje
 

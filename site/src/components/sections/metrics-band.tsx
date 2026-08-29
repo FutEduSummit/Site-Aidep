@@ -2,6 +2,7 @@
 
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { MetricBlock } from '@/components/ui/metric'
+import { SectionBanner } from '@/components/ui/section-banner'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section, type Surface } from '@/components/ui/section'
 import type { Metric } from '@/content/types'
@@ -19,6 +20,8 @@ type MetricsBandProps = {
   surface?: Surface
   size?: 'lg' | 'md' | 'sm'
   columns?: 2 | 3 | 4
+  /** Faixa de fotografia ao fundo — chave do registro de mídia. */
+  mediaKey?: string
 }
 
 const columnClasses = {
@@ -37,9 +40,16 @@ export function MetricsBand({
   surface = 'dark',
   size = 'lg',
   columns = 4,
+  mediaKey,
 }: MetricsBandProps) {
+  const bannerTone = surface === 'brand' ? 'brand' : surface === 'dark' ? 'dark' : 'light'
+
   return (
     <Section id={id} surface={surface} ariaLabelledby={`${id}-title`}>
+      {mediaKey ? (
+        <SectionBanner mediaKey={mediaKey} tone={bannerTone} strength="strong" />
+      ) : null}
+
       <Container className="flex flex-col gap-stack">
         <SectionHeader
           id={`${id}-title`}

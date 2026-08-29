@@ -45,6 +45,7 @@ export default async function TransparencyPage({ params }: Props) {
         eyebrow={t('hero.eyebrow')}
         title={t('hero.title')}
         lead={t('hero.lead')}
+        mediaKey="page.transparency.banner"
         aside={
           <dl className="flex flex-col gap-6">
             <div className="border-t border-(--border) pt-5">
@@ -105,6 +106,7 @@ export default async function TransparencyPage({ params }: Props) {
       <CtaBand
         id="transparency-cta"
         surface="dark"
+        mediaKey="home.donate.banner"
         title={t('hero.title')}
         primary={{ href: '/donate', label: tActions('donate') }}
         secondary={{ href: '/partners', label: tActions('seePartners') }}

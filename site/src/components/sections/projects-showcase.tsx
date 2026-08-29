@@ -67,7 +67,6 @@ export function ProjectsShowcase({ projects, locale }: ShowcaseProps) {
               project={project}
               locale={locale}
               index={index}
-              cursorLabel={tActions('seeProject')}
             />
           ))}
         </div>
@@ -82,7 +81,6 @@ export function ProjectsShowcase({ projects, locale }: ShowcaseProps) {
               index={index}
               total={projects.length}
               progress={scrollYProgress}
-              cursorLabel={tActions('seeProject')}
               cta={tActions('seeProject')}
             />
           ))}
@@ -98,7 +96,6 @@ function StickyProject({
   index,
   total,
   progress,
-  cursorLabel,
   cta,
 }: {
   project: Project
@@ -106,7 +103,6 @@ function StickyProject({
   index: number
   total: number
   progress: MotionValue<number>
-  cursorLabel: string
   cta: string
 }) {
   const isLast = index === total - 1
@@ -136,7 +132,6 @@ function StickyProject({
         >
           <Link
             href={{ pathname: '/projects/[slug]', params: { slug: project.slug } }}
-            data-cursor-label={cursorLabel}
             className="group/row grid grid-cols-12 items-stretch gap-x-8 outline-offset-4"
           >
             <div className="col-span-5 flex flex-col justify-between gap-10 p-10 xl:p-12">

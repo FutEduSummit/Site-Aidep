@@ -78,6 +78,7 @@
       "title": "Uma plataforma de desenvolvimento humano construída no território.",
       "paragraphs": [
         "Reunimos projetos, escolas, metodologias e iniciativas sob uma mesma estrutura institucional. O esporte e o paradesporto são o meio; a formação de pessoas é o objetivo.",
+        "Não trabalhamos com ações isoladas: cada projeto entra nessa estrutura com acompanhamento, registro e prestação de contas.",
         "Atuamos em todo o território brasileiro e nosso estatuto prevê atuação internacional."
       ],
       "highlights": [
@@ -185,14 +186,6 @@
     ]
   },
   "about": {
-    "positioning": {
-      "eyebrow": "Posicionamento",
-      "title": "O que a AIDEP é.",
-      "paragraphs": [
-        "A AIDEP é uma plataforma internacional de desenvolvimento humano por meio do esporte e do paradesporto, que reúne projetos, escolas, metodologias e iniciativas voltadas à formação, inclusão e transformação social.",
-        "A associação não trabalha com ações isoladas: cada projeto integra uma mesma estrutura institucional, com acompanhamento, registro e prestação de contas."
-      ]
-    },
     "purpose": {
       "eyebrow": "Propósito",
       "title": "Três compromissos.",
@@ -238,21 +231,6 @@
         }
       ]
     },
-    "identity": {
-      "eyebrow": "Identidade",
-      "title": "Uma marca pensada para o mundo.",
-      "paragraphs": [
-        "O símbolo da AIDEP é formado por módulos que se organizam em trajetória — pessoas em movimento que, juntas, formam uma esfera.",
-        "O manual da marca define uma cor oficial para cada continente. O verde acumula duas funções: é a cor principal da associação e a cor das Américas, transitando entre a comunicação continental e a internacional."
-      ]
-    },
-    "governance": {
-      "eyebrow": "Governança",
-      "title": "Transparência como método.",
-      "paragraphs": [
-        "A prestação de contas da AIDEP é preparada mensalmente e publicada na página de Transparência, junto com documentos institucionais e de projetos."
-      ]
-    },
     "presence": {
       "eyebrow": "Atuação",
       "title": "Onde a AIDEP está.",
@@ -267,30 +245,6 @@
       "eyebrow": "Visão geral",
       "title": "O retrato da atuação.",
       "description": "Números consolidados de todos os projetos e iniciativas."
-    },
-    "narrative": {
-      "eyebrow": "Como o impacto se constrói",
-      "title": "Três escalas de atuação.",
-      "steps": [
-        {
-          "title": "A comunidade",
-          "text": "Polos esportivos em comunidades e regiões de vulnerabilidade social, onde o Coração Valente atende 1.800 crianças em Aracaju e 700 no Distrito Federal.",
-          "metric": "2.500",
-          "metricLabel": "crianças atendidas"
-        },
-        {
-          "title": "A escola",
-          "text": "O Futsal na Escola leva a prática esportiva para dentro do ambiente escolar, presente em 12 cidades.",
-          "metric": "12",
-          "metricLabel": "cidades"
-        },
-        {
-          "title": "O conhecimento",
-          "text": "O FutEdu Summit reúne, na Arena da Baixada, profissionais e instituições de futebol, futsal e beach soccer.",
-          "metric": "7 mil",
-          "metricLabel": "participantes"
-        }
-      ]
     },
     "byProject": {
       "eyebrow": "Por projeto",

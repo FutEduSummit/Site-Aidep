@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { useRef, type ReactNode } from 'react'
 import { MaskedWords } from '@/components/motion/animated-text'
+import { SectionBanner } from '@/components/ui/section-banner'
+import { getMedia } from '@/content/media'
 import { Container, Section } from '@/components/ui/section'
 import { symbolMark } from '@/lib/brand'
 import { DURATION, EASE } from '@/lib/motion'
@@ -15,13 +17,16 @@ type PageHeroProps = {
   children?: ReactNode
   /** Conteúdo alinhado à direita — números, categoria, data. */
   aside?: ReactNode
+  /** Faixa de fotografia ao fundo — chave do registro de mídia. */
+  mediaKey?: string
 }
 
 /**
  * Hero das páginas internas.
- * Mesma linguagem do Hero da Home — fundo escuro, grafismo em movimento e
- * título revelado por máscara — em escala menor, para não competir com o
- * conteúdo da página.
+ * Mesma linguagem do Hero da Home — fotografia sangrada ao fundo, grafismo
+ * em movimento e título revelado por máscara — em escala menor, para não
+ * competir com o conteúdo da página. Sem `mediaKey`, a faixa fica no fundo
+ * escuro sólido de sempre.
  */
 export function PageHero({
   eyebrow,
@@ -29,6 +34,7 @@ export function PageHero({
   lead,
   children,
   aside,
+  mediaKey,
 }: PageHeroProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -36,6 +42,7 @@ export function PageHero({
     offset: ['start start', 'end start'],
   })
 
+  const hasBanner = Boolean(mediaKey && getMedia(mediaKey))
   const grafismoY = useTransform(scrollYProgress, [0, 1], [0, 120])
   const contentY = useTransform(scrollYProgress, [0, 1], [0, -40])
 
@@ -46,23 +53,29 @@ export function PageHero({
       className="pb-section-sm pt-18 lg:pt-22"
       ariaLabelledby="page-title"
     >
+      {hasBanner && mediaKey ? (
+        <SectionBanner mediaKey={mediaKey} tone="dark" strength="strong" priority />
+      ) : null}
+
       <div ref={ref}>
-        <motion.div
-          aria-hidden="true"
-          data-motion="parallax"
-          style={{ y: grafismoY }}
-          className="pointer-events-none absolute -right-[24%] -top-[30%] -z-10 w-[90vw] max-w-[900px] opacity-[0.05] lg:-right-[8%] lg:w-[46vw]"
-        >
-          <Image
-            src={symbolMark.white.src}
-            alt=""
-            width={symbolMark.white.width}
-            height={symbolMark.white.height}
-            priority
-            sizes="(max-width: 1024px) 90vw, 46vw"
-            className="h-auto w-full"
-          />
-        </motion.div>
+        {hasBanner ? null : (
+          <motion.div
+            aria-hidden="true"
+            data-motion="parallax"
+            style={{ y: grafismoY }}
+            className="pointer-events-none absolute -right-[24%] -top-[30%] -z-10 w-[90vw] max-w-[900px] opacity-[0.05] lg:-right-[8%] lg:w-[46vw]"
+          >
+            <Image
+              src={symbolMark.white.src}
+              alt=""
+              width={symbolMark.white.width}
+              height={symbolMark.white.height}
+              priority
+              sizes="(max-width: 1024px) 90vw, 46vw"
+              className="h-auto w-full"
+            />
+          </motion.div>
+        )}
 
         <Container className="pt-section-sm">
           <motion.div

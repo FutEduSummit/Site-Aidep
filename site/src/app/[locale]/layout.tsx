@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { CursorInteraction } from "@/components/motion/cursor-interaction";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { ScrollReset } from "@/components/motion/scroll-reset";
@@ -120,7 +119,6 @@ export default async function LocaleLayout({
             </main>
 
             <Footer />
-            <CursorInteraction />
           </MotionProvider>
         </NextIntlClientProvider>
 
