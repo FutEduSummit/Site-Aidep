@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { news } from '@/content/news'
 import { projects } from '@/content/projects'
 import { locales, type Locale } from '@/i18n/routing'
+import { gateEnabled } from '@/lib/gate'
 import { absoluteUrl, localizedPath, type PageHref } from '@/lib/seo'
 
 const staticRoutes: { href: PageHref; priority: number; changeFrequency: 'daily' | 'weekly' | 'monthly' }[] = [
@@ -20,6 +21,9 @@ function languagesFor(href: PageHref) {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  /* Fase de pré-lançamento: nem o mapa do site fica exposto. */
+  if (gateEnabled) return []
+
   const entries: MetadataRoute.Sitemap = []
 
   for (const route of staticRoutes) {

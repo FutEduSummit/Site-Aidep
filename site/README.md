@@ -8,6 +8,36 @@ next-intl · React Hook Form + Zod.
 
 ---
 
+## Portão de pré-lançamento (site em construção)
+
+O site **está fechado ao público**. Qualquer endereço responde com a página
+_Site em construção_ e só libera o conteúdo real depois da senha.
+
+- **Senha:** `123` — chumbada no código, em [`src/lib/gate.ts`](src/lib/gate.ts).
+- Ao acertar a senha, um cookie (`aidep-preview`, 30 dias) libera o navegador
+  e o visitante cai exatamente na página que tentou abrir.
+- Com o portão ligado, `robots.txt` bloqueia tudo, o `sitemap.xml` sai vazio e
+  as respostas levam `X-Robots-Tag: noindex`.
+
+> É uma barreira de cortesia para a fase de aprovação, **não** um mecanismo de
+> segurança: quem tem acesso ao código sabe a senha. Não use para proteger
+> dados sensíveis.
+
+### Para abrir o site ao público
+
+Em [`src/lib/gate.ts`](src/lib/gate.ts), troque uma linha:
+
+```ts
+export const gateEnabled: boolean = false
+```
+
+É a única alteração necessária. Feito isso, estes arquivos podem ser apagados
+sem afetar o site: `src/lib/gate.ts`, `src/app/em-construcao/` e
+`src/app/api/liberar/` — removendo também os `import` do portão em
+`src/proxy.ts`, `src/app/robots.ts` e `src/app/sitemap.ts`.
+
+---
+
 ## Como rodar
 
 ```bash
