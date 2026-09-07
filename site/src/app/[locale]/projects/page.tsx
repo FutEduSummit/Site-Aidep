@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { ProjectsIndex } from '@/components/sections/projects-index'
-import { projects } from '@/content/projects'
+import { getProjects } from '@/content/projects'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
 
@@ -28,6 +28,7 @@ export default async function ProjectsPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'projects' })
   const tHome = await getTranslations({ locale, namespace: 'home' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
+  const projects = await getProjects()
 
   return (
     <>

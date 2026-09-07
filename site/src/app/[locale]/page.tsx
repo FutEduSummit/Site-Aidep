@@ -15,10 +15,12 @@ import { ProjectsShowcase } from '@/components/sections/projects-showcase'
 import { PurposeSection } from '@/components/sections/purpose-section'
 import { ResultsRows } from '@/components/sections/results-rows'
 import { SportSection } from '@/components/sections/sport-section'
+import { VideoRail } from '@/components/sections/video-rail'
 import { headlineMetrics, projectMetrics } from '@/content/impact'
 import { getArticles } from '@/content/news'
 import { partners } from '@/content/partners'
-import { projects } from '@/content/projects'
+import { getProjects } from '@/content/projects'
+import { videos } from '@/content/videos'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
 
@@ -44,8 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * leitura contínua, na ordem em que as perguntas aparecem:
  *
  *   quem somos → o que nos move → quem atendemos → que impacto geramos →
- *   o que fazemos → como fazemos → onde estamos → quem caminha junto →
- *   o que está acontecendo → como apoiar → como falar com a gente
+ *   o que fazemos → como fazemos → como é na prática → onde estamos →
+ *   quem caminha junto → o que está acontecendo → como apoiar →
+ *   como falar com a gente
  *
  * As páginas que continuam existindo (Projetos, Notícias, Transparência,
  * Parceiros e Doações) são aprofundamentos, não caminhos paralelos: cada
@@ -62,7 +65,9 @@ export default async function HomePage({ params }: Props) {
   const tAbout = await getTranslations({ locale, namespace: 'about' })
   const tImpact = await getTranslations({ locale, namespace: 'impact' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
-  const articles = getArticles(3)
+  const tVideos = await getTranslations({ locale, namespace: 'home.videos' })
+  const articles = await getArticles(3)
+  const projects = await getProjects()
 
   return (
     <>
@@ -108,6 +113,18 @@ export default async function HomePage({ params }: Props) {
       <ApproachSection surface="dark" id="home-approach" />
 
       <SportSection locale={locale} />
+
+      {/* ---- O acervo: como é o dia nos polos ---------------------- */}
+
+      <VideoRail
+        id="home-videos"
+        videos={videos}
+        locale={locale}
+        surface="dark"
+        eyebrow={tVideos('eyebrow')}
+        title={tVideos('title')}
+        description={tVideos('description')}
+      />
 
       {/* ---- Onde estamos e quem somos institucionalmente --------- */}
 

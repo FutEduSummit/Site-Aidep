@@ -308,6 +308,15 @@ function renderRegistry(entries) {
         `      en: ${JSON.stringify(entry.title.en)},`,
         `      es: ${JSON.stringify(entry.title.es)},`,
         '    },',
+        ...(entry.description
+          ? [
+              '    description: {',
+              `      pt: ${JSON.stringify(entry.description)},`,
+              `      en: ${JSON.stringify(entry.description)},`,
+              `      es: ${JSON.stringify(entry.description)},`,
+              '    },',
+            ]
+          : []),
         `    category: ${JSON.stringify(entry.category)},`,
         `    year: ${entry.year},`,
         `    publishedAt: ${JSON.stringify(entry.publishedAt)},`,
@@ -365,6 +374,10 @@ async function main() {
     entries.push({
       id: doc.id,
       title: doc.title,
+      /* Alimenta a coluna "Conteúdo" da tabela de Transparência. Nos três
+         idiomas fica o mesmo texto: é conteúdo de demonstração, marcado
+         com EXEMPLO em cada página, e traduzi-lo não acrescentaria nada. */
+      description: doc.summary,
       category: doc.category,
       year: doc.year,
       publishedAt: doc.publishedAt,

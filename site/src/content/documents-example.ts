@@ -13,8 +13,8 @@ import type { InstitutionalDocument } from './types'
  * com a palavra EXEMPLO. Não são documentos oficiais da AIDEP e não valem
  * como prestação de contas.
  *
- * Estão na página de Transparência enquanto o conteúdo de exemplo
- * estiver ligado — o padrão, ver `lib/example-content.ts`. Com
+ * Eles só chegam à página de Transparência quando o conteúdo de exemplo
+ * está ligado — o padrão, ver `lib/example-content.ts`. Com
  * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` a lista volta a ser vazia e a página
  * exibe o estado vazio institucional.
  */
@@ -25,6 +25,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Relatório anual de atividades 2025",
       en: "2025 annual activities report",
       es: "Informe anual de actividades 2025",
+    },
+    description: {
+      pt: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
+      en: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
+      es: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
     },
     category: "reports",
     year: 2025,
@@ -40,6 +45,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "2024 annual activities report",
       es: "Informe anual de actividades 2024",
     },
+    description: {
+      pt: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
+      en: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
+      es: "Panorama das atividades desenvolvidas pela associação ao longo do ano.",
+    },
     category: "reports",
     year: 2024,
     publishedAt: "2025-03-25",
@@ -53,6 +63,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Estatuto social",
       en: "Articles of association",
       es: "Estatuto social",
+    },
+    description: {
+      pt: "Documento constitutivo da associação: finalidade, governança e regras de funcionamento.",
+      en: "Documento constitutivo da associação: finalidade, governança e regras de funcionamento.",
+      es: "Documento constitutivo da associação: finalidade, governança e regras de funcionamento.",
     },
     category: "institutional",
     year: 2024,
@@ -68,6 +83,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "Minutes of the board election (2025–2028)",
       es: "Acta de elección de la directiva (2025–2028)",
     },
+    description: {
+      pt: "Registro da assembleia geral que elegeu a diretoria para o quadriênio.",
+      en: "Registro da assembleia geral que elegeu a diretoria para o quadriênio.",
+      es: "Registro da assembleia geral que elegeu a diretoria para o quadriênio.",
+    },
     category: "institutional",
     year: 2025,
     publishedAt: "2025-02-10",
@@ -81,6 +101,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Certidão de regularidade",
       en: "Certificate of good standing",
       es: "Certificado de regularidad",
+    },
+    description: {
+      pt: "Comprovação de regularidade cadastral e fiscal da associação.",
+      en: "Comprovação de regularidade cadastral e fiscal da associação.",
+      es: "Comprovação de regularidade cadastral e fiscal da associação.",
     },
     category: "institutional",
     year: 2026,
@@ -96,6 +121,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "Accountability report — first half of 2026",
       es: "Rendición de cuentas — primer semestre de 2026",
     },
+    description: {
+      pt: "Origem e aplicação dos recursos no período.",
+      en: "Origem e aplicação dos recursos no período.",
+      es: "Origem e aplicação dos recursos no período.",
+    },
     category: "accountability",
     year: 2026,
     publishedAt: "2026-08-10",
@@ -110,12 +140,17 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "Accountability report — second half of 2025",
       es: "Rendición de cuentas — segundo semestre de 2025",
     },
+    description: {
+      pt: "Origem e aplicação dos recursos no período.",
+      en: "Origem e aplicação dos recursos no período.",
+      es: "Origem e aplicação dos recursos no período.",
+    },
     category: "accountability",
     year: 2025,
     publishedAt: "2026-02-12",
     file: "/documentos/exemplo/prestacao-de-contas-2o-semestre-2025.pdf",
     format: "pdf",
-    sizeLabel: "4 kB",
+    sizeLabel: "3 kB",
   },
   {
     id: "demonstracoes-contabeis-2025",
@@ -123,6 +158,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Demonstrações contábeis 2025",
       en: "2025 financial statements",
       es: "Estados contables 2025",
+    },
+    description: {
+      pt: "Balanço patrimonial e demonstração do resultado do exercício, com notas explicativas.",
+      en: "Balanço patrimonial e demonstração do resultado do exercício, com notas explicativas.",
+      es: "Balanço patrimonial e demonstração do resultado do exercício, com notas explicativas.",
     },
     category: "accountability",
     year: 2025,
@@ -138,6 +178,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "Transfers by project — 2026 (spreadsheet)",
       es: "Transferencias por proyecto — 2026 (planilla)",
     },
+    description: {
+      pt: "Planilha aberta com os repasses por projeto e por mês.",
+      en: "Planilha aberta com os repasses por projeto e por mês.",
+      es: "Planilha aberta com os repasses por projeto e por mês.",
+    },
     category: "accountability",
     year: 2026,
     publishedAt: "2026-08-10",
@@ -151,6 +196,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Relatório do projeto Coração Valente 2025",
       en: "2025 report — Coração Valente project",
       es: "Informe del proyecto Coração Valente 2025",
+    },
+    description: {
+      pt: "Execução, público atendido e resultados do projeto no ano.",
+      en: "Execução, público atendido e resultados do projeto no ano.",
+      es: "Execução, público atendido e resultados do projeto no ano.",
     },
     category: "projects",
     year: 2025,
@@ -167,6 +217,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       en: "2025 report — Futsal na Escola project",
       es: "Informe del proyecto Futsal na Escola 2025",
     },
+    description: {
+      pt: "Execução, público atendido e resultados do projeto no ano.",
+      en: "Execução, público atendido e resultados do projeto no ano.",
+      es: "Execução, público atendido e resultados do projeto no ano.",
+    },
     category: "projects",
     year: 2025,
     publishedAt: "2026-03-18",
@@ -181,6 +236,11 @@ export const exampleDocuments: InstitutionalDocument[] = [
       pt: "Relatório do FutEdu Summit 2026",
       en: "2026 FutEdu Summit report",
       es: "Informe del FutEdu Summit 2026",
+    },
+    description: {
+      pt: "Programação, participação e desdobramentos do encontro.",
+      en: "Programação, participação e desdobramentos do encontro.",
+      es: "Programação, participação e desdobramentos do encontro.",
     },
     category: "projects",
     year: 2026,

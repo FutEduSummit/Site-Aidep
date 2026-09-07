@@ -1,19 +1,23 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { ContentBlock } from '@/components/sections/content-block'
+import { CoverageSection } from '@/components/sections/coverage-section'
 import { CtaBand } from '@/components/sections/cta-band'
 import { MetricsBand } from '@/components/sections/metrics-band'
 import { PageHero } from '@/components/sections/page-hero'
+import { ProjectGallery } from '@/components/sections/project-gallery'
+import { VideoRail } from '@/components/sections/video-rail'
 import { NewsCard } from '@/components/ui/news-card'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { getArticlesByProject } from '@/content/news'
+import { coverOf, galleryOf } from '@/content/media'
 import { getPartners } from '@/content/partners'
-import { getProject, projects } from '@/content/projects'
+import { getProject, getProjects } from '@/content/projects'
+import { videosOfProject } from '@/content/videos'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { locales } from '@/i18n/routing'
@@ -26,7 +30,12 @@ import {
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> }
 
-export function generateStaticParams() {
+/**
+ * Projeto criado depois do build ainda funciona: o Next renderiza o slug
+ * que faltar sob demanda e passa a servi-lo daí em diante.
+ */
+export async function generateStaticParams() {
+  const projects = await getProjects()
   return locales.flatMap((locale) =>
     projects.map((project) => ({ locale, slug: project.slug })),
   )
@@ -34,7 +43,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
-  const project = getProject(slug)
+  const project = await getProject(slug)
   if (!project) return {}
 
   return buildPageMetadata({
@@ -49,15 +58,17 @@ export default async function ProjectPage({ params }: Props) {
   const { locale, slug } = await params
   setRequestLocale(locale)
 
-  const project = getProject(slug)
+  const project = await getProject(slug)
   if (!project) notFound()
 
   const t = await getTranslations({ locale, namespace: 'projects' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
   const tNav = await getTranslations({ locale, namespace: 'nav' })
 
-  const relatedNews = getArticlesByProject(project.slug)
+  const projects = await getProjects()
+  const relatedNews = await getArticlesByProject(project.slug)
   const projectPartners = getPartners(project.partnerIds)
+  const projectVideos = videosOfProject(project.slug)
   const currentIndex = projects.findIndex((item) => item.slug === project.slug)
   const nextProject = projects[(currentIndex + 1) % projects.length]
 
@@ -91,6 +102,7 @@ export default async function ProjectPage({ params }: Props) {
         title={project.name}
         lead={project.summary[locale]}
         mediaKey={project.coverKey}
+        media={coverOf(project)}
         aside={
           <dl className="flex flex-col gap-6">
             {project.metrics.slice(0, 2).map((metric) => (
@@ -136,7 +148,7 @@ export default async function ProjectPage({ params }: Props) {
             title={project.category[locale]}
           />
 
-          <div className="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-2">
             {project.objective ? (
               <div className="flex flex-col gap-4 border-t border-(--border) pt-8">
                 <h3 className="text-micro font-semibold uppercase tracking-[0.16em] text-(--fg-subtle)">
@@ -163,38 +175,19 @@ export default async function ProjectPage({ params }: Props) {
               </StaggerContainer>
             </div>
 
-            {project.locations.length > 0 ? (
-              <div className="flex flex-col gap-4 border-t border-(--border) pt-8">
-                <h3 className="text-micro font-semibold uppercase tracking-[0.16em] text-(--fg-subtle)">
-                  {t('labels.locations')}
-                </h3>
-                <ul className="flex flex-col gap-3">
-                  {project.locations.map((location) => (
-                    <li
-                      key={location.city[locale]}
-                      className="flex items-start gap-3 text-body"
-                    >
-                      <MapPin
-                        aria-hidden="true"
-                        className="mt-1 size-4 shrink-0 text-(--accent-text)"
-                      />
-                      <span>
-                        {location.city[locale]}
-                        {location.region ? ` — ${location.region}` : ''}
-                        {location.venue ? (
-                          <span className="block text-small text-(--fg-muted)">
-                            {location.venue}
-                          </span>
-                        ) : null}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
           </div>
         </Container>
       </Section>
+
+      {/* Onde o projeto acontece — mapa e lista das cidades atendidas.
+          Sai sozinho da página quando nenhum local foi cadastrado. */}
+      <CoverageSection
+        id="project-coverage"
+        locale={locale}
+        locations={project.locations}
+        projectName={project.name}
+        surface="light"
+      />
 
       <MetricsBand
         id="project-metrics"
@@ -239,35 +232,26 @@ export default async function ProjectPage({ params }: Props) {
         </Section>
       ) : null}
 
-      {/* Galeria — exibida quando houver fotografias cadastradas. */}
-      {project.gallery.length > 0 ? (
-        <Section surface="muted" ariaLabelledby="project-gallery-title">
-          <Container className="flex flex-col gap-stack">
-            <SectionHeader
-              id="project-gallery-title"
-              title={t('labels.gallery')}
-            />
-            <StaggerContainer
-              as="ul"
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {project.gallery.map((image) => (
-                <StaggerItem key={image.src} as="li">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={image.src}
-                      alt={image.alt[locale]}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </Container>
-        </Section>
-      ) : null}
+      {/* Vídeos do projeto — fileira vertical, som só ao abrir.
+          Sai sozinha da página quando não há vídeo cadastrado. */}
+      <VideoRail
+        id="project-videos"
+        videos={projectVideos}
+        locale={locale}
+        surface="dark"
+        eyebrow={t('videos.eyebrow')}
+        title={t('videos.title')}
+        description={t('videos.description')}
+      />
+
+      {/* Galeria — miniaturas em lotes, foto inteira em tela cheia.
+          Sai sozinha da página quando não há fotografia cadastrada. */}
+      <ProjectGallery
+        id="project-gallery"
+        photos={galleryOf(project)}
+        locale={locale}
+        surface="muted"
+      />
 
       {/* Resultados descritivos — publicados quando fornecidos. */}
       {project.results ? (

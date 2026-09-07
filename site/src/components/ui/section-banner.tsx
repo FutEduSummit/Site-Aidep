@@ -1,10 +1,16 @@
 import Image from 'next/image'
 import { getMedia } from '@/content/media'
+import type { MediaAsset } from '@/content/types'
 import { cn } from '@/lib/utils'
 
 type SectionBannerProps = {
   /** Chave do registro de mídia — sem imagem, nada é renderizado. */
-  mediaKey: string
+  mediaKey?: string
+  /**
+   * Fotografia já resolvida — a capa enviada pelo painel, por exemplo.
+   * Tem precedência sobre `mediaKey`.
+   */
+  media?: MediaAsset | null
   /**
    * Véu sobre a fotografia. Cada superfície tem o seu, calibrado para o
    * texto continuar legível sobre qualquer foto.
@@ -35,12 +41,13 @@ type SectionBannerProps = {
  */
 export function SectionBanner({
   mediaKey,
+  media: mediaDireta,
   tone = 'dark',
   strength = 'base',
   priority = false,
   className,
 }: SectionBannerProps) {
-  const media = getMedia(mediaKey)
+  const media = mediaDireta ?? (mediaKey ? getMedia(mediaKey) : null)
   if (!media) return null
 
   const veil = {

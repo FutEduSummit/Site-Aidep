@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { MediaFrame } from '@/components/ui/media-frame'
-import { getMedia } from '@/content/media'
+import { coverOf } from '@/content/media'
 import type { NewsArticle } from '@/content/types'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
@@ -27,7 +27,7 @@ export function NewsCard({
       >
         <div className="overflow-hidden">
           <MediaFrame
-            media={getMedia(article.coverKey)}
+            media={coverOf(article)}
             locale={locale}
             ratio="16 / 10"
             tone="light"

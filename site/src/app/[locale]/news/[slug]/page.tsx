@@ -8,8 +8,8 @@ import { NewsCard } from '@/components/ui/news-card'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { ShareLinks } from '@/components/ui/share-links'
-import { getMedia } from '@/content/media'
-import { getArticle, getRelatedArticles, news } from '@/content/news'
+import { coverOf } from '@/content/media'
+import { getArticle, getArticles, getRelatedArticles } from '@/content/news'
 import { getProject } from '@/content/projects'
 import type { NewsBlock } from '@/content/types'
 import { Link } from '@/i18n/navigation'
@@ -30,15 +30,20 @@ const localeTag: Record<Locale, string> = {
   es: 'es-ES',
 }
 
-export function generateStaticParams() {
+/**
+ * Notícia publicada depois do build ainda funciona: o Next renderiza o
+ * slug que faltar sob demanda e passa a servi-lo daí em diante.
+ */
+export async function generateStaticParams() {
+  const articles = await getArticles()
   return locales.flatMap((locale) =>
-    news.map((article) => ({ locale, slug: article.slug })),
+    articles.map((article) => ({ locale, slug: article.slug })),
   )
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
-  const article = getArticle(slug)
+  const article = await getArticle(slug)
   if (!article) return {}
 
   return buildPageMetadata({
@@ -80,12 +85,12 @@ export default async function ArticlePage({ params }: Props) {
   const { locale, slug } = await params
   setRequestLocale(locale)
 
-  const article = getArticle(slug)
+  const article = await getArticle(slug)
   if (!article) notFound()
 
   const t = await getTranslations({ locale, namespace: 'news' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
-  const related = getRelatedArticles(slug)
+  const related = await getRelatedArticles(slug)
 
   const url = absoluteUrl(
     localizedPath(locale, { pathname: '/news/[slug]', params: { slug } }),
@@ -99,12 +104,14 @@ export default async function ArticlePage({ params }: Props) {
     datePublished: article.date,
     dateModified: article.updatedAt,
     author: article.author,
-    image: getMedia(article.coverKey)?.src,
+    image: coverOf(article)?.src,
   })
 
-  const relatedProjects = article.relatedProjectSlugs
-    .map((projectSlug) => getProject(projectSlug))
-    .filter((project) => Boolean(project))
+  const relatedProjects = (
+    await Promise.all(
+      article.relatedProjectSlugs.map((projectSlug) => getProject(projectSlug)),
+    )
+  ).filter((project) => project !== undefined)
 
   return (
     <>
@@ -151,7 +158,7 @@ export default async function ArticlePage({ params }: Props) {
         <Container>
           <ImageReveal>
             <MediaFrame
-              media={getMedia(article.coverKey)}
+              media={coverOf(article)}
               locale={locale}
               ratio="16 / 9"
               tone="light"
@@ -181,15 +188,15 @@ export default async function ArticlePage({ params }: Props) {
                   </h2>
                   <ul className="flex flex-col gap-2">
                     {relatedProjects.map((project) => (
-                      <li key={project!.slug}>
+                      <li key={project.slug}>
                         <Link
                           href={{
                             pathname: '/projects/[slug]',
-                            params: { slug: project!.slug },
+                            params: { slug: project.slug },
                           }}
                           className="link-underline text-small font-medium"
                         >
-                          {project!.name}
+                          {project.name}
                         </Link>
                       </li>
                     ))}

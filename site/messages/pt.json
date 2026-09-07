@@ -49,7 +49,9 @@
     "view": "Visualizar",
     "openInstagram": "Abrir o Instagram",
     "sendEmail": "Escrever para a AIDEP",
-    "toTop": "Voltar ao topo"
+    "toTop": "Voltar ao topo",
+    "openInNewTab": "Abrir em nova aba",
+    "close": "Fechar"
   },
   "a11y": {
     "skipToContent": "Ir para o conteúdo principal",
@@ -128,6 +130,11 @@
           "text": "Resultado que aparece na comunidade, não apenas no placar."
         }
       ]
+    },
+    "videos": {
+      "eyebrow": "Nos polos",
+      "title": "O acervo de quem estava lá.",
+      "description": "Vídeos gravados nas inaugurações, nos treinos e nas competições dos polos do Coração Valente, em Sergipe."
     },
     "results": {
       "eyebrow": "Resultados",
@@ -272,9 +279,41 @@
       "allProjects": "Todos os projetos",
       "nextProject": "Próximo projeto"
     },
+    "map": {
+      "title": "Onde o projeto acontece",
+      "cities": "{count, plural, =0 {Nenhuma cidade} one {# cidade} other {# cidades}}",
+      "states": "{count, plural, one {# estado} other {# estados}}",
+      "legend": "Cidades atendidas",
+      "alt": "Mapa do Brasil com as cidades atendidas pelo projeto {project}"
+    },
+    "gallery": {
+      "count": "{count, plural, one {# foto} other {# fotos}}",
+      "showMore": "Ver mais {count, plural, one {# foto} other {# fotos}}",
+      "position": "{current} de {total}",
+      "previous": "Foto anterior",
+      "next": "Próxima foto"
+    },
+    "videos": {
+      "eyebrow": "Vídeos",
+      "title": "O projeto em movimento",
+      "description": "Registros dos polos, dos treinos e das competições."
+    },
     "cta": {
       "title": "Apoie este projeto.",
       "description": "Sua contribuição ajuda a manter e ampliar a estrutura que atende essas pessoas."
+    }
+  },
+  "videos": {
+    "label": "Vídeos do acervo",
+    "position": "{current} de {total}",
+    "previous": "Vídeo anterior",
+    "next": "Próximo vídeo",
+    "film": "Filme",
+    "spokenIn": "Vídeo falado em {language}.",
+    "languages": {
+      "pt": "português",
+      "en": "inglês",
+      "es": "espanhol"
     }
   },
   "news": {
@@ -340,6 +379,25 @@
         "Prestação de contas",
         "Documentos dos projetos"
       ]
+    },
+    "table": {
+      "caption": "Documentos de transparência da AIDEP",
+      "title": "Título",
+      "category": "Categoria",
+      "content": "Conteúdo",
+      "date": "Data",
+      "image": "Imagem",
+      "download": "Download",
+      "perPage": "Itens por página",
+      "sortBy": "Ordenar por {column}",
+      "openDocument": "Abrir {title}",
+      "pagination": "Paginação dos documentos",
+      "previous": "Anterior",
+      "next": "Próxima",
+      "pageOf": "Página {current} de {total}"
+    },
+    "viewer": {
+      "notEmbeddable": "O navegador não exibe arquivos {format} dentro da página. Baixe o arquivo para abrir no seu computador."
     }
   },
   "partners": {

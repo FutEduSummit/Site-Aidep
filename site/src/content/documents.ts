@@ -1,59 +1,41 @@
+import { lerCategorias, lerDocumentos } from '@/lib/cms/leitura'
 import { exampleContentEnabled } from '@/lib/example-content'
 import { exampleDocuments, exampleLastUpdatedAt } from './documents-example'
-import type { DocumentCategory, InstitutionalDocument, Localized } from './types'
+import type { DocumentCategoryEntry, InstitutionalDocument } from './types'
 
 /**
  * TRANSPARÊNCIA
  * =============
- * Nenhum documento, relatório ou valor financeiro real foi fornecido.
- * Nada é inventado na build pública: a lista fica vazia e a página exibe o
- * estado vazio institucional, com todo o sistema de filtros, busca e
- * download pronto para receber os arquivos.
+ * A fonte da verdade é o painel do cliente (`/admin/documentos`): o PDF vai
+ * para o Storage do Supabase e a linha para a tabela `documentos`.
  *
- * Por padrão entram os documentos de exemplo de
- * `documents-example.ts` — arquivos de demonstração, marcados com a
- * palavra EXEMPLO em cada página, para avaliar a lista, os filtros, a
- * busca, a visualização e o download funcionando.
- * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` desliga.
+ * Enquanto essa tabela estiver vazia — ou se o Supabase estiver fora do ar
+ * — valem os documentos abaixo: os cadastrados à mão em `publicados` e,
+ * com o conteúdo de exemplo ligado (o padrão), os de demonstração de
+ * `documents-example.ts`, cada um marcado com a palavra EXEMPLO na página.
  *
- * O briefing informa que a prestação de contas é preparada mensalmente. A
- * data de última atualização só é preenchida quando houver publicação real.
- *
- * Para publicar um documento:
- *   1. coloque o arquivo em `public/documentos/…`;
- *   2. acrescente um item na lista `published` abaixo;
- *   3. preencha `lastUpdatedAt` com a data da publicação.
+ * Com `NEXT_PUBLIC_EXAMPLE_CONTENT=0` e a tabela vazia, a página de
+ * Transparência exibe o estado vazio institucional, com filtros, busca,
+ * visualização e download prontos para receber os arquivos reais.
  */
 
-/** Documentos publicados pela associação. */
-const published: InstitutionalDocument[] = []
+/** Documentos cadastrados diretamente no código. Normalmente vazio. */
+const publicados: InstitutionalDocument[] = []
 
-export const documents: InstitutionalDocument[] = exampleContentEnabled
-  ? [...published, ...exampleDocuments]
-  : published
+const reserva: InstitutionalDocument[] = exampleContentEnabled
+  ? [...publicados, ...exampleDocuments]
+  : publicados
 
-/** Data da última publicação real — `null` enquanto não houver nenhuma. */
-const publishedAt: string | null = null
-
-export const lastUpdatedAt: string | null = exampleContentEnabled
-  ? (publishedAt ?? exampleLastUpdatedAt)
-  : publishedAt
-
-export const documentCategories: {
-  id: DocumentCategory
-  label: Localized
-}[] = [
+/**
+ * Categorias usadas quando o Supabase ainda não respondeu. Espelham as que
+ * a migração cadastra — no painel, o cliente renomeia, recolore e cria as
+ * dele em `/admin/documentos/categorias`.
+ */
+export const documentCategories: DocumentCategoryEntry[] = [
   {
-    id: 'reports',
-    label: { pt: 'Relatórios', en: 'Reports', es: 'Informes' },
-  },
-  {
-    id: 'institutional',
-    label: {
-      pt: 'Documentos institucionais',
-      en: 'Institutional documents',
-      es: 'Documentos institucionales',
-    },
+    id: 'painel',
+    label: { pt: 'Painel', en: 'Dashboard', es: 'Panel' },
+    color: 'verde',
   },
   {
     id: 'accountability',
@@ -62,6 +44,21 @@ export const documentCategories: {
       en: 'Accountability',
       es: 'Rendición de cuentas',
     },
+    color: 'azul',
+  },
+  {
+    id: 'reports',
+    label: { pt: 'Relatórios', en: 'Reports', es: 'Informes' },
+    color: 'ambar',
+  },
+  {
+    id: 'institutional',
+    label: {
+      pt: 'Documentos institucionais',
+      en: 'Institutional documents',
+      es: 'Documentos institucionales',
+    },
+    color: 'roxo',
   },
   {
     id: 'projects',
@@ -70,10 +67,42 @@ export const documentCategories: {
       en: 'Project documents',
       es: 'Documentos de proyectos',
     },
+    color: 'cinza',
   },
 ]
 
-/** Anos disponíveis, derivados dos documentos publicados. */
-export function getDocumentYears(): number[] {
+export async function getDocuments(): Promise<InstitutionalDocument[]> {
+  const doPainel = await lerDocumentos()
+  const todos = doPainel ?? reserva
+
+  return [...todos].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+}
+
+export async function getDocumentCategories(): Promise<DocumentCategoryEntry[]> {
+  const doPainel = await lerCategorias()
+  return doPainel ?? documentCategories
+}
+
+/** Anos disponíveis, derivados da lista que está no ar. */
+export function getDocumentYears(documents: InstitutionalDocument[]): number[] {
   return [...new Set(documents.map((doc) => doc.year))].sort((a, b) => b - a)
+}
+
+/**
+ * Data da publicação mais recente — é o que a página anuncia como "última
+ * atualização". `null` enquanto não houver documento nenhum, e nesse caso
+ * a página diz que a atualização está pendente em vez de inventar data.
+ */
+export function getLastUpdatedAt(
+  documents: InstitutionalDocument[],
+): string | null {
+  if (documents.length === 0) {
+    return exampleContentEnabled ? exampleLastUpdatedAt : null
+  }
+
+  return documents.reduce(
+    (maisRecente, doc) =>
+      doc.publishedAt > maisRecente ? doc.publishedAt : maisRecente,
+    documents[0].publishedAt,
+  )
 }

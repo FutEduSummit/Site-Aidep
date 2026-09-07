@@ -27,6 +27,36 @@ export type MediaAsset = {
   credit?: string
 }
 
+/**
+ * Um vídeo do acervo oficial, pronto para tocar.
+ *
+ * Todo o acervo de vídeo da AIDEP é vertical (celular), então a proporção
+ * faz parte do dado — é ela que decide a moldura, e não o contrário.
+ * `poster` é obrigatório: o cartão nunca aparece vazio esperando o vídeo.
+ */
+export type VideoAsset = {
+  src: string
+  poster: string
+  width: number
+  height: number
+  /** Duração em segundos. */
+  duration: number
+  title: Localized
+  /** Descrição do que se vê — legenda do cartão e texto do leitor de tela. */
+  description: Localized
+  /** Onde foi gravado. Nome próprio de lugar: não se traduz. */
+  place: string
+  /** Projeto a que o vídeo pertence, quando houver. */
+  projectSlug?: string
+  /**
+   * Filme institucional — recebe o cartão grande na frente da fileira.
+   * No máximo um por lista.
+   */
+  featured?: boolean
+  /** Idioma falado, quando o vídeo tem narração ou depoimento. */
+  spokenLocale?: Locale
+}
+
 /* ------------------------------------------------------------------ */
 /* Números                                                            */
 /* ------------------------------------------------------------------ */
@@ -49,9 +79,23 @@ export type ProjectLocation = {
   city: Localized
   region?: string
   venue?: string
+  /**
+   * Sigla da unidade federativa. Só é necessária quando `region` não é a
+   * sigla — é ela que decide entre cidades homônimas ("Palmas" existe em
+   * TO e no PR) ao marcar o ponto no mapa.
+   */
+  uf?: string
+  /**
+   * Coordenada informada à mão. Vale sobre o nome da cidade e resolve o
+   * que o cadastro do IBGE não tem: distrito, comunidade, aldeia — ou
+   * cidade fora do Brasil, que fica só na lista, sem ponto no mapa.
+   */
+  coords?: { lat: number; lng: number }
 }
 
 export type Project = {
+  /** Presente apenas nos projetos vindos do painel (linha do Supabase). */
+  id?: string
   slug: string
   /** Nome próprio — não se traduz. */
   name: string
@@ -70,6 +114,11 @@ export type Project = {
   /** Ids de parceiros declarados para este projeto. */
   partnerIds: string[]
   coverKey: string
+  /**
+   * Capa enviada pelo painel. Quando presente, vale sobre `coverKey` —
+   * ver `coverOf()` em `content/media.ts`.
+   */
+  cover?: MediaAsset | null
 }
 
 /* ------------------------------------------------------------------ */
@@ -92,6 +141,8 @@ export type Partner = {
 /* ------------------------------------------------------------------ */
 
 export type NewsArticle = {
+  /** Presente apenas nas notícias vindas do painel (linha do Supabase). */
+  id?: string
   slug: string
   title: Localized
   excerpt: Localized
@@ -103,6 +154,8 @@ export type NewsArticle = {
   updatedAt?: string
   author?: string
   coverKey: string
+  /** Capa enviada pelo painel; vale sobre `coverKey` quando presente. */
+  cover?: MediaAsset | null
   relatedProjectSlugs: string[]
   seo?: {
     title?: Localized
@@ -120,23 +173,54 @@ export type NewsBlock =
 /* Transparência                                                      */
 /* ------------------------------------------------------------------ */
 
-export type DocumentCategory =
-  | 'reports'
-  | 'institutional'
-  | 'accountability'
-  | 'projects'
+/**
+ * Id da categoria. É `string` porque o cliente cria as categorias dele no
+ * painel (tabela `documento_categorias`); os quatro valores históricos
+ * abaixo continuam válidos e seguem cadastrados na migração inicial.
+ */
+export type DocumentCategory = string
+
+/** Cores disponíveis para o selo da categoria na tabela de Transparência. */
+export type CategoryColor =
+  | 'verde'
+  | 'azul'
+  | 'ambar'
+  | 'roxo'
+  | 'cinza'
+  | 'vermelho'
+
+export type DocumentCategoryEntry = {
+  id: DocumentCategory
+  label: Localized
+  color: CategoryColor
+}
+
+export type DocumentFormat =
+  | 'pdf'
+  | 'xlsx'
+  | 'csv'
+  | 'doc'
+  | 'docx'
+  | 'imagem'
+  | 'outro'
 
 export type InstitutionalDocument = {
   id: string
   title: Localized
+  /** Coluna "Conteúdo" da tabela: o que o documento contém, em uma frase. */
+  description?: Localized | null
   category: DocumentCategory
   /** Ano de referência do documento. */
   year: number
   /** ISO 8601 — data de publicação. */
   publishedAt: string
-  /** Caminho em /public. Sem arquivo, o item não é listado. */
+  /** URL do arquivo: caminho em /public ou endereço no Storage do Supabase. */
   file: string
-  format: 'pdf' | 'xlsx' | 'csv' | 'doc'
+  format: DocumentFormat
   sizeLabel?: string
   projectSlug?: string
+  /** Miniatura da primeira página, exibida na coluna "Imagem". */
+  thumbnail?: MediaAsset | null
+  /** Nome original do arquivo enviado — usado no atributo `download`. */
+  fileName?: string
 }

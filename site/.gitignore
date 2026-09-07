@@ -7,3 +7,7 @@ build
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Downloads do gerador do mapa (scripts/gerar-mapa-brasil.mjs) — o que
+# entra no repositório são os arquivos gerados em src/content.
+scripts/.cache

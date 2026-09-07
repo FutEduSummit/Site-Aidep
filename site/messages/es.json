@@ -49,7 +49,9 @@
     "view": "Ver",
     "openInstagram": "Abrir Instagram",
     "sendEmail": "Escribir a la AIDEP",
-    "toTop": "Volver arriba"
+    "toTop": "Volver arriba",
+    "openInNewTab": "Abrir en una pestaña nueva",
+    "close": "Cerrar"
   },
   "a11y": {
     "skipToContent": "Ir al contenido principal",
@@ -128,6 +130,11 @@
           "text": "Resultados que aparecen en la comunidad, no solo en el marcador."
         }
       ]
+    },
+    "videos": {
+      "eyebrow": "En los polos",
+      "title": "El acervo de quien estuvo allí.",
+      "description": "Vídeos grabados en las inauguraciones, los entrenamientos y las competiciones de los polos de Coração Valente, en Sergipe, Brasil."
     },
     "results": {
       "eyebrow": "Resultados",
@@ -272,9 +279,41 @@
       "allProjects": "Todos los proyectos",
       "nextProject": "Siguiente proyecto"
     },
+    "map": {
+      "title": "Donde ocurre el proyecto",
+      "cities": "{count, plural, =0 {Ninguna ciudad} one {# ciudad} other {# ciudades}}",
+      "states": "{count, plural, one {# estado} other {# estados}}",
+      "legend": "Ciudades atendidas",
+      "alt": "Mapa de Brasil con las ciudades atendidas por el proyecto {project}"
+    },
+    "gallery": {
+      "count": "{count, plural, one {# foto} other {# fotos}}",
+      "showMore": "Ver {count, plural, one {# foto más} other {# fotos más}}",
+      "position": "{current} de {total}",
+      "previous": "Foto anterior",
+      "next": "Foto siguiente"
+    },
+    "videos": {
+      "eyebrow": "Vídeos",
+      "title": "El proyecto en movimiento",
+      "description": "Registros de los polos, de los entrenamientos y de las competiciones."
+    },
     "cta": {
       "title": "Apoya este proyecto.",
       "description": "Tu aporte ayuda a mantener y ampliar la estructura que atiende a estas personas."
+    }
+  },
+  "videos": {
+    "label": "Vídeos del acervo",
+    "position": "{current} de {total}",
+    "previous": "Vídeo anterior",
+    "next": "Vídeo siguiente",
+    "film": "Película",
+    "spokenIn": "Vídeo hablado en {language}.",
+    "languages": {
+      "pt": "portugués",
+      "en": "inglés",
+      "es": "español"
     }
   },
   "news": {
@@ -340,6 +379,25 @@
         "Rendición de cuentas",
         "Documentos de los proyectos"
       ]
+    },
+    "table": {
+      "caption": "Documentos de transparencia de AIDEP",
+      "title": "Título",
+      "category": "Categoría",
+      "content": "Contenido",
+      "date": "Fecha",
+      "image": "Imagen",
+      "download": "Descarga",
+      "perPage": "Ítems por página",
+      "sortBy": "Ordenar por {column}",
+      "openDocument": "Abrir {title}",
+      "pagination": "Paginación de documentos",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "pageOf": "Página {current} de {total}"
+    },
+    "viewer": {
+      "notEmbeddable": "El navegador no muestra archivos {format} dentro de la página. Descarga el archivo para abrirlo en tu ordenador."
     }
   },
   "partners": {

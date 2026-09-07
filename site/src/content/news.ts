@@ -1,88 +1,81 @@
+import { lerNoticias } from '@/lib/cms/leitura'
 import { exampleContentEnabled } from '@/lib/example-content'
 import { exampleNews } from './news-example'
 import type { NewsArticle } from './types'
 
 /**
  * NOTÍCIAS
- * =========
- * Nenhuma notícia real foi fornecida até o momento. A estrutura está
- * completa e pronta para receber conteúdo — manualmente ou por um CMS
- * futuro: basta que a fonte devolva objetos no formato `NewsArticle`.
+ * ========
+ * A fonte da verdade é o painel do cliente (`/admin/noticias`), gravado na
+ * tabela `noticias` do Supabase.
  *
- * Enquanto isso, o site carrega as notícias de exemplo de
- * `news-example.ts` — conteúdo de demonstração, para avaliar a lista, a
- * página de leitura e a seção da Home preenchidas. Com
- * `NEXT_PUBLIC_EXAMPLE_CONTENT=0` a lista é vazia e, com ela:
- *   • a seção de notícias da Home não é renderizada;
- *   • a página de Notícias exibe o estado vazio institucional;
- *   • o sitemap não gera URLs de notícia.
+ * Enquanto não houver nenhuma notícia publicada lá — ou se o Supabase
+ * estiver fora do ar —, valem as notícias abaixo: as escritas à mão em
+ * `estaticas` e, quando o conteúdo de exemplo está ligado (o padrão), as de
+ * demonstração de `news-example.ts`. Assim a página nunca fica quebrada e
+ * a demonstração continua disponível até o conteúdo real entrar.
  *
- * Para publicar notícia real, escreva os itens aqui mesmo, no lugar da
- * lista vazia — o formato é o de `news-example.ts`:
- *
- *   const published: NewsArticle[] = [
- *     {
- *       slug: 'futedu-summit-2026',
- *       title: { pt: '…', en: '…', es: '…' },
- *       excerpt: { pt: '…', en: '…', es: '…' },
- *       body: {
- *         pt: [{ type: 'paragraph', text: '…' }],
- *         en: [{ type: 'paragraph', text: '…' }],
- *         es: [{ type: 'paragraph', text: '…' }],
- *       },
- *       category: { pt: 'Institucional', en: 'Institutional', es: 'Institucional' },
- *       date: '2026-03-18',
- *       coverKey: 'news.futedu-summit-2026',
- *       relatedProjectSlugs: ['futedu-summit'],
- *     },
- *   ]
+ * Com `NEXT_PUBLIC_EXAMPLE_CONTENT=0` e a tabela vazia, a lista é vazia:
+ * a Home não renderiza a seção, a página de Notícias exibe o estado vazio
+ * institucional e o sitemap não gera URLs de notícia.
  */
 
-/** Notícias publicadas pela associação. */
-const published: NewsArticle[] = []
+/** Notícias escritas diretamente no código. Normalmente vazio. */
+const estaticas: NewsArticle[] = []
 
-export const news: NewsArticle[] = exampleContentEnabled
-  ? [...published, ...exampleNews]
-  : published
+const reserva: NewsArticle[] = exampleContentEnabled
+  ? [...estaticas, ...exampleNews]
+  : estaticas
 
-export function getArticle(slug: string): NewsArticle | undefined {
-  return news.find((article) => article.slug === slug)
+/** Tudo o que está no ar, da mais recente para a mais antiga. */
+export async function getArticles(limit?: number): Promise<NewsArticle[]> {
+  const doPainel = await lerNoticias()
+  const todas = doPainel ?? reserva
+
+  const ordenadas = [...todas].sort((a, b) => b.date.localeCompare(a.date))
+  return typeof limit === 'number' ? ordenadas.slice(0, limit) : ordenadas
 }
 
-/** Ordenadas da mais recente para a mais antiga. */
-export function getArticles(limit?: number): NewsArticle[] {
-  const sorted = [...news].sort((a, b) => b.date.localeCompare(a.date))
-  return typeof limit === 'number' ? sorted.slice(0, limit) : sorted
+export async function getArticle(slug: string): Promise<NewsArticle | undefined> {
+  const todas = await getArticles()
+  return todas.find((article) => article.slug === slug)
 }
 
-export function getRelatedArticles(
+/**
+ * Relacionadas: primeiro as que dividem projeto com a notícia atual,
+ * depois as mais recentes, até completar o limite.
+ */
+export async function getRelatedArticles(
   slug: string,
   limit = 3,
-): NewsArticle[] {
-  const current = getArticle(slug)
-  if (!current) return []
+): Promise<NewsArticle[]> {
+  const todas = await getArticles()
+  const atual = todas.find((article) => article.slug === slug)
+  if (!atual) return []
 
-  const byProject = getArticles().filter(
+  const porProjeto = todas.filter(
     (article) =>
       article.slug !== slug &&
       article.relatedProjectSlugs.some((projectSlug) =>
-        current.relatedProjectSlugs.includes(projectSlug),
+        atual.relatedProjectSlugs.includes(projectSlug),
       ),
   )
 
-  const rest = getArticles().filter(
+  const restantes = todas.filter(
     (article) =>
-      article.slug !== slug && !byProject.some((a) => a.slug === article.slug),
+      article.slug !== slug &&
+      !porProjeto.some((outra) => outra.slug === article.slug),
   )
 
-  return [...byProject, ...rest].slice(0, limit)
+  return [...porProjeto, ...restantes].slice(0, limit)
 }
 
-export function getArticlesByProject(
+export async function getArticlesByProject(
   projectSlug: string,
   limit = 3,
-): NewsArticle[] {
-  return getArticles()
+): Promise<NewsArticle[]> {
+  const todas = await getArticles()
+  return todas
     .filter((article) => article.relatedProjectSlugs.includes(projectSlug))
     .slice(0, limit)
 }

@@ -1,16 +1,31 @@
 'use client'
 
-import { Download, Eye, Search } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Eye,
+  FileText,
+  Search,
+} from 'lucide-react'
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useId, useMemo, useState } from 'react'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
-import { EmptyState } from '@/components/ui/empty-state'
 import { SelectControl, inputClasses } from '@/components/forms/fields'
+import { DocumentViewer } from '@/components/ui/document-viewer'
+import { EmptyState } from '@/components/ui/empty-state'
 import { Container, Section } from '@/components/ui/section'
-import { documentCategories } from '@/content/documents'
-import type { DocumentCategory, InstitutionalDocument } from '@/content/types'
+import type {
+  DocumentCategory,
+  DocumentCategoryEntry,
+  InstitutionalDocument,
+} from '@/content/types'
 import type { Locale } from '@/i18n/routing'
-import { formatDate } from '@/lib/utils'
+import { categoriaDe, coresDeCategoria, urlDeDownload } from '@/lib/documentos'
+import { cn, formatDate } from '@/lib/utils'
 
 const localeTag: Record<Locale, string> = {
   pt: 'pt-BR',
@@ -20,17 +35,169 @@ const localeTag: Record<Locale, string> = {
 
 type Props = {
   documents: InstitutionalDocument[]
+  categories: DocumentCategoryEntry[]
   years: number[]
   locale: Locale
 }
 
+type Coluna = 'title' | 'category' | 'content' | 'date'
+type Sentido = 'asc' | 'desc'
+
+const opcoesPorPagina = [10, 25, 50] as const
+
+/* ------------------------------------------------------------------ */
+/* Peças da tabela                                                     */
+/* ------------------------------------------------------------------ */
+/* Declaradas aqui fora, e não dentro do explorador: componente criado
+   durante a renderização é um componente novo a cada tecla digitada na
+   busca — o React desmonta e remonta a subárvore inteira, o que apagaria
+   o estado e recarregaria cada miniatura. */
+
+function Ordenador({
+  campo,
+  rotulo,
+  colunaAtiva,
+  sentido,
+  aoOrdenar,
+  descricao,
+}: {
+  campo: Coluna
+  rotulo: string
+  colunaAtiva: Coluna
+  sentido: Sentido
+  aoOrdenar: (campo: Coluna) => void
+  descricao: string
+}) {
+  const ativo = colunaAtiva === campo
+  const Seta = ativo && sentido === 'asc' ? ArrowUp : ArrowDown
+
+  return (
+    <button
+      type="button"
+      onClick={() => aoOrdenar(campo)}
+      aria-label={descricao}
+      className={cn(
+        'group/sort inline-flex items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ease-brand',
+        ativo ? 'text-(--fg)' : 'text-(--fg-subtle) hover:text-(--fg)',
+      )}
+    >
+      {rotulo}
+      <Seta
+        aria-hidden="true"
+        className={cn(
+          'size-3.5 shrink-0 transition-opacity duration-200',
+          ativo ? 'opacity-100' : 'opacity-0 group-hover/sort:opacity-40',
+        )}
+      />
+    </button>
+  )
+}
+
+function Selo({
+  doc,
+  categories,
+  locale,
+}: {
+  doc: InstitutionalDocument
+  categories: DocumentCategoryEntry[]
+  locale: Locale
+}) {
+  const categoria = categoriaDe(categories, doc.category)
+  if (!categoria) return null
+
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center whitespace-nowrap px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.1em]',
+        coresDeCategoria[categoria.color],
+      )}
+    >
+      {categoria.label[locale]}
+    </span>
+  )
+}
+
+function Miniatura({ doc }: { doc: InstitutionalDocument }) {
+  return (
+    <span className="relative flex h-18 w-14 shrink-0 items-center justify-center overflow-hidden border border-(--border) bg-paper-3">
+      {doc.thumbnail ? (
+        <Image
+          src={doc.thumbnail.src}
+          alt=""
+          fill
+          sizes="56px"
+          className="object-cover object-top"
+        />
+      ) : (
+        <FileText
+          aria-hidden="true"
+          className="size-5 text-(--fg-subtle)"
+          strokeWidth={1.5}
+        />
+      )}
+    </span>
+  )
+}
+
+function BotaoVisualizar({
+  doc,
+  rotulo,
+  aoAbrir,
+}: {
+  doc: InstitutionalDocument
+  rotulo: string
+  aoAbrir: (doc: InstitutionalDocument) => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => aoAbrir(doc)}
+      className="inline-flex min-h-11 items-center gap-2 border border-(--border-strong) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-brand hover:border-(--fg)"
+    >
+      <Eye aria-hidden="true" className="size-4" />
+      {rotulo}
+    </button>
+  )
+}
+
+function BotaoBaixar({
+  doc,
+  rotulo,
+}: {
+  doc: InstitutionalDocument
+  rotulo: string
+}) {
+  return (
+    <a
+      href={urlDeDownload(doc)}
+      download={doc.fileName ?? undefined}
+      className="inline-flex min-h-11 items-center gap-2 bg-brand-500 px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-ink-950 transition-colors duration-200 ease-brand hover:bg-brand-400"
+    >
+      <Download aria-hidden="true" className="size-4" />
+      {rotulo}
+    </a>
+  )
+}
+
 /**
- * Explorador de documentos da Transparência.
- * Filtros por ano e categoria, busca por título, visualização e download.
- * Sem documentos publicados, exibe o estado vazio institucional — nenhum
- * documento ou valor é inventado.
+ * EXPLORADOR DE DOCUMENTOS DA TRANSPARÊNCIA
+ * =========================================
+ * Tabela com título, categoria, conteúdo, data, miniatura e download —
+ * ordenável por qualquer coluna, com busca, filtro por ano e por
+ * categoria, e paginação.
+ *
+ * O clique no título ou na miniatura abre o arquivo dentro da própria
+ * página (ver `DocumentViewer`), sem tirar o visitante do site.
+ *
+ * Sem documento publicado, exibe o estado vazio institucional: nenhum
+ * documento, número ou valor é inventado para preencher a tela.
  */
-export function DocumentsExplorer({ documents, years, locale }: Props) {
+export function DocumentsExplorer({
+  documents,
+  categories,
+  years,
+  locale,
+}: Props) {
   const t = useTranslations('transparency')
   const tActions = useTranslations('actions')
   const uid = useId()
@@ -38,19 +205,90 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
   const [query, setQuery] = useState('')
   const [year, setYear] = useState<'all' | number>('all')
   const [category, setCategory] = useState<'all' | DocumentCategory>('all')
+  const [coluna, setColuna] = useState<Coluna>('date')
+  const [sentido, setSentido] = useState<Sentido>('desc')
+  const [porPagina, setPorPagina] = useState<number>(10)
+  const [pagina, setPagina] = useState(1)
+  const [aberto, setAberto] = useState<InstitutionalDocument | null>(null)
 
   const hasDocuments = documents.length > 0
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase()
+  /** Texto pelo qual cada coluna ordena e a busca procura. */
+  const textoDe = useMemo(
+    () => ({
+      title: (doc: InstitutionalDocument) => doc.title[locale] ?? '',
+      content: (doc: InstitutionalDocument) => doc.description?.[locale] ?? '',
+      category: (doc: InstitutionalDocument) =>
+        categoriaDe(categories, doc.category)?.label[locale] ?? '',
+      date: (doc: InstitutionalDocument) => doc.publishedAt,
+    }),
+    [categories, locale],
+  )
+
+  const filtrados = useMemo(() => {
+    const termo = query.trim().toLowerCase()
+
     return documents
       .filter((doc) => (year === 'all' ? true : doc.year === year))
       .filter((doc) => (category === 'all' ? true : doc.category === category))
-      .filter((doc) =>
-        term ? doc.title[locale].toLowerCase().includes(term) : true,
-      )
-      .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-  }, [documents, query, year, category, locale])
+      .filter((doc) => {
+        if (!termo) return true
+        return (
+          textoDe.title(doc).toLowerCase().includes(termo) ||
+          textoDe.content(doc).toLowerCase().includes(termo)
+        )
+      })
+  }, [documents, query, year, category, textoDe])
+
+  const ordenados = useMemo(() => {
+    const fator = sentido === 'asc' ? 1 : -1
+    const extrair = textoDe[coluna]
+
+    return [...filtrados].sort((a, b) => {
+      const comparacao =
+        coluna === 'date'
+          ? extrair(a).localeCompare(extrair(b))
+          : extrair(a).localeCompare(extrair(b), localeTag[locale])
+
+      /* Empate cai na data mais recente — a ordem que o visitante espera. */
+      return comparacao !== 0
+        ? comparacao * fator
+        : b.publishedAt.localeCompare(a.publishedAt)
+    })
+  }, [filtrados, coluna, sentido, textoDe, locale])
+
+  const totalPaginas = Math.max(1, Math.ceil(ordenados.length / porPagina))
+  /* A página some sozinha quando um filtro encurta a lista — recalcular na
+     renderização evita a tela em branco de uma página que não existe mais. */
+  const paginaAtual = Math.min(pagina, totalPaginas)
+  const visiveis = ordenados.slice(
+    (paginaAtual - 1) * porPagina,
+    paginaAtual * porPagina,
+  )
+
+  function ordenarPor(proxima: Coluna) {
+    if (proxima === coluna) {
+      setSentido(sentido === 'asc' ? 'desc' : 'asc')
+    } else {
+      setColuna(proxima)
+      setSentido(proxima === 'date' ? 'desc' : 'asc')
+    }
+    setPagina(1)
+  }
+
+  function aoFiltrar<T>(definir: (valor: T) => void) {
+    return (valor: T) => {
+      definir(valor)
+      setPagina(1)
+    }
+  }
+
+  const rotulosDeColuna: Record<Coluna, string> = {
+    title: t('table.title'),
+    category: t('table.category'),
+    content: t('table.content'),
+    date: t('table.date'),
+  }
 
   return (
     <Section surface="light" ariaLabelledby="transparency-docs-title">
@@ -61,6 +299,7 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
 
         {hasDocuments ? (
           <>
+            {/* Filtros ------------------------------------------------ */}
             <div className="grid grid-cols-1 gap-6 border-b border-(--border) pb-8 sm:grid-cols-2 lg:grid-cols-4">
               <div className="flex flex-col gap-2 sm:col-span-2">
                 <label
@@ -78,7 +317,9 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
                     id={`${uid}-search`}
                     type="search"
                     value={query}
-                    onChange={(event) => setQuery(event.target.value)}
+                    onChange={(event) =>
+                      aoFiltrar(setQuery)(event.target.value)
+                    }
                     placeholder={t('filters.searchPlaceholder')}
                     className={`${inputClasses} pl-11`}
                   />
@@ -96,7 +337,7 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
                   id={`${uid}-year`}
                   value={String(year)}
                   onChange={(event) =>
-                    setYear(
+                    aoFiltrar(setYear)(
                       event.target.value === 'all'
                         ? 'all'
                         : Number(event.target.value),
@@ -123,11 +364,13 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
                   id={`${uid}-category`}
                   value={category}
                   onChange={(event) =>
-                    setCategory(event.target.value as 'all' | DocumentCategory)
+                    aoFiltrar(setCategory)(
+                      event.target.value as 'all' | DocumentCategory,
+                    )
                   }
                 >
                   <option value="all">{t('filters.all')}</option>
-                  {documentCategories.map((item) => (
+                  {categories.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.label[locale]}
                     </option>
@@ -136,59 +379,252 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
               </div>
             </div>
 
-            <p aria-live="polite" className="text-small text-(--fg-muted)">
-              {t('filters.resultsCount', { count: filtered.length })}
-            </p>
+            {/* Contagem e itens por página ---------------------------- */}
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p aria-live="polite" className="text-small text-(--fg-muted)">
+                {t('filters.resultsCount', { count: ordenados.length })}
+              </p>
 
-            {filtered.length > 0 ? (
-              <StaggerContainer as="ul" className="flex flex-col">
-                {filtered.map((doc) => (
-                  <StaggerItem
-                    key={doc.id}
-                    as="li"
-                    className="flex flex-col gap-4 border-t border-(--border) py-6 last:border-b sm:flex-row sm:items-center sm:justify-between sm:gap-8"
+              <div className="flex items-center gap-3">
+                <label
+                  htmlFor={`${uid}-per-page`}
+                  className="text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-muted)"
+                >
+                  {t('table.perPage')}
+                </label>
+                <SelectControl
+                  id={`${uid}-per-page`}
+                  value={String(porPagina)}
+                  onChange={(event) =>
+                    aoFiltrar(setPorPagina)(Number(event.target.value))
+                  }
+                  className="min-h-11 w-auto py-2 pr-10 text-small"
+                >
+                  {opcoesPorPagina.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </SelectControl>
+              </div>
+            </div>
+
+            {ordenados.length > 0 ? (
+              <>
+                {/* Tabela — telas grandes -------------------------- */}
+                <div className="hidden overflow-x-auto lg:block">
+                  <table className="w-full border-collapse text-left">
+                    <caption className="sr-only">{t('table.caption')}</caption>
+                    <thead>
+                      <tr className="border-y border-(--border-strong)">
+                        <th scope="col" className="py-4 pr-6">
+                          <Ordenador
+                            campo="title"
+                            rotulo={rotulosDeColuna.title}
+                            colunaAtiva={coluna}
+                            sentido={sentido}
+                            aoOrdenar={ordenarPor}
+                            descricao={t('table.sortBy', {
+                              column: rotulosDeColuna.title,
+                            })}
+                          />
+                        </th>
+                        <th scope="col" className="py-4 pr-6">
+                          <Ordenador
+                            campo="category"
+                            rotulo={rotulosDeColuna.category}
+                            colunaAtiva={coluna}
+                            sentido={sentido}
+                            aoOrdenar={ordenarPor}
+                            descricao={t('table.sortBy', {
+                              column: rotulosDeColuna.category,
+                            })}
+                          />
+                        </th>
+                        <th scope="col" className="py-4 pr-6">
+                          <Ordenador
+                            campo="content"
+                            rotulo={rotulosDeColuna.content}
+                            colunaAtiva={coluna}
+                            sentido={sentido}
+                            aoOrdenar={ordenarPor}
+                            descricao={t('table.sortBy', {
+                              column: rotulosDeColuna.content,
+                            })}
+                          />
+                        </th>
+                        <th scope="col" className="py-4 pr-6">
+                          <Ordenador
+                            campo="date"
+                            rotulo={rotulosDeColuna.date}
+                            colunaAtiva={coluna}
+                            sentido={sentido}
+                            aoOrdenar={ordenarPor}
+                            descricao={t('table.sortBy', {
+                              column: rotulosDeColuna.date,
+                            })}
+                          />
+                        </th>
+                        <th
+                          scope="col"
+                          className="py-4 pr-6 text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)"
+                        >
+                          {t('table.image')}
+                        </th>
+                        <th
+                          scope="col"
+                          className="py-4 text-right text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)"
+                        >
+                          {t('table.download')}
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {visiveis.map((doc) => (
+                        <tr
+                          key={doc.id}
+                          className="border-b border-(--border) align-top transition-colors duration-200 ease-brand hover:bg-(--overlay)"
+                        >
+                          <th scope="row" className="max-w-[22rem] py-5 pr-6">
+                            <button
+                              type="button"
+                              onClick={() => setAberto(doc)}
+                              className="link-underline text-left text-body font-semibold tracking-[-0.01em]"
+                            >
+                              {doc.title[locale]}
+                            </button>
+                          </th>
+
+                          <td className="py-5 pr-6">
+                            <Selo doc={doc} categories={categories} locale={locale} />
+                          </td>
+
+                          <td className="max-w-[26rem] py-5 pr-6 text-small text-(--fg-muted)">
+                            {doc.description?.[locale] || '—'}
+                          </td>
+
+                          <td className="whitespace-nowrap py-5 pr-6 text-small text-(--fg-muted)">
+                            <time dateTime={doc.publishedAt}>
+                              {formatDate(doc.publishedAt, localeTag[locale])}
+                            </time>
+                          </td>
+
+                          <td className="py-5 pr-6">
+                            <button
+                              type="button"
+                              onClick={() => setAberto(doc)}
+                              aria-label={t('table.openDocument', {
+                                title: doc.title[locale],
+                              })}
+                              className="block transition-opacity duration-200 ease-brand hover:opacity-75"
+                            >
+                              <Miniatura doc={doc} />
+                            </button>
+                          </td>
+
+                          <td className="py-5">
+                            <div className="flex items-center justify-end gap-2">
+                              <BotaoVisualizar doc={doc} rotulo={tActions('view')} aoAbrir={setAberto} />
+                              <BotaoBaixar doc={doc} rotulo={tActions('download')} />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Cartões — telas pequenas ------------------------ */}
+                <StaggerContainer as="ul" className="flex flex-col lg:hidden">
+                  {visiveis.map((doc) => (
+                    <StaggerItem
+                      key={doc.id}
+                      as="li"
+                      className="flex flex-col gap-4 border-t border-(--border) py-6 last:border-b"
+                    >
+                      <div className="flex items-start gap-4">
+                        <button
+                          type="button"
+                          onClick={() => setAberto(doc)}
+                          aria-label={t('table.openDocument', {
+                            title: doc.title[locale],
+                          })}
+                        >
+                          <Miniatura doc={doc} />
+                        </button>
+
+                        <div className="flex min-w-0 flex-col gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setAberto(doc)}
+                            className="link-underline text-left text-h4 font-semibold tracking-[-0.02em]"
+                          >
+                            {doc.title[locale]}
+                          </button>
+
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                            <Selo doc={doc} categories={categories} locale={locale} />
+                            <span className="text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
+                              <time dateTime={doc.publishedAt}>
+                                {formatDate(doc.publishedAt, localeTag[locale])}
+                              </time>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {doc.description?.[locale] ? (
+                        <p className="text-small text-(--fg-muted)">
+                          {doc.description[locale]}
+                        </p>
+                      ) : null}
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <BotaoVisualizar doc={doc} rotulo={tActions('view')} aoAbrir={setAberto} />
+                        <BotaoBaixar doc={doc} rotulo={tActions('download')} />
+                      </div>
+                    </StaggerItem>
+                  ))}
+                </StaggerContainer>
+
+                {/* Paginação -------------------------------------- */}
+                {totalPaginas > 1 ? (
+                  <nav
+                    aria-label={t('table.pagination')}
+                    className="flex items-center justify-between gap-4 border-t border-(--border) pt-6"
                   >
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-h4 font-semibold tracking-[-0.02em]">
-                        {doc.title[locale]}
-                      </h3>
-                      <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
-                        <span>
-                          {documentCategories.find(
-                            (item) => item.id === doc.category,
-                          )?.label[locale] ?? ''}
-                        </span>
-                        <span>{doc.year}</span>
-                        <span>{doc.format.toUpperCase()}</span>
-                        {doc.sizeLabel ? <span>{doc.sizeLabel}</span> : null}
-                        <time dateTime={doc.publishedAt}>
-                          {formatDate(doc.publishedAt, localeTag[locale])}
-                        </time>
-                      </p>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPagina(Math.max(1, paginaAtual - 1))}
+                      disabled={paginaAtual === 1}
+                      className="inline-flex min-h-11 items-center gap-2 border border-(--border-strong) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-brand hover:border-(--fg) disabled:pointer-events-none disabled:opacity-40"
+                    >
+                      <ChevronLeft aria-hidden="true" className="size-4" />
+                      {t('table.previous')}
+                    </button>
 
-                    <div className="flex shrink-0 items-center gap-3">
-                      <a
-                        href={doc.file}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="inline-flex min-h-11 items-center gap-2 border border-(--border-strong) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-brand hover:border-(--fg)"
-                      >
-                        <Eye aria-hidden="true" className="size-4" />
-                        {tActions('view')}
-                      </a>
-                      <a
-                        href={doc.file}
-                        download
-                        className="inline-flex min-h-11 items-center gap-2 bg-(--fg) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-(--bg) transition-colors duration-200 ease-brand hover:bg-(--fg-muted)"
-                      >
-                        <Download aria-hidden="true" className="size-4" />
-                        {tActions('download')}
-                      </a>
-                    </div>
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
+                    <p aria-live="polite" className="text-small text-(--fg-muted)">
+                      {t('table.pageOf', {
+                        current: paginaAtual,
+                        total: totalPaginas,
+                      })}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPagina(Math.min(totalPaginas, paginaAtual + 1))
+                      }
+                      disabled={paginaAtual === totalPaginas}
+                      className="inline-flex min-h-11 items-center gap-2 border border-(--border-strong) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-brand hover:border-(--fg) disabled:pointer-events-none disabled:opacity-40"
+                    >
+                      {t('table.next')}
+                      <ChevronRight aria-hidden="true" className="size-4" />
+                    </button>
+                  </nav>
+                ) : null}
+              </>
             ) : (
               <EmptyState title={t('empty.noResults')} />
             )}
@@ -200,6 +636,12 @@ export function DocumentsExplorer({ documents, years, locale }: Props) {
           />
         )}
       </Container>
+
+      <DocumentViewer
+        document={aberto}
+        locale={locale}
+        onClose={() => setAberto(null)}
+      />
     </Section>
   )
 }

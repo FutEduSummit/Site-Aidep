@@ -1,3 +1,5 @@
+import { lerProjetos } from '@/lib/cms/leitura'
+import { galeriaCoracaoValente } from './media'
 import type { Project } from './types'
 
 /**
@@ -7,7 +9,7 @@ import type { Project } from './types'
  * parceiros por projeto) permanecem vazios e os blocos correspondentes
  * ficam ocultos até que o conteúdo seja entregue.
  */
-export const projects: Project[] = [
+export const projetosDoBriefing: Project[] = [
   {
     slug: 'coracao-valente',
     name: 'Projeto Social Coração Valente',
@@ -86,7 +88,7 @@ export const projects: Project[] = [
     ],
     methodology: null,
     results: null,
-    gallery: [],
+    gallery: galeriaCoracaoValente,
     partnerIds: [],
     coverKey: 'project.coracao-valente.cover',
   },
@@ -125,7 +127,39 @@ export const projects: Project[] = [
       en: ['Children', 'Teenagers', 'School community'],
       es: ['Niños', 'Adolescentes', 'Comunidad escolar'],
     },
-    locations: [],
+    /**
+     * CIDADES PROVISÓRIAS — TROCAR PELAS REAIS.
+     * O briefing informa o número (12 cidades, ver a métrica `cities`
+     * abaixo), mas não os nomes. As doze abaixo estão aqui para que o mapa
+     * de atuação possa ser conferido enquanto a lista oficial não chega;
+     * são cidades plausíveis, não as cidades atendidas.
+     *
+     * Para corrigir, basta trocar nome e sigla: a coordenada de cada ponto
+     * é resolvida sozinha pelo cadastro do IBGE (ver `lib/mapa.ts`). Mais
+     * de uma cidade no mesmo estado é normal e cada uma recebe seu ponto —
+     * `region` é o que separa homônimas ("Itabaiana" existe em SE e na PB).
+     */
+    locations: [
+      { city: { pt: 'Aracaju', en: 'Aracaju', es: 'Aracaju' }, region: 'SE' },
+      { city: { pt: 'Itabaiana', en: 'Itabaiana', es: 'Itabaiana' }, region: 'SE' },
+      { city: { pt: 'Lagarto', en: 'Lagarto', es: 'Lagarto' }, region: 'SE' },
+      { city: { pt: 'Brasília', en: 'Brasília', es: 'Brasilia' }, region: 'DF' },
+      { city: { pt: 'Goiânia', en: 'Goiânia', es: 'Goiania' }, region: 'GO' },
+      { city: { pt: 'Anápolis', en: 'Anápolis', es: 'Anapolis' }, region: 'GO' },
+      { city: { pt: 'Salvador', en: 'Salvador', es: 'Salvador' }, region: 'BA' },
+      {
+        city: {
+          pt: 'Feira de Santana',
+          en: 'Feira de Santana',
+          es: 'Feira de Santana',
+        },
+        region: 'BA',
+      },
+      { city: { pt: 'Curitiba', en: 'Curitiba', es: 'Curitiba' }, region: 'PR' },
+      { city: { pt: 'Londrina', en: 'Londrina', es: 'Londrina' }, region: 'PR' },
+      { city: { pt: 'São Paulo', en: 'São Paulo', es: 'São Paulo' }, region: 'SP' },
+      { city: { pt: 'Campinas', en: 'Campinas', es: 'Campinas' }, region: 'SP' },
+    ],
     metrics: [
       {
         id: 'cities',
@@ -250,8 +284,31 @@ export const projects: Project[] = [
   },
 ]
 
-export function getProject(slug: string): Project | undefined {
-  return projects.find((project) => project.slug === slug)
+
+/* ------------------------------------------------------------------ */
+/* Leitura                                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A fonte da verdade é o painel do cliente (`/admin/projetos`), gravado na
+ * tabela `projetos` do Supabase.
+ *
+ * Enquanto essa tabela estiver vazia — ou se o Supabase estiver fora do ar
+ * — valem os projetos do briefing acima, exatamente como estavam. O botão
+ * "Importar conteúdo do site" no painel copia os três para o banco de uma
+ * vez, e a partir daí o cliente edita cada um por lá.
+ */
+export async function getProjects(): Promise<Project[]> {
+  const doPainel = await lerProjetos()
+  return doPainel ?? projetosDoBriefing
 }
 
-export const projectSlugs = projects.map((project) => project.slug)
+export async function getProject(slug: string): Promise<Project | undefined> {
+  const todos = await getProjects()
+  return todos.find((project) => project.slug === slug)
+}
+
+export async function getProjectSlugs(): Promise<string[]> {
+  const todos = await getProjects()
+  return todos.map((project) => project.slug)
+}

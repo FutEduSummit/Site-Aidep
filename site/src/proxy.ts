@@ -8,6 +8,7 @@ import {
   gatePath,
   gateUnlocked,
 } from './lib/gate'
+import { renovarSessao } from './lib/supabase/proxy'
 
 /**
  * Roteamento de idiomas.
@@ -26,10 +27,22 @@ const intl = createMiddleware(routing)
  * libere o navegador. Desligando a chave, este arquivo volta a se
  * comportar exatamente como o roteamento de idiomas puro.
  */
-export default function proxy(request: NextRequest) {
-  if (!gateEnabled) return intl(request)
-
+export default async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
+
+  /**
+   * O painel do cliente fica fora de tudo isto: não tem idioma na URL e
+   * não passa pelo portão de pré-lançamento — ele tem a própria porta, que
+   * é o login do Supabase. O que ele precisa do proxy é só a renovação do
+   * token de sessão.
+   */
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const resposta = await renovarSessao(request)
+    resposta.headers.set('X-Robots-Tag', 'noindex, nofollow')
+    return resposta
+  }
+
+  if (!gateEnabled) return intl(request)
   const liberado = gateUnlocked(request.cookies.get(gateCookie)?.value)
 
   /* A própria página de construção não passa pelo roteamento de idiomas. */

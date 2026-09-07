@@ -3,7 +3,7 @@
 import { ArrowRight } from 'lucide-react'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { MediaFrame } from '@/components/ui/media-frame'
-import { getMedia } from '@/content/media'
+import { coverOf } from '@/content/media'
 import type { Project } from '@/content/types'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
@@ -57,7 +57,7 @@ export function ProjectCard({
 
         <div className="relative overflow-hidden">
           <MediaFrame
-            media={getMedia(project.coverKey)}
+            media={coverOf(project)}
             locale={locale}
             ratio={variant === 'feature' ? '4 / 3' : '16 / 10'}
             tone="light"

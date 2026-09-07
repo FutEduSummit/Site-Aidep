@@ -38,6 +38,140 @@ sem afetar o site: `src/lib/gate.ts`, `src/app/em-construcao/` e
 
 ---
 
+## Painel de conteúdo (`/admin`)
+
+O cliente publica notícias, projetos e documentos de transparência sozinho,
+em `https://…/admin` — sem tocar em código e sem precisar de deploy.
+
+O painel fica fora do roteamento de idiomas, não passa pelo portão de
+pré-lançamento e não é indexado.
+
+### Colocar no ar (uma vez só)
+
+1. **Preencher o `.env`** — as duas primeiras em **Project Settings → API**,
+   a senha em **Project Settings → Database**:
+
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://SEU-PROJETO.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_…
+   SUPABASE_PASSWORD=…
+   ```
+
+   A senha é usada só pelos scripts de terminal abaixo. O site não precisa
+   dela.
+
+2. **Criar as tabelas:**
+
+   ```bash
+   npm run db:migrate
+   ```
+
+   Aplica `supabase/migrations/*.sql` em ordem e anota o que já rodou em
+   `public._migracoes` — rodar de novo não repete nada. Cria as tabelas, as
+   regras de acesso, os dois buckets de arquivo e cinco categorias de
+   documento.
+
+   > Projeto novo do Supabase só aceita conexão direta por IPv6. Em rede sem
+   > IPv6 o script cai no pooler sozinho, testando as regiões até uma
+   > autenticar — não é preciso descobrir a região à mão.
+
+3. **Criar o acesso do cliente:**
+
+   ```bash
+   npm run admin:criar contato@aidepoficial.com "" "Equipe AIDEP"
+   ```
+
+   Com a senha vazia (`""`) o script sorteia uma forte e imprime uma vez só.
+   Ele faz as duas metades que o acesso exige: a conta em `auth.users` e a
+   liberação em `public.admins`. Sem a segunda, a pessoa entra e não
+   consegue salvar nada.
+
+4. **Conferir:**
+
+   ```bash
+   npm run db:conferir
+   ```
+
+   Mostra tabelas, políticas, buckets, categorias, quanto há publicado e
+   quem são os administradores.
+
+5. **Entrar em `/admin/login`** e, na tela inicial, clicar em
+   **Importar projetos do site** para trazer Coração Valente, Futsal na
+   Escola e FutEdu Summit do código para o painel.
+
+### Encher o painel com o conteúdo de demonstração
+
+```bash
+npm run conteudo:semear -- <email-do-admin> <senha>
+```
+
+Leva para o Supabase as 3 notícias mais recentes de `content/news-example.ts`
+e os 12 documentos de `content/documents-example.ts` — o arquivo sobe para o
+Storage e **a miniatura da primeira página de cada PDF é gerada na hora**,
+pelo Chrome instalado na máquina. Serve para o cliente ver o painel e o site
+preenchidos antes de ter conteúdo real.
+
+> É conteúdo de **demonstração**: as notícias não relatam fato ocorrido e
+> cada documento traz a palavra EXEMPLO impressa. Substitua pelo conteúdo
+> real antes do lançamento — pelo próprio painel.
+
+O painel mostra na hora; o site público leva até 5 minutos, porque só as
+ações do painel invalidam o cache imediatamente.
+
+### Os três idiomas
+
+O painel **não traduz nada automaticamente**. O que for escrito é o que vai
+para o ar.
+
+Nos campos de texto principais — título, resumo, editoria, objetivo, nome da
+categoria, descrição da imagem — há um bloco **"Traduções"**, fechado por
+padrão, com um campo para inglês e outro para espanhol. Quem quiser
+escrever a versão de cada idioma escreve ali.
+
+**Campo de tradução em branco não deixa buraco no site**: `lib/idiomas.ts`
+completa com o português na hora de exibir. Um visitante em inglês vê o
+texto em português em vez de um espaço vazio.
+
+Os campos de lista e o corpo da notícia (parágrafos, público atendido,
+resultados, blocos do texto) são só em português, e seguem a mesma regra de
+exibição — os três idiomas mostram o mesmo texto.
+
+### O que o painel controla
+
+| Seção | Tabela | O que muda no site |
+| --- | --- | --- |
+| Notícias | `noticias` | Página de Notícias, seção da Home, notícias relacionadas, sitemap |
+| Projetos | `projetos` | Página de Projetos, Home, página de cada projeto, doações |
+| Transparência | `documentos` | A tabela da página de Transparência |
+| Categorias | `documento_categorias` | Os selos coloridos da coluna Categoria |
+
+**Enquanto uma tabela estiver vazia, o site usa o conteúdo estático de
+`src/content`** — os projetos do briefing, as notícias e os documentos de
+exemplo. Assim que houver uma linha publicada, o banco manda sozinho. Se o
+Supabase cair, o site volta ao conteúdo estático em vez de quebrar.
+
+Publicou, o site atualiza na hora: cada ação do painel chama `updateTag`
+sobre a etiqueta de cache do conteúdo.
+
+### Documentos: o que é automático
+
+Ao escolher um PDF, o painel envia o arquivo, **desenha a primeira página no
+próprio navegador** e sobe a imagem como miniatura da coluna "Imagem" — o
+cliente não precisa recortar nada. Formato e tamanho também são preenchidos
+sozinhos. Se o PDF não permitir (protegido, corrompido), a linha fica com o
+ícone do formato e ele pode enviar uma imagem à mão.
+
+Na página pública, clicar no título ou na miniatura **abre o documento
+dentro da própria página**, sem tirar o visitante do site.
+
+### Segurança
+
+Quem protege os dados é o RLS declarado na migração, que roda no banco:
+leitura pública apenas do que está publicado, escrita apenas para quem está
+na tabela `admins`. A chave publicável do `.env` vai para o navegador de
+propósito e não dá poder nenhum a mais. As checagens de sessão nas telas do
+painel são conveniência de interface, não a barreira.
+
 ## Como rodar
 
 ```bash
@@ -55,6 +189,11 @@ Scripts disponíveis:
 | `npm start` | serve o build |
 | `npm run lint` | ESLint (flat config, `eslint-config-next`) |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run db:migrate` | aplica as migrações do Supabase (`supabase/migrations/`) |
+| `npm run db:conferir` | mostra o estado do banco: tabelas, políticas, buckets, categorias, conteúdo e administradores |
+| `npm run admin:criar <email> [senha] [nome]` | cria (ou troca a senha de) um administrador do painel |
+| `npm run conteudo:semear -- <email> <senha>` | leva o conteúdo de demonstração para o painel, com as miniaturas dos PDFs |
+| `npm run acervo` | prepara o acervo oficial (fotos e vídeos) para a web — precisa de ffmpeg |
 | `npm run images:stock` | baixa do Pexels as fotos de banco que preenchem as molduras |
 | `npm run docs:example` | gera os documentos de exemplo da Transparência (PDF/CSV) |
 | `npm run qa:pages <url>` | percorre todas as rotas nos 3 idiomas em 6 larguras e reporta overflow, erros de console, imagens deformadas ou invisíveis, links quebrados e problemas de estrutura |
@@ -75,6 +214,7 @@ Os scripts de QA usam `puppeteer-core` com o Chrome instalado na máquina
 | `CONTACT_WEBHOOK_URL` | Endpoint que recebe os formulários. **Enquanto não estiver definida, os formulários validam os dados, informam que o envio não está habilitado e oferecem o e-mail institucional — nunca exibem sucesso falso.** |
 | `NEXT_PUBLIC_EXAMPLE_CONTENT` | `0` desliga as notícias e os documentos de exemplo. Ligado por padrão. |
 | `PEXELS_API_KEY` | Só para rodar `npm run images:stock`. As fotos já baixadas estão versionadas. |
+| `ACERVO_ORIGEM` | Só para rodar `npm run acervo`. Caminho da pasta bruta `Vídeos e Fotos`. Padrão: `../Vídeos e Fotos` |
 
 ---
 
@@ -126,6 +266,8 @@ Duas regras de navegação valem em todo o site:
 ```
 messages/                 pt.json · en.json · es.json  (todo o texto do site)
 public/brand/             logotipos oficiais, por idioma e por versão
+public/images/acervo/     fotografias oficiais da AIDEP, preparadas por npm run acervo
+public/videos/            vídeos oficiais (MP4) e suas capas
 public/images/stock/      fotografias de banco (Pexels) — nenhuma gerada por IA
 public/documentos/        documentos da Transparência
 public/og/                imagens Open Graph compostas a partir da marca
@@ -148,18 +290,25 @@ src/
 
 ## Onde mexer para publicar conteúdo
 
+Notícias, projetos, documentos de transparência e categorias de documento
+saem do **painel** (ver acima) — nada disso precisa de código. A tabela
+abaixo cobre o restante, mais o conteúdo estático que o site usa enquanto o
+painel estiver vazio.
+
 Nada de texto ou dado institucional mora dentro de componentes.
 
 | O que | Arquivo |
 | --- | --- |
 | Textos da interface e das páginas | `messages/pt.json`, `en.json`, `es.json` |
 | Dados institucionais, contato, redes | `src/content/site.ts` |
-| Projetos | `src/content/projects.ts` |
+| Projetos (reserva; o normal é o painel) | `src/content/projects.ts` |
 | Números de impacto | `src/content/impact.ts` |
 | Parceiros | `src/content/partners.ts` |
-| Notícias | `src/content/news.ts` |
-| Documentos de transparência | `src/content/documents.ts` |
-| Fotografias e posts do Instagram | `src/content/media.ts` |
+| Notícias (reserva; o normal é o painel) | `src/content/news.ts` |
+| Documentos de transparência (reserva; o normal é o painel) | `src/content/documents.ts` |
+| Fotografias, galerias e posts do Instagram | `src/content/media.ts` |
+| Vídeos (título, legenda e lugar) | `src/content/videos.ts` |
+| Curadoria do acervo bruto | `scripts/lib/acervo.mjs` |
 | Rotas e URLs por idioma | `src/i18n/routing.ts` |
 | Itens do menu, seções da Home e página ativa | `src/lib/nav.ts` |
 | Tokens do design system | `src/app/globals.css` |
@@ -167,9 +316,17 @@ Nada de texto ou dado institucional mora dentro de componentes.
 
 ### Publicar uma fotografia
 
-1. Coloque o arquivo em `public/images/…` (WebP ou AVIF, quando possível).
-2. Em `src/content/media.ts`, troque o `null` da chave por um objeto com
-   `src`, `width`, `height` e `alt` nos três idiomas.
+O caminho normal passa pelo acervo (ver **O acervo da AIDEP**, abaixo):
+
+1. acrescente o arquivo à curadoria em `scripts/lib/acervo.mjs`;
+2. rode `npm run acervo` — ele converte, redimensiona, tira os metadados e
+   escreve as medidas reais em `src/content/acervo.ts`;
+3. em `src/content/media.ts`, aponte a chave para o nome novo, com `alt`
+   nos três idiomas.
+
+Para uma foto avulsa que não venha do acervo, basta colocar o arquivo em
+`public/images/…` (WebP ou AVIF, quando possível) e escrever o objeto com
+`src`, `width`, `height` e `alt` à mão na chave.
 
 Enquanto a chave estiver `null`, `getMedia()` entrega a fotografia de banco
 equivalente (ver abaixo). Sem nenhuma das duas, a moldura exibe o painel
@@ -200,12 +357,57 @@ para o texto continuar legível sobre qualquer fotografia — sem ele o
 contraste dependeria da imagem que estivesse no ar. Sem foto cadastrada, a
 seção volta ao fundo sólido da superfície, sem buraco visual.
 
+### O acervo da AIDEP
+
+O acervo entregue pela associação — inaugurações dos polos em Sergipe
+(Estância, Poço Verde, Bugio, Boquim, Porto Dantas, Tobias Barreto), a Copa
+Coração Valente e as atividades com entrega de lanches e materiais — é a
+fotografia e o vídeo que estão no ar hoje nas seções principais.
+
+A pasta bruta tem 14 GB de MOV em 4K e HEIC de celular e **não vai para o
+repositório** (está no `.gitignore` da raiz). O que é versionado é o
+resultado da curadoria, já preparado para a web:
+
+```bash
+npm run acervo                 # prepara tudo
+npm run acervo -- --faltantes  # só o que ainda não existe
+npm run acervo -- --fotos      # só as fotografias
+npm run acervo -- --videos     # só os vídeos
+```
+
+| Arquivo | O que é |
+| --- | --- |
+| `scripts/lib/acervo.mjs` | a curadoria: o que entra, com que nome e em que tamanho — **é aqui que você mexe** |
+| `scripts/preparar-acervo.mjs` | converte, redimensiona, tira metadado e gera o registro |
+| `src/content/acervo.ts` | medidas e durações reais dos arquivos — **gerado**, não edite |
+| `public/images/acervo/` | as fotografias em WebP |
+| `public/videos/` | os vídeos em MP4 e as capas em WebP |
+
+Três coisas que o script faz e vale saber:
+
+- **Tira todo o metadado.** O acervo é de celular e carrega GPS, aparelho e
+  data. Nada disso vai ao ar: publicar a coordenada da quadra onde as
+  crianças treinam não é opção.
+- **Baixa a resolução com critério.** Foto de banner sai em 2400 px, de
+  moldura e galeria em 1400–2000 px; vídeo sai em 720×1280 (o filme
+  institucional) e 540×960 (os clipes), a 30 quadros e com teto de bitrate.
+- **Mede o arquivo pronto.** Largura, altura e duração são lidas, nunca
+  digitadas — é o que garante que nenhuma moldura erre a proporção.
+
+Precisa de `ffmpeg` e `ffprobe` no PATH (`winget install Gyan.FFmpeg` ·
+`brew install ffmpeg`): são eles que decodificam o HEIC do iPhone e
+recomprimem o vídeo. A pasta bruta é lida de `../Vídeos e Fotos` — outro
+caminho, use `ACERVO_ORIGEM`.
+
 ### As fotografias que estão no ar hoje
 
-**Nenhuma imagem deste projeto é gerada por IA.** O que preenche as molduras
-são **fotografias de banco do [Pexels](https://www.pexels.com/api/)**
-(licença de uso comercial livre), baixadas para `public/images/stock/` e
-versionadas junto com o código, cada uma com o crédito do fotógrafo.
+**Nenhuma imagem deste projeto é gerada por IA.** As chaves principais estão
+com fotografia oficial da AIDEP (acima). As que ainda não têm — o
+paradesporto, as capas de Futsal na Escola e FutEdu Summit e as notícias de
+exemplo — seguem preenchidas por **fotografias de banco do
+[Pexels](https://www.pexels.com/api/)** (licença de uso comercial livre),
+baixadas para `public/images/stock/` e versionadas junto com o código, cada
+uma com o crédito do fotógrafo.
 
 Elas aparecem sempre, sem interruptor e sem variável de ambiente: é assim
 que o site pode ser navegado e apresentado com todas as imagens no lugar
@@ -251,6 +453,38 @@ guardada em `public/images/stock/.picks.json` e sobrevive ao `--force`.
 > a fotografia real for cadastrada em `content/media.ts`, ela passa a valer
 > sempre.
 
+### Vídeos
+
+Todo o acervo de vídeo é vertical, gravado no celular de quem estava no
+polo. O site segue esse formato em vez de brigar com ele: uma **fileira de
+cartões 9/16** que corre na horizontal, com o filme institucional na frente,
+maior. Aparece na Home (`#home-videos`) e na página de cada projeto que
+tenha vídeo cadastrado.
+
+Como o cartão se comporta:
+
+- **parado**, é uma fotografia — a capa é a única coisa que a página baixa;
+- **no mouse**, vira prévia muda e em laço, um vídeo por vez, e nenhum byte
+  de vídeo antes do gesto (nada disso em tela de toque ou com
+  `prefers-reduced-motion: reduce`);
+- **no clique**, abre em tela cheia com som e com os controles nativos do
+  navegador.
+
+Para publicar mais um vídeo: acrescente o arquivo à lista `videos` de
+`scripts/lib/acervo.mjs`, rode `npm run acervo` e escreva título, legenda e
+lugar em `src/content/videos.ts`. `featured: true` marca o filme
+institucional — no máximo um por lista.
+
+O filme institucional está em português, com legenda gravada na imagem. É o
+que o campo `spokenLocale` declara: quem estiver lendo o site em inglês ou
+espanhol vê o aviso de que o vídeo é falado em português.
+
+| Arquivo | O que é |
+| --- | --- |
+| `src/content/videos.ts` | título, legenda e lugar de cada vídeo — **é aqui que você mexe** |
+| `src/components/sections/video-rail.tsx` | a fileira de cartões |
+| `src/components/ui/video-player.tsx` | o vídeo em tela cheia |
+
 ### Ver o site com notícias e documentos no lugar
 
 A AIDEP ainda não entregou notícias nem documentos. Para que as páginas
@@ -284,17 +518,24 @@ Quando o conteúdo real chegar: escreva as notícias na lista `published` de
 
 ### Publicar uma notícia
 
-Acrescente um objeto `NewsArticle` na lista `published` de
-`src/content/news.ts`. A partir daí a
-notícia aparece na listagem, na Home, no sitemap, nas notícias relacionadas do
-projeto e ganha página própria com dados estruturados de artigo.
+Pelo painel: **`/admin/noticias` → Escrever notícia**. A notícia aparece na
+listagem, na Home, no sitemap, nas notícias relacionadas do projeto e ganha
+página própria com dados estruturados de artigo.
+
+Pelo código, se for preciso: acrescente um objeto `NewsArticle` na lista
+`estaticas` de `src/content/news.ts`. Vale apenas enquanto a tabela
+`noticias` estiver vazia — havendo qualquer notícia no painel, é o painel
+que manda.
 
 ### Publicar um documento de transparência
 
-Coloque o PDF em `public/documentos/` e acrescente um item na lista
-`published` de `src/content/documents.ts`, junto com a data em
-`publishedAt`. Os filtros por ano e categoria, a busca, a visualização e o
-download já funcionam.
+Pelo painel: **`/admin/documentos` → Enviar documento**. Escolha o PDF e
+pronto — o arquivo sobe, a miniatura da primeira página é gerada sozinha e
+os filtros, a busca, a visualização embutida e o download já funcionam.
+
+Pelo código, se for preciso: coloque o arquivo em `public/documentos/` e
+acrescente um item na lista `publicados` de `src/content/documents.ts`.
+Vale apenas enquanto a tabela `documentos` estiver vazia.
 
 ### Publicar uma logo de parceiro
 

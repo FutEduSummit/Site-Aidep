@@ -6,7 +6,12 @@ import { DocumentsExplorer } from '@/components/sections/documents-explorer'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
-import { documents, getDocumentYears, lastUpdatedAt } from '@/content/documents'
+import {
+  getDocumentCategories,
+  getDocumentYears,
+  getDocuments,
+  getLastUpdatedAt,
+} from '@/content/documents'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
 import { formatMonthYear } from '@/lib/utils'
@@ -38,6 +43,10 @@ export default async function TransparencyPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'transparency' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
   const commitmentItems = t.raw('commitment.items') as string[]
+
+  const documents = await getDocuments()
+  const categories = await getDocumentCategories()
+  const lastUpdatedAt = getLastUpdatedAt(documents)
 
   return (
     <>
@@ -72,7 +81,8 @@ export default async function TransparencyPage({ params }: Props) {
 
       <DocumentsExplorer
         documents={documents}
-        years={getDocumentYears()}
+        categories={categories}
+        years={getDocumentYears(documents)}
         locale={locale}
       />
 

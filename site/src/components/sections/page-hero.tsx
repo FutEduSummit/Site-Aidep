@@ -6,6 +6,7 @@ import { useRef, type ReactNode } from 'react'
 import { MaskedWords } from '@/components/motion/animated-text'
 import { SectionBanner } from '@/components/ui/section-banner'
 import { getMedia } from '@/content/media'
+import type { MediaAsset } from '@/content/types'
 import { Container, Section } from '@/components/ui/section'
 import { symbolMark } from '@/lib/brand'
 import { DURATION, EASE } from '@/lib/motion'
@@ -19,6 +20,11 @@ type PageHeroProps = {
   aside?: ReactNode
   /** Faixa de fotografia ao fundo — chave do registro de mídia. */
   mediaKey?: string
+  /**
+   * Fotografia já resolvida — a capa que o cliente enviou pelo painel,
+   * por exemplo. Tem precedência sobre `mediaKey`.
+   */
+  media?: MediaAsset | null
 }
 
 /**
@@ -35,6 +41,7 @@ export function PageHero({
   children,
   aside,
   mediaKey,
+  media,
 }: PageHeroProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -42,7 +49,8 @@ export function PageHero({
     offset: ['start start', 'end start'],
   })
 
-  const hasBanner = Boolean(mediaKey && getMedia(mediaKey))
+  const banner = media ?? (mediaKey ? getMedia(mediaKey) : null)
+  const hasBanner = Boolean(banner)
   const grafismoY = useTransform(scrollYProgress, [0, 1], [0, 120])
   const contentY = useTransform(scrollYProgress, [0, 1], [0, -40])
 
@@ -53,8 +61,8 @@ export function PageHero({
       className="pb-section-sm pt-18 lg:pt-22"
       ariaLabelledby="page-title"
     >
-      {hasBanner && mediaKey ? (
-        <SectionBanner mediaKey={mediaKey} tone="dark" strength="strong" priority />
+      {banner ? (
+        <SectionBanner media={banner} tone="dark" strength="strong" priority />
       ) : null}
 
       <div ref={ref}>

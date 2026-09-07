@@ -31,7 +31,7 @@ export default async function NewsPage({ params }: Props) {
 
   const t = await getTranslations({ locale, namespace: 'news' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
-  const articles = getArticles()
+  const articles = await getArticles()
 
   return (
     <>

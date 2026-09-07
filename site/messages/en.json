@@ -49,7 +49,9 @@
     "view": "View",
     "openInstagram": "Open Instagram",
     "sendEmail": "Write to AIDEP",
-    "toTop": "Back to top"
+    "toTop": "Back to top",
+    "openInNewTab": "Open in a new tab",
+    "close": "Close"
   },
   "a11y": {
     "skipToContent": "Skip to main content",
@@ -128,6 +130,11 @@
           "text": "Results that show up in the community, not only on the scoreboard."
         }
       ]
+    },
+    "videos": {
+      "eyebrow": "At the hubs",
+      "title": "Filmed by the people who were there.",
+      "description": "Videos recorded at the openings, training sessions and competitions of the Coração Valente hubs, in Sergipe, Brazil."
     },
     "results": {
       "eyebrow": "Results",
@@ -272,9 +279,41 @@
       "allProjects": "All projects",
       "nextProject": "Next project"
     },
+    "map": {
+      "title": "Where the project happens",
+      "cities": "{count, plural, =0 {No cities} one {# city} other {# cities}}",
+      "states": "{count, plural, one {# state} other {# states}}",
+      "legend": "Cities served",
+      "alt": "Map of Brazil with the cities served by the {project} project"
+    },
+    "gallery": {
+      "count": "{count, plural, one {# photo} other {# photos}}",
+      "showMore": "Show {count, plural, one {# more photo} other {# more photos}}",
+      "position": "{current} of {total}",
+      "previous": "Previous photo",
+      "next": "Next photo"
+    },
+    "videos": {
+      "eyebrow": "Videos",
+      "title": "The project in motion",
+      "description": "Footage from the hubs, the training sessions and the competitions."
+    },
     "cta": {
       "title": "Support this project.",
       "description": "Your contribution helps to sustain and widen the structure that serves these people."
+    }
+  },
+  "videos": {
+    "label": "Videos from the archive",
+    "position": "{current} of {total}",
+    "previous": "Previous video",
+    "next": "Next video",
+    "film": "Film",
+    "spokenIn": "Spoken in {language}.",
+    "languages": {
+      "pt": "Portuguese",
+      "en": "English",
+      "es": "Spanish"
     }
   },
   "news": {
@@ -340,6 +379,25 @@
         "Accountability",
         "Project documents"
       ]
+    },
+    "table": {
+      "caption": "AIDEP transparency documents",
+      "title": "Title",
+      "category": "Category",
+      "content": "Content",
+      "date": "Date",
+      "image": "Image",
+      "download": "Download",
+      "perPage": "Items per page",
+      "sortBy": "Sort by {column}",
+      "openDocument": "Open {title}",
+      "pagination": "Document pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {current} of {total}"
+    },
+    "viewer": {
+      "notEmbeddable": "Your browser cannot display {format} files inside the page. Download the file to open it on your computer."
     }
   },
   "partners": {

@@ -9,7 +9,10 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: [{ userAgent: '*', allow: '/' }],
+    /* O painel do cliente nunca é indexado. O proxy já manda
+       `X-Robots-Tag: noindex` em toda resposta de /admin; isto evita que o
+       robô sequer bata na porta. */
+    rules: [{ userAgent: '*', allow: '/', disallow: '/admin' }],
     sitemap: new URL('/sitemap.xml', site.url).toString(),
     host: site.url,
   }

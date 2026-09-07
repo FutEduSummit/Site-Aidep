@@ -1,0 +1,6 @@
+# Acervo bruto entregue pela AIDEP — 14 GB de MOV em 4K e HEIC de celular.
+# O que vai para o repositório é o resultado da curadoria, já preparado para
+# a web em site/public (ver site/scripts/preparar-acervo.mjs).
+/Vídeos e Fotos/
+
+node_modules

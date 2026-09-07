@@ -9,7 +9,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { site } from '@/content/site'
-import { projects } from '@/content/projects'
+import { getProjects } from '@/content/projects'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
@@ -38,6 +38,8 @@ export default async function DonatePage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'donate' })
   const tFaq = await getTranslations({ locale, namespace: 'faq' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
+
+  const projects = await getProjects()
 
   const impactItems = t.raw('impact.items') as ImpactItem[]
   const faqItems = tFaq.raw('items') as FaqItem[]
