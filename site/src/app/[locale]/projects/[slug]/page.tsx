@@ -276,7 +276,6 @@ export default async function ProjectPage({ params }: Props) {
                     locale={locale}
                     size="md"
                     align="left"
-                    decorative
                   />
                   <span className="text-h4 font-semibold">{partner.name}</span>
                 </li>
