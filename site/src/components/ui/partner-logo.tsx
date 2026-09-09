@@ -4,16 +4,19 @@ import type { Locale } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
 
 /**
- * Caixa de altura e largura fixas. As logomarcas dos parceiros têm proporções
- * muito diferentes — a Honda é uma tipográfica de 7,9:1, a assinatura da
- * Prefeitura tem 2,9:1 — e normalizar só a altura deixaria a mais larga
- * dominando a faixa. Com a caixa travada nos dois eixos e `object-contain`,
- * cada logo se encaixa e todas ficam com peso visual parecido.
+ * `--logo-h` é a altura de todas as logos — a caixa trava só a altura e deixa
+ * a largura livre, então cada logomarca fica exatamente na mesma altura das
+ * vizinhas, independente da proporção.
+ *
+ * No tamanho `lg` a caixa também tem largura fixa, de 8× a altura: é onde o
+ * nome do parceiro aparece ao lado da logo, e a coluna fixa alinha os nomes
+ * de uma linha para a outra. 8× cabe a logo mais alongada do conjunto (a
+ * tipográfica da Honda, 7,9:1) sem que ela precise encolher para caber.
  */
 const boxes = {
-  sm: 'h-[clamp(1.75rem,3.5vw,2.5rem)] w-[clamp(6.5rem,13vw,10rem)]',
-  md: 'h-[clamp(2rem,4vw,2.75rem)] w-[clamp(7rem,14vw,11rem)]',
-  lg: 'h-[clamp(2.25rem,4.5vw,3.25rem)] w-[clamp(7.5rem,15vw,12rem)]',
+  sm: '[--logo-h:clamp(1.4rem,2.8vw,2.25rem)]',
+  md: '[--logo-h:clamp(1.4rem,2.8vw,2.25rem)]',
+  lg: '[--logo-h:clamp(1.5rem,3vw,2.5rem)] w-[calc(var(--logo-h)*8)]',
 } as const
 
 export type PartnerLogoSize = keyof typeof boxes
@@ -21,35 +24,47 @@ export type PartnerLogoSize = keyof typeof boxes
 /**
  * Logomarca oficial do parceiro. Devolve `null` quando o arquivo ainda não foi
  * fornecido — quem chama decide o que mostrar no lugar (a faixa mostra o nome
- * numa placa tipográfica; a lista já exibe o nome ao lado e não repete).
+ * numa placa tipográfica; a lista já exibe o nome ao lado e não o repete).
  */
 export function PartnerLogo({
   partner,
   locale,
   size = 'md',
   align = 'center',
+  decorative = false,
   className,
 }: {
   partner: Partner
   locale: Locale
   size?: PartnerLogoSize
   align?: 'left' | 'center'
+  /**
+   * O nome do parceiro já aparece em texto ao lado — com `alt` preenchido o
+   * leitor de tela anunciaria a instituição duas vezes.
+   */
+  decorative?: boolean
   className?: string
 }) {
-  if (!partner.logo) return null
+  const { logo } = partner
+  if (!logo) return null
 
   return (
     <span
-      className={cn('flex shrink-0 items-center', boxes[size], className)}
+      className={cn(
+        'flex h-(--logo-h) shrink-0 items-center',
+        align === 'left' ? 'justify-start' : 'justify-center',
+        boxes[size],
+        className,
+      )}
     >
       <Image
-        src={partner.logo.src}
-        alt={partner.logo.alt[locale]}
-        width={partner.logo.width}
-        height={partner.logo.height}
-        sizes="(max-width: 768px) 45vw, 200px"
+        src={logo.src}
+        alt={decorative ? '' : logo.alt[locale]}
+        width={logo.width}
+        height={logo.height}
+        sizes="(max-width: 768px) 60vw, 340px"
         className={cn(
-          'h-full w-full object-contain',
+          'h-full w-auto max-w-full object-contain',
           align === 'left' ? 'object-left' : 'object-center',
         )}
       />

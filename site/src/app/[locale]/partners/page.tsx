@@ -64,6 +64,7 @@ export default async function PartnersPage({ params }: Props) {
                     locale={locale}
                     size="lg"
                     align="left"
+                    decorative
                   />
                   <h3 className="text-h3 font-bold tracking-[-0.03em]">
                     {partner.name}
