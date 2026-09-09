@@ -4,6 +4,7 @@ import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { PartnerForm } from '@/components/forms/partner-form'
 import { PageHero } from '@/components/sections/page-hero'
 import { PartnersStrip } from '@/components/sections/partners-strip'
+import { PartnerLogo } from '@/components/ui/partner-logo'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { institutionalSupport, partners } from '@/content/partners'
@@ -55,11 +56,19 @@ export default async function PartnersPage({ params }: Props) {
               <StaggerItem
                 key={partner.id}
                 as="li"
-                className="flex flex-col gap-2 border-t border-(--border) py-7 last:border-b sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
+                className="flex flex-col gap-4 border-t border-(--border) py-7 last:border-b sm:flex-row sm:items-center sm:justify-between sm:gap-8"
               >
-                <h3 className="text-h3 font-bold tracking-[-0.03em]">
-                  {partner.name}
-                </h3>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
+                  <PartnerLogo
+                    partner={partner}
+                    locale={locale}
+                    size="lg"
+                    align="left"
+                  />
+                  <h3 className="text-h3 font-bold tracking-[-0.03em]">
+                    {partner.name}
+                  </h3>
+                </div>
                 <p className="text-micro uppercase tracking-[0.16em] text-(--fg-subtle)">
                   {t(`list.kinds.${partner.kind}`)}
                 </p>
@@ -67,9 +76,12 @@ export default async function PartnersPage({ params }: Props) {
             ))}
           </StaggerContainer>
 
-          <p className="text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
-            {t('list.logoPending')}
-          </p>
+          {/* O aviso só aparece enquanto faltar a logo de algum parceiro. */}
+          {partners.some((partner) => !partner.logo) ? (
+            <p className="text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
+              {t('list.logoPending')}
+            </p>
+          ) : null}
         </Container>
       </Section>
 

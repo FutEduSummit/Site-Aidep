@@ -14,6 +14,12 @@ type SectionProps = {
   as?: 'section' | 'div' | 'footer' | 'header'
   ariaLabelledby?: string
   ariaLabel?: string
+  /**
+   * O bloco tem fotografia sangrada atrás do conteúdo. Numa superfície
+   * escura isso clareia o cinza do texto de apoio, que não tem folga de
+   * contraste sobre foto — ver `globals.css` e `lib/banner-veil.ts`.
+   */
+  overPhoto?: boolean
 }
 
 const spaces = {
@@ -31,11 +37,13 @@ export function Section({
   as: Tag = 'section',
   ariaLabelledby,
   ariaLabel,
+  overPhoto = false,
 }: SectionProps) {
   return (
     <Tag
       id={id}
       data-surface={surface}
+      data-sobre-foto={overPhoto ? '' : undefined}
       aria-labelledby={ariaLabelledby}
       aria-label={ariaLabel}
       className={cn(

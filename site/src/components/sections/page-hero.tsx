@@ -60,6 +60,7 @@ export function PageHero({
       space="none"
       className="pb-section-sm pt-18 lg:pt-22"
       ariaLabelledby="page-title"
+      overPhoto={hasBanner}
     >
       {banner ? (
         <SectionBanner media={banner} tone="dark" strength="strong" priority />

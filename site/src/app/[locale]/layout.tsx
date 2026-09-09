@@ -9,9 +9,12 @@ import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { ScrollReset } from "@/components/motion/scroll-reset";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { getProjects } from "@/content/projects";
 import { site } from "@/content/site";
+import { pick } from "@/content/types";
 import { routing, type Locale } from "@/i18n/routing";
 import { brandColors } from "@/lib/brand";
+import { PROJECTS_MENU_LIMIT } from "@/lib/nav";
 import {
   buildLanguageAlternates,
   absoluteUrl,
@@ -101,6 +104,16 @@ export default async function LocaleLayout({
   const t = await getTranslations({ locale, namespace: "a11y" });
   const typedLocale = locale as Locale;
 
+  /* O submenu de "Projetos" no topo. Vai montado daqui — o layout já sabe
+     o idioma e já lê os projetos publicados — e o header recebe apenas o
+     que a linha mostra. Acima do limite, a lista remete ao índice. */
+  const projects = await getProjects();
+  const projectNav = projects.slice(0, PROJECTS_MENU_LIMIT).map((project) => ({
+    slug: project.slug,
+    name: project.name,
+    summary: pick(project.summary, typedLocale),
+  }));
+
   return (
     <html lang={locale} className={sora.variable} suppressHydrationWarning>
       <body data-surface="light" className="antialiased">
@@ -112,7 +125,7 @@ export default async function LocaleLayout({
 
             <ScrollReset />
             <ScrollProgress label={t("scrollProgress")} />
-            <Header />
+            <Header projects={projectNav} />
 
             <main id="conteudo" tabIndex={-1}>
               {children}

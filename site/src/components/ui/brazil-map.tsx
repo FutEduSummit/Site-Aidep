@@ -1,5 +1,9 @@
+'use client'
+
+import { motion } from 'motion/react'
 import { mapaBrasil } from '@/content/mapa-brasil'
 import type { PontoDeAtuacao } from '@/lib/mapa'
+import { DURATION, STAGGER, VIEWPORT, transition } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 type BrazilMapProps = {
@@ -19,6 +23,44 @@ type BrazilMapProps = {
 /** Folga entre o ponto e o nome, em unidades do viewBox. */
 const DO_PONTO = 14
 
+/** Intervalo entre a chegada de um ponto e a do próximo. */
+const CASCATA = STAGGER.tight
+
+/** O nome (e a linha) chega logo depois do ponto a que pertence. */
+const ATRASO_DO_ROTULO = 0.16
+
+/**
+ * Cada ponto chega no seu tempo: `custom` é o índice dele na lista, já
+ * ordenada de norte a sul em `lib/mapa.ts`, e vira o atraso da entrada.
+ * A cascata desce o país junto com o scroll de quem lê.
+ */
+const entradaDoPonto = {
+  hidden: { opacity: 0, scale: 0.3 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: transition(DURATION.fast, i * CASCATA),
+  }),
+}
+
+/** A linha ponto → nome é desenhada a partir do ponto, para fora. */
+const entradaDaLinha = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i: number) => ({
+    pathLength: 1,
+    opacity: 1,
+    transition: transition(DURATION.fast, i * CASCATA + ATRASO_DO_ROTULO),
+  }),
+}
+
+const entradaDoRotulo = {
+  hidden: { opacity: 0 },
+  visible: (i: number) => ({
+    opacity: 1,
+    transition: transition(DURATION.fast, i * CASCATA + ATRASO_DO_ROTULO),
+  }),
+}
+
 /**
  * MAPA DO BRASIL COM AS CIDADES DO PROJETO
  * ========================================
@@ -26,10 +68,15 @@ const DO_PONTO = 14
  * `npm run mapa:dados` a partir do dado público do IBGE) com um ponto em
  * cima de cada cidade atendida.
  *
- * Sem JavaScript no cliente: o mapa é SVG renderizado no servidor, os
- * pontos já vêm projetados de `lib/mapa.ts` e o realce ao passar o mouse é
- * CSS. Quem chega com a rede ruim, com script bloqueado ou imprimindo a
- * página vê o mapa igual.
+ * O país é SVG renderizado no servidor e não depende de script nenhum: o
+ * contorno e o recorte da atuação aparecem sempre. O que o cliente anima
+ * são só os pontos — eles entram em cascata, de norte a sul, quando o
+ * mapa aparece na tela, uma única vez. É a mesma língua do resto do site
+ * (`lib/motion.ts`): nada surge do nada, tudo *chega*.
+ *
+ * `prefers-reduced-motion` é respeitado pelo `MotionProvider`: a escala
+ * some e sobra o fade. Quem está com script bloqueado continua com o mapa
+ * e com a lista de cidades ao lado, que é servida em HTML puro.
  *
  * O `paint-order` do rótulo desenha o contorno claro antes do texto: é o
  * que mantém o nome da cidade legível quando ele cai sobre o desenho.
@@ -44,12 +91,19 @@ export function BrazilMap({
   const acesos = new Set(states)
   const comRotulo = points.length > 0 && points.length <= maxLabels
 
+  /* O índice de cada ponto vira o atraso da entrada — e o rótulo e a linha
+     do mesmo ponto usam o mesmo índice, para chegarem juntos. */
+  const ordem = new Map(points.map((ponto, i) => [ponto.id, i]))
+
   return (
-    <svg
+    <motion.svg
       viewBox={`-4 -4 ${mapaBrasil.largura + 8} ${mapaBrasil.altura + 8}`}
       role="img"
       aria-label={label}
       className={cn('h-auto w-full', className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2, margin: VIEWPORT.margin }}
     >
       <g strokeLinejoin="round">
         {mapaBrasil.estados.map((estado) => (
@@ -76,26 +130,33 @@ export function BrazilMap({
           {points
             .filter((ponto) => ponto.comLinha)
             .map((ponto) => (
-              <line
+              <motion.line
                 key={ponto.id}
                 x1={ponto.x}
                 y1={ponto.y}
                 x2={ponto.x + (ponto.lado === 'direita' ? DO_PONTO : -DO_PONTO)}
                 y2={ponto.rotuloY - 5}
+                variants={entradaDaLinha}
+                custom={ordem.get(ponto.id) ?? 0}
               />
             ))}
         </g>
       ) : null}
 
-      {points.map((ponto) => (
-        <g key={ponto.id} className="group/ponto">
+      {points.map((ponto, i) => (
+        /* `transform-box: fill-box` é o que faz o ponto crescer a partir
+           do próprio centro, e não da origem do SVG. */
+        <motion.g
+          key={ponto.id}
+          className="origin-center transform-fill group/ponto"
+          variants={entradaDoPonto}
+          custom={i}
+        >
           <title>
             {ponto.detalhe ? `${ponto.rotulo} — ${ponto.detalhe}` : ponto.rotulo}
           </title>
 
-          {/* Halo: dá volume ao ponto e cresce ao passar o mouse.
-              `transform-box: fill-box` é o que faz a escala crescer a
-              partir do centro do círculo, e não da origem do SVG. */}
+          {/* Halo: dá volume ao ponto e cresce ao passar o mouse. */}
           <circle
             cx={ponto.x}
             cy={ponto.y}
@@ -109,7 +170,7 @@ export function BrazilMap({
             className="fill-brand-600 stroke-(--bg)"
             strokeWidth={3}
           />
-        </g>
+        </motion.g>
       ))}
 
       {/* Os nomes vão por último, todos juntos: cidades vizinhas — três no
@@ -122,19 +183,21 @@ export function BrazilMap({
           strokeWidth={6}
           className="fill-(--fg) font-semibold [paint-order:stroke_fill] stroke-(--bg)"
         >
-          {points.map((ponto) => (
-            <text
+          {points.map((ponto, i) => (
+            <motion.text
               key={ponto.id}
               x={ponto.x + (ponto.lado === 'direita' ? DO_PONTO + 6 : -DO_PONTO - 6)}
               y={ponto.rotuloY}
               textAnchor={ponto.lado === 'direita' ? 'start' : 'end'}
               dominantBaseline="middle"
+              variants={entradaDoRotulo}
+              custom={i}
             >
               {ponto.rotulo}
-            </text>
+            </motion.text>
           ))}
         </g>
       ) : null}
-    </svg>
+    </motion.svg>
   )
 }

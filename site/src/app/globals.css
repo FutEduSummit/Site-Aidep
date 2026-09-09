@@ -96,6 +96,12 @@
   --text-display--line-height: 0.98;
   --text-display-xl: clamp(2rem, 1.05rem + 4.4vw, 5rem);
   --text-display-xl--line-height: 0.94;
+  /* Abertura da Página inicial: o teto de `display`, para o título não
+     crescer sozinho em monitor grande e continuar acima do `h1` da
+     primeira seção, com o piso de `display-xl`, para as linhas do título
+     caberem em tela de 390px sem quebrar no meio. */
+  --text-hero: clamp(2rem, 1.15rem + 3.4vw, 4.5rem);
+  --text-hero--line-height: 0.98;
   --text-metric: clamp(2.75rem, 1.7rem + 4.65vw, 6.25rem);
   --text-metric--line-height: 0.9;
 
@@ -205,6 +211,30 @@
     --overlay: rgb(255 255 255 / 0.08);
   }
 
+  /* TEXTO DE APOIO SOBRE FOTOGRAFIA
+     ------------------------------
+     O cinza de apoio da superfície escura foi calibrado sobre fundo
+     sólido. Sobre fotografia ele não tem folga nenhuma: é ele — o rótulo
+     de 12px e a linha de apoio, não o título, que é branco e enorme — que
+     obrigava o véu da faixa a chegar perto do preto e apagar a imagem.
+
+     Numa faixa com foto o apoio sobe para quase branco. É o que permite ao
+     véu clarear (ver `lib/banner-veil.ts`) com a fotografia aparecendo e o
+     texto ainda passando de 4,5:1 sobre realce estourado.
+
+     `--fg-subtle` fica mais claro que `--fg-muted`, invertendo a escala de
+     propósito: ele veste os rótulos de 11px do apoio lateral, o menor
+     texto da faixa e o que exige mais contraste — quanto menor a letra,
+     mais folga ela precisa. Foi o único bloco que reprovou a medição em
+     cinza.
+
+     Só na superfície escura: no tom claro o texto é escuro e clarear o
+     cinza faria o contrário. */
+  [data-surface="dark"][data-sobre-foto] {
+    --fg-muted: var(--color-ink-100);
+    --fg-subtle: var(--color-paper);
+  }
+
   [data-surface="brand"] {
     --bg: var(--color-brand-500);
     --bg-raised: var(--color-brand-600);
@@ -241,6 +271,49 @@
     scroll-behavior: smooth;
     scroll-padding-top: 6.5rem;
     overflow-x: clip;
+
+    /* A barra de rolagem da página, na linguagem da marca: trilho no cinza
+       da papelaria e polegar no verde AIDEP. Padrão moderno primeiro —
+       Firefox e Chrome recentes leem esta propriedade; o bloco
+       `::-webkit-scrollbar` adiante atende os WebKit que ainda não a
+       implementam.
+
+       A largura fica a do sistema, sem `scrollbar-width: thin`: em barra
+       fina o verde vira um fio de 10px que quase não se lê, e o alvo de
+       arrasto encolhe junto. */
+    scrollbar-color: var(--color-brand-500) var(--color-paper-2);
+
+    /* O espaço da barra fica reservado sempre. Sem isto, tudo o que tranca
+       a rolagem da página — o menu do celular, a janela de documento, a
+       foto em tela cheia — some com a barra e desloca a página inteira
+       alguns pixels para o lado no instante em que abre. */
+    scrollbar-gutter: stable;
+  }
+
+  /* Mesma barra nos WebKit sem `scrollbar-color`. Só a barra da página: as
+     áreas que rolam por dentro (tabelas largas, trilhos de vídeo, painéis)
+     ficam com a barra do sistema, que é discreta e se adapta sozinha ao
+     fundo claro ou escuro de cada uma. */
+  @supports not (scrollbar-color: auto) {
+    html::-webkit-scrollbar {
+      width: 15px;
+    }
+
+    html::-webkit-scrollbar-track {
+      background-color: var(--color-paper-2);
+    }
+
+    /* Cantos retos, como todo o resto do sistema, e uma folga clara de cada
+       lado para o verde não encostar na borda da tela. */
+    html::-webkit-scrollbar-thumb {
+      background-color: var(--color-brand-500);
+      border: 3px solid var(--color-paper-2);
+      border-radius: 0;
+    }
+
+    html::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-brand-600);
+    }
   }
 
   body {

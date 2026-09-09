@@ -2,7 +2,10 @@
  * ACERVO OFICIAL DA AIDEP — SELEÇÃO
  * =================================
  * A lista do que entra no site a partir do acervo bruto entregue pela
- * associação (a pasta "Vídeos e Fotos": 143 fotografias e 381 vídeos, 14 GB).
+ * associação (a pasta "Vídeos e Fotos", com mais de 14 GB de MOV em 4K e
+ * HEIC de celular). As entregas seguem chegando por evento: além das
+ * inaugurações dos polos em Sergipe, a pasta hoje tem "FUTEDU" (o Summit
+ * de Curitiba) e "AIDEP - Futsal" (a quadra do Futsal na Escola).
  *
  * Esta é a curadoria — o que foi escolhido, com que nome e em que tamanho.
  * Quem transforma isso em arquivo de web é `scripts/preparar-acervo.mjs`;
@@ -53,6 +56,35 @@ export const fotos = [
   { nome: 'polo-poco-verde-time', origem: 'Polo Poço Verde-20260907T134819Z-1-001/Polo Poço Verde/IMG_0985.heic', largura: 2400 },
   { nome: 'polo-poco-verde-abertura', origem: 'Polo Poço Verde-20260907T134819Z-1-001/Polo Poço Verde/IMG_1028.heic', largura: 2000 },
   { nome: 'polo-poco-verde-cerimonia', origem: 'Polo Poço Verde-20260907T134819Z-1-001/Polo Poço Verde/IMG_1030.heic', largura: 2400 },
+
+  /* FutEdu Summit — Curitiba (PR)
+     O acervo do evento: o pórtico de entrada, a formação na universidade,
+     o palco com a entrega dos certificados, o torneio e as delegações. */
+  { nome: 'futedu-summit-portico', origem: 'FUTEDU/DJI_0005.JPG', largura: 2400 },
+  { nome: 'futedu-summit-delegacoes', origem: 'FUTEDU/IMG_8475.JPG', largura: 2400 },
+  { nome: 'futedu-summit-participantes', origem: 'FUTEDU/IMG_8463.JPG', largura: 2400 },
+  { nome: 'futedu-summit-certificado', origem: 'FUTEDU/IMG_8352.JPG', largura: 1800 },
+  { nome: 'futedu-summit-palco', origem: 'FUTEDU/IMG_8341.JPG', largura: 2000 },
+  { nome: 'futedu-summit-formacao', origem: 'FUTEDU/IMG_1043.JPG', largura: 1280 },
+  { nome: 'futedu-summit-na-arena', origem: 'FUTEDU/IMG_4249.JPG.jpeg', largura: 2400 },
+  { nome: 'futedu-summit-time-na-arena', origem: 'FUTEDU/IMG_4311.JPG.jpeg', largura: 1600 },
+  { nome: 'futedu-summit-torneio', origem: 'FUTEDU/IMG_8550.JPG', largura: 2400 },
+  { nome: 'futedu-summit-hidratacao', origem: 'FUTEDU/IMG_8564.JPG', largura: 1800 },
+  { nome: 'futedu-summit-jogo-na-quadra', origem: 'FUTEDU/IMG_8530.JPG', largura: 1800 },
+  { nome: 'futedu-summit-painel-de-marcas', origem: 'FUTEDU/IMG_9544.JPG', largura: 1600 },
+
+  /* Futsal na Escola — quadra coberta
+     Chegaram por WhatsApp e por isso já vêm em 1600 px no lado maior: a
+     `largura` aqui nunca pede mais do que o original tem (o `resize` não
+     amplia), então a capa fica em 1600 e a galeria em 1400. */
+  { nome: 'futsal-na-escola-turma', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.23.18.jpeg', largura: 1600 },
+  { nome: 'futsal-na-escola-equipe', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.23.19 (2).jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-uniforme', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.23.18 (1).jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-treino', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.42.43 (1).jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-jogo', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.42.44 (2).jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-lateral', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.42.43.jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-professor', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.42.44 (3).jpeg', largura: 1400 },
+  { nome: 'futsal-na-escola-fim-da-atividade', origem: 'AIDEP - Futsal/WhatsApp Image 2026-09-03 at 14.42.45 (1).jpeg', largura: 1400 },
 
   /* Atividades e entrega de lanches */
   { nome: 'coracao-valente-trofeu', origem: 'Fotos Recebidas/Atividades e Entrega dos Lanches/WhatsApp Image 2026-08-17 at 18.33.59 (2).jpeg', largura: 1400 },

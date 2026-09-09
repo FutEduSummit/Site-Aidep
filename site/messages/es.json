@@ -19,6 +19,7 @@
     "mobileLabel": "Navegación del sitio",
     "footerLabel": "Navegación del pie de página",
     "currentPage": "Página actual",
+    "projectsSubmenu": "Mostrar proyectos",
     "sectionsLabel": "En esta página",
     "aboutSection": "La AIDEP",
     "audienceSection": "Público atendido",
@@ -59,7 +60,9 @@
     "scrollProgress": "Progreso de lectura de la página",
     "imagePending": "Imagen institucional aún no disponible",
     "partnersMarquee": "Socios y apoyadores de la AIDEP",
-    "externalLink": "se abre en una nueva pestaña"
+    "externalLink": "se abre en una nueva pestaña",
+    "carouselLabel": "Fotografías de la apertura",
+    "carouselGoTo": "Ver la fotografía {number} de la apertura"
   },
   "home": {
     "hero": {
@@ -115,20 +118,6 @@
       "paragraphs": [
         "Para la AIDEP, el deporte y el paradeporte no son el punto de llegada. Son el medio por el cual ocurren la formación, la inclusión y la transformación social — en comunidades, en escuelas y en espacios de conocimiento.",
         "Por eso el deporte y el paradeporte están juntos en el nombre de la asociación: la misma estructura, el mismo cuidado y la misma exigencia técnica para todas las personas."
-      ],
-      "pillars": [
-        {
-          "title": "Formación",
-          "text": "Aprender dentro y fuera de la cancha, con continuidad y acompañamiento."
-        },
-        {
-          "title": "Inclusión",
-          "text": "Espacios donde nadie necesita demostrar que merece estar."
-        },
-        {
-          "title": "Transformación social",
-          "text": "Resultados que aparecen en la comunidad, no solo en el marcador."
-        }
       ]
     },
     "videos": {
@@ -268,7 +257,6 @@
       "objective": "Objetivo",
       "audience": "Público atendido",
       "locations": "Lugar de actuación",
-      "numbers": "Números",
       "presentation": "Presentación",
       "methodology": "Metodología",
       "gallery": "Galería",
@@ -386,7 +374,7 @@
       "category": "Categoría",
       "content": "Contenido",
       "date": "Fecha",
-      "image": "Imagen",
+      "preview": "Vista previa",
       "download": "Descarga",
       "perPage": "Ítems por página",
       "sortBy": "Ordenar por {column}",
@@ -397,7 +385,13 @@
       "pageOf": "Página {current} de {total}"
     },
     "viewer": {
-      "notEmbeddable": "El navegador no muestra archivos {format} dentro de la página. Descarga el archivo para abrirlo en tu ordenador."
+      "notEmbeddable": "El navegador no muestra archivos {format} dentro de la página. Descarga el archivo para abrirlo en tu ordenador.",
+      "loading": "Cargando la planilla…",
+      "unreadable": "No se pudo leer esta planilla aquí. Descarga el archivo para abrirlo en tu ordenador.",
+      "sheetCaption": "Contenido de la planilla {title}",
+      "rowNumber": "Fila",
+      "sheetSummary": "{rows} filas · {columns} columnas",
+      "truncated": "Mostrando las primeras {shown} de {total} filas. Descarga el archivo para ver la planilla completa."
     }
   },
   "partners": {

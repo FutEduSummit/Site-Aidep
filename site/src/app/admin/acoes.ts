@@ -1,8 +1,10 @@
 'use server'
 
 import { updateTag } from 'next/cache'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { projetosDoBriefing } from '@/content/projects'
+import { site } from '@/content/site'
 import type { Localized, NewsBlock } from '@/content/types'
 import {
   camposComErro,
@@ -12,7 +14,9 @@ import {
   projetoSchema,
   type BlocoPayload,
   type Resultado,
+  SENHA_MINIMA,
 } from '@/lib/admin/esquemas'
+import { supabaseConfigurado } from '@/lib/supabase/config'
 import { clienteServidor, sessaoAdmin } from '@/lib/supabase/servidor'
 import { TAG_CONTEUDO } from '@/lib/supabase/publico'
 
@@ -161,6 +165,158 @@ export async function sair() {
   const supabase = await clienteServidor()
   await supabase.auth.signOut()
   redirect('/admin/login')
+}
+
+/* ------------------------------------------------------------------ */
+/* Esqueci a senha                                                    */
+/* ------------------------------------------------------------------ */
+
+/* Server Action é endereço público: as duas abaixo podem ser chamadas
+   mesmo quando a tela esconde o formulário. Sem isto, `clienteServidor()`
+   lançaria e o navegador receberia um erro cru. */
+const semBanco = {
+  ok: false as const,
+  erro: 'O painel ainda não está conectado ao banco. Fale com quem cuida do site.',
+}
+
+/**
+ * Origem desta requisição — `http://localhost:3000`, `https://aidep…`.
+ *
+ * Montada a partir dos cabeçalhos, e não de `NEXT_PUBLIC_SITE_URL`, para
+ * que o link do e-mail volte para o mesmo endereço de onde foi pedido:
+ * máquina de desenvolvimento, pré-visualização ou produção. Atrás de
+ * proxy, o host verdadeiro vem em `x-forwarded-host`.
+ */
+async function origemDaRequisicao(): Promise<string> {
+  const cabecalhos = await headers()
+  const host = cabecalhos.get('x-forwarded-host') ?? cabecalhos.get('host')
+
+  if (!host) return site.url
+
+  /* O cabeçalho pode trazer a cadeia inteira ("https,http"): vale o primeiro. */
+  const declarado = cabecalhos.get('x-forwarded-proto')?.split(',')[0]?.trim()
+  const local = /^(localhost|127\.0\.0\.1|\[::1\])(:|$)/.test(host)
+
+  return `${declarado || (local ? 'http' : 'https')}://${host}`
+}
+
+/**
+ * Pede ao Supabase o e-mail com o link de nova senha.
+ *
+ * O link volta para `/admin/auth/confirmar`, que troca o código por uma
+ * sessão curta e leva para `/admin/nova-senha`.
+ *
+ * Cada endereço de onde o painel é usado precisa constar em
+ * **Authentication → URL Configuration → Redirect URLs** no Supabase. Fora
+ * dessa lista o `redirectTo` é ignorado e a pessoa cai na Site URL do
+ * projeto — o e-mail chega, o link não leva a lugar nenhum.
+ *
+ * A resposta é a mesma para e-mail cadastrado e não cadastrado, de
+ * propósito: esta tela não é lugar de descobrir quem tem conta.
+ */
+export async function pedirNovaSenha(
+  email: string,
+): Promise<{ ok: true } | { ok: false; erro: string }> {
+  const endereco = email.trim().toLowerCase()
+
+  if (!supabaseConfigurado) return semBanco
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(endereco)) {
+    return { ok: false, erro: 'Informe um e-mail válido.' }
+  }
+
+  const supabase = await clienteServidor()
+
+  const { error } = await supabase.auth.resetPasswordForEmail(endereco, {
+    redirectTo: `${await origemDaRequisicao()}/admin/auth/confirmar`,
+  })
+
+  if (error) {
+    console.error('[aidep] pedirNovaSenha falhou:', error)
+
+    /* Limite de envio é o único erro que vale contar: quem esbarrou nele
+       precisa saber que é para esperar, não para tentar de novo. */
+    if (error.status === 429) {
+      return {
+        ok: false,
+        erro: 'Já enviamos um e-mail há pouco. Espere alguns minutos antes de pedir outro.',
+      }
+    }
+
+    return {
+      ok: false,
+      erro: 'Não foi possível enviar o e-mail agora. Tente de novo em alguns instantes.',
+    }
+  }
+
+  return { ok: true }
+}
+
+/**
+ * Grava a senha nova.
+ *
+ * Exige a sessão que o link do e-mail acabou de abrir — ou a de quem já
+ * está logado e quer trocar a própria senha. Quem não tem nenhuma das duas
+ * recebe o aviso de link expirado, não uma tela que não salva.
+ */
+export async function definirNovaSenha(
+  senha: string,
+): Promise<
+  | { ok: true; destino: '/admin' | '/admin/login' }
+  | { ok: false; erro: string }
+> {
+  if (!supabaseConfigurado) return semBanco
+
+  if (senha.length < SENHA_MINIMA) {
+    return {
+      ok: false,
+      erro: `A senha precisa de pelo menos ${SENHA_MINIMA} caracteres.`,
+    }
+  }
+
+  const supabase = await clienteServidor()
+  const { data: conta } = await supabase.auth.getUser()
+
+  if (!conta.user) {
+    return {
+      ok: false,
+      erro: 'O link para trocar a senha expirou. Peça outro e-mail para continuar.',
+    }
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: senha })
+
+  if (error) {
+    console.error('[aidep] definirNovaSenha falhou:', error)
+
+    if (error.code === 'same_password') {
+      return { ok: false, erro: 'Esta já é a senha atual. Escolha outra.' }
+    }
+
+    /* O mínimo e as exigências de caractere são do projeto no Supabase:
+       a mensagem dele é mais precisa do que qualquer texto nosso. */
+    if (error.code === 'weak_password') {
+      return {
+        ok: false,
+        erro: error.message || 'Senha fraca demais. Use uma combinação mais longa.',
+      }
+    }
+
+    return {
+      ok: false,
+      erro: 'Não foi possível salvar a senha nova. Tente de novo em alguns instantes.',
+    }
+  }
+
+  /* Conta válida ainda não é acesso: quem não está em `admins` trocou a
+     senha, mas não tem o que fazer no painel — vai para a porta. */
+  const { data: admin } = await supabase
+    .from('admins')
+    .select('user_id')
+    .eq('user_id', conta.user.id)
+    .maybeSingle()
+
+  return { ok: true, destino: admin ? '/admin' : '/admin/login' }
 }
 
 /* ------------------------------------------------------------------ */

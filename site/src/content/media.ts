@@ -8,11 +8,12 @@ import type { Localized, MediaAsset } from './types'
  * Fonte da verdade das fotografias oficiais da AIDEP.
  *
  * As fotos abaixo são do acervo entregue pela associação — inaugurações dos
- * polos em Sergipe (Estância, Poço Verde, Bugio), a Copa Coração Valente e
- * as atividades com entrega de lanches e materiais. Os arquivos são
- * preparados por `npm run acervo` (ver `scripts/preparar-acervo.mjs`), que
- * escreve as medidas reais em `content/acervo.ts`; aqui só entram a chave e
- * o texto alternativo nos três idiomas.
+ * polos em Sergipe (Estância, Poço Verde, Bugio), a Copa Coração Valente,
+ * as atividades com entrega de lanches e materiais, o FutEdu Summit em
+ * Curitiba e a quadra do Futsal na Escola. Os arquivos são preparados por
+ * `npm run acervo` (ver `scripts/preparar-acervo.mjs`), que escreve as
+ * medidas reais em `content/acervo.ts`; aqui só entram a chave e o texto
+ * alternativo nos três idiomas.
  *
  * Chave ainda sem fotografia real permanece `null` e `getMedia()` cai na
  * fotografia de banco equivalente em `media-stock.ts` (Pexels, creditada) —
@@ -37,13 +38,76 @@ function doAcervo(
   return { ...imagensDoAcervo[chave], alt, ...(position ? { position } : {}) }
 }
 
+/**
+ * A fotografia de abertura da Página inicial. Tem nome próprio porque
+ * aparece em dois lugares — a chave `home.hero` e o primeiro quadro de
+ * `carrosselDaHome`, adiante — e o texto alternativo dela precisa ser o
+ * mesmo nos dois.
+ */
+const aberturaDaHome = doAcervo('polo-estancia-comemoracao', {
+  pt: 'Crianças de uniforme do projeto comemoram de braços erguidos na inauguração do polo de Estância, em Sergipe.',
+  en: 'Children in project kit cheer with their arms raised at the opening of the Estância hub, in Sergipe, Brazil.',
+  es: 'Niños con el uniforme del proyecto celebran con los brazos en alto en la inauguración del polo de Estância, en Sergipe, Brasil.',
+})
+
+/**
+ * CAPAS DAS NOTÍCIAS
+ * ==================
+ * Cada capa tem nome próprio porque entra duas vezes no registro abaixo —
+ * uma na chave do conteúdo de exemplo (`news.<slug>`) e outra na chave que
+ * a notícia lida do banco carrega (`noticia.<slug>`). Com o nome, o texto
+ * alternativo é escrito uma vez só e as duas chaves apontam para a mesma
+ * fotografia.
+ *
+ * Todas são do acervo da associação: a notícia mostra gente do projeto, no
+ * lugar onde o assunto dela aconteceu.
+ */
+
+/** Inscrições do Summit: o palco da edição anterior, em Curitiba. */
+const capaDoSummit = doAcervo('futedu-summit-palco', {
+  pt: 'Palco do FutEdu Summit durante a cerimônia, com o painel do evento ao fundo.',
+  en: 'The FutEdu Summit stage during the ceremony, with the event banner behind.',
+  es: 'Escenario del FutEdu Summit durante la ceremonia, con el panel del evento al fondo.',
+})
+
+/** Prestação de contas: o kit entregue — onde o recurso do período chega. */
+const capaDaPrestacaoDeContas = doAcervo('polo-estancia-entrega-kit', {
+  pt: 'Menino sorri ao abrir o kit entregue pelo projeto, com uniforme e chuteiras.',
+  en: 'A boy smiles as he opens the kit handed out by the project, with uniform and boots.',
+  es: 'Un niño sonríe al abrir el kit entregado por el proyecto, con uniforme y botines.',
+})
+
+/** Nova turma em Aracaju: a turma do polo do Bugio, bairro da capital. */
+const capaDaTurmaDeAracaju = doAcervo('polo-bugio-turma', {
+  pt: 'Turma do polo do Bugio, em Aracaju, reunida para a foto no dia da inauguração.',
+  en: 'The Bugio hub group, in Aracaju, gathered for a photo on opening day.',
+  es: 'El grupo del polo de Bugio, en Aracaju, reunido para la foto el día de la inauguración.',
+})
+
+/** Formação de professores: a equipe do Futsal na Escola na quadra. */
+const capaDaFormacao = doAcervo('futsal-na-escola-equipe', {
+  pt: 'Equipe de professores do projeto posa no meio da quadra, de uniforme.',
+  en: 'The project’s teaching staff pose in the middle of the court, in kit.',
+  es: 'El equipo de profesores del proyecto posa en el centro de la cancha, con uniforme.',
+})
+
+/** Oficinas nos polos: a roda no gramado, antes de a atividade começar. */
+const capaDasOficinas = doAcervo('polo-estancia-roda-no-gramado', {
+  pt: 'Crianças sentadas em roda no gramado, com as bolas ao lado, antes do início da atividade.',
+  en: 'Children sitting in a circle on the grass, balls beside them, before the activity starts.',
+  es: 'Niños sentados en círculo en el césped, con los balones al lado, antes de empezar la actividad.',
+})
+
+/** Articulação internacional: as delegações reunidas no Summit. */
+const capaDaArticulacaoInternacional = doAcervo('futedu-summit-delegacoes', {
+  pt: 'Atletas e educadores das delegações posam para a foto oficial diante do painel do Summit.',
+  en: 'Athletes and educators from the delegations pose for the official photo in front of the Summit banner.',
+  es: 'Atletas y educadores de las delegaciones posan para la foto oficial frente al panel del Summit.',
+})
+
 export const media: Record<string, MediaAsset | null> = {
   /* Página inicial */
-  'home.hero': doAcervo('polo-estancia-comemoracao', {
-    pt: 'Crianças de uniforme do projeto comemoram de braços erguidos na inauguração do polo de Estância, em Sergipe.',
-    en: 'Children in project kit cheer with their arms raised at the opening of the Estância hub, in Sergipe, Brazil.',
-    es: 'Niños con el uniforme del proyecto celebran con los brazos en alto en la inauguración del polo de Estância, en Sergipe, Brasil.',
-  }),
+  'home.hero': aberturaDaHome,
 
   'home.about': doAcervo('polo-estancia-atencao', {
     pt: 'Dois meninos de uniforme azul acompanham a atividade com atenção, lado a lado.',
@@ -51,10 +115,39 @@ export const media: Record<string, MediaAsset | null> = {
     es: 'Dos niños con uniforme azul siguen la actividad con atención, uno al lado del otro.',
   }),
 
+  /* Público atendido — um cartão por faixa, cada um com a fotografia da
+     etapa correspondente. `home.audience` é o cartão das crianças e abre a
+     série; as quatro chaves seguintes completam a ordem em que os públicos
+     aparecem em `messages/*.json` (ver `sections/audience-section.tsx`). */
+
   'home.audience': doAcervo('polo-poco-verde-plateia-2', {
     pt: 'Meninas e meninos sentados na quadra do ginásio, atentos à abertura do polo de Poço Verde.',
     en: 'Girls and boys sitting on the sports hall floor, following the opening of the Poço Verde hub.',
     es: 'Niñas y niños sentados en la cancha del gimnasio, atentos a la apertura del polo de Poço Verde.',
+  }),
+
+  'home.audience.teenagers': doAcervo('futsal-na-escola-treino', {
+    pt: 'Adolescentes disputam a bola durante o treino do Futsal na Escola, com o mural da quadra ao fundo.',
+    en: 'Teenagers going for the ball during a Futsal na Escola training session, with the court’s mural behind them.',
+    es: 'Adolescentes disputan el balón durante el entrenamiento de Futsal na Escola, con el mural de la cancha al fondo.',
+  }),
+
+  'home.audience.youth': doAcervo('futsal-na-escola-fim-da-atividade', {
+    pt: 'Jovens reunidos no meio da quadra ao fim da atividade do Futsal na Escola.',
+    en: 'Young people gathered in the middle of the court at the end of the Futsal na Escola session.',
+    es: 'Jóvenes reunidos en el centro de la cancha al final de la actividad de Futsal na Escola.',
+  }),
+
+  'home.audience.adults': doAcervo('futedu-summit-formacao', {
+    pt: 'Palestrante conduz uma das formações do Summit para professores e treinadores na sala de aula.',
+    en: 'A speaker leads one of the Summit’s training sessions for teachers and coaches in the classroom.',
+    es: 'Un ponente conduce una de las formaciones del Summit para profesores y entrenadores en el aula.',
+  }),
+
+  'home.audience.communities': doAcervo('polo-bugio-comunidade', {
+    pt: 'Crianças e adolescentes do Bugio reunidos diante do painel do projeto, no dia da inauguração do polo.',
+    en: 'Children and teenagers from Bugio gathered in front of the project banner on the hub’s opening day.',
+    es: 'Niños y adolescentes de Bugio reunidos frente al panel del proyecto, el día de la inauguración del polo.',
   }),
 
   'home.sport': doAcervo('polo-estancia-alegria', {
@@ -138,18 +231,89 @@ export const media: Record<string, MediaAsset | null> = {
     es: 'El grupo de Coração Valente reunido en el campo del polo de Estância, frente al panel del proyecto.',
   }),
 
-  /* Sem fotografia própria destes dois no acervo entregue. */
-  'project.futsal-na-escola.cover': null,
-  'project.futedu-summit.cover': null,
+  'project.futsal-na-escola.cover': doAcervo('futsal-na-escola-turma', {
+    pt: 'Turma do Futsal na Escola reunida na quadra coberta, com os coletes e as bolas do projeto.',
+    en: 'The Futsal na Escola group gathered on the indoor court, with the project’s bibs and balls.',
+    es: 'El grupo de Futsal na Escola reunido en la cancha cubierta, con los petos y los balones del proyecto.',
+  }),
 
-  /* Notícias */
-  'news.futedu-summit-2026-inscricoes': null,
-  'news.prestacao-de-contas-primeiro-semestre-2026': null,
-  'news.coracao-valente-nova-turma-aracaju': null,
-  'news.futsal-na-escola-formacao-de-professores': null,
-  'news.oficinas-de-paradesporto-nos-polos': null,
-  'news.articulacao-internacional-2027': null,
+  'project.futedu-summit.cover': doAcervo('futedu-summit-portico', {
+    pt: 'Pórtico de boas-vindas do FutEdu Summit sobre a alameda de entrada, em Curitiba.',
+    en: 'The FutEdu Summit welcome arch over the entrance walkway, in Curitiba, Brazil.',
+    es: 'Pórtico de bienvenida del FutEdu Summit sobre la alameda de entrada, en Curitiba, Brasil.',
+  }),
+
+  /* Notícias
+     ========
+     Toda capa de notícia sai do acervo da associação — nenhuma cai mais na
+     fotografia de banco. Cada notícia entra com duas chaves: `news.<slug>`,
+     a do conteúdo de exemplo que `npm run conteudo:semear` leva para o
+     painel, e `noticia.<slug>`, a que `lib/cms/mapear.ts` monta para a
+     notícia lida do banco. Com as duas registradas, a notícia publicada
+     pelo painel sem capa enviada mostra a fotografia oficial do assunto em
+     vez do painel institucional da marca. */
+
+  'news.futedu-summit-2026-inscricoes': capaDoSummit,
+  'noticia.futedu-summit-2026-inscricoes': capaDoSummit,
+
+  'news.prestacao-de-contas-primeiro-semestre-2026': capaDaPrestacaoDeContas,
+  'noticia.prestacao-de-contas-primeiro-semestre-2026': capaDaPrestacaoDeContas,
+
+  'news.coracao-valente-nova-turma-aracaju': capaDaTurmaDeAracaju,
+  'noticia.coracao-valente-nova-turma-aracaju': capaDaTurmaDeAracaju,
+
+  'news.futsal-na-escola-formacao-de-professores': capaDaFormacao,
+  'noticia.futsal-na-escola-formacao-de-professores': capaDaFormacao,
+
+  'news.oficinas-de-paradesporto-nos-polos': capaDasOficinas,
+  'noticia.oficinas-de-paradesporto-nos-polos': capaDasOficinas,
+
+  'news.articulacao-internacional-2027': capaDaArticulacaoInternacional,
+  'noticia.articulacao-internacional-2027': capaDaArticulacaoInternacional,
 }
+
+/**
+ * CARROSSEL DA ABERTURA
+ * =====================
+ * O rodízio de fotografias que passa atrás do título da Página inicial.
+ * A primeira é a mesma foto de `home.hero`: a abertura pinta igual ao que
+ * pintava antes de o carrossel existir, e é ela que carrega com prioridade.
+ * Da segunda em diante o acervo mostra a extensão do trabalho — a rua da
+ * comunidade, o campo, a quadra coberta e a arena do encontro em Curitiba.
+ *
+ * Valem as duas regras das faixas de fundo (ver `ui/banner-carousel.tsx`):
+ * fotografia **larga** e com **espaço livre à esquerda**, onde entra o
+ * título. Foto em pé não entra aqui — sangrada na largura toda, sobraria
+ * dela só uma tira do meio.
+ */
+export const carrosselDaHome: MediaAsset[] = [
+  aberturaDaHome,
+  doAcervo('polo-bugio-na-rua', {
+    pt: 'Crianças e adolescentes da comunidade reunidos na rua, no dia da inauguração do polo do Bugio, em Aracaju.',
+    en: 'Children and teenagers from the community gathered in the street on the opening day of the Bugio hub, in Aracaju.',
+    es: 'Niños y adolescentes de la comunidad reunidos en la calle el día de la inauguración del polo de Bugio, en Aracaju.',
+  }),
+  doAcervo('polo-estancia-time-no-campo', {
+    pt: 'Turma inteira do polo de Estância perfilada no campo, diante do painel do projeto.',
+    en: 'The whole Estância hub group lined up on the pitch in front of the project banner.',
+    es: 'Todo el grupo del polo de Estância alineado en el campo, frente al panel del proyecto.',
+  }),
+  doAcervo('futsal-na-escola-turma', {
+    pt: 'Turma do Futsal na Escola reunida na quadra coberta, com os coletes e as bolas do projeto.',
+    en: 'The Futsal na Escola group gathered on the indoor court, with the project’s bibs and balls.',
+    es: 'El grupo de Futsal na Escola reunido en la cancha cubierta, con los petos y los balones del proyecto.',
+  }),
+  doAcervo('futedu-summit-na-arena', {
+    pt: 'Delegação perfilada no gramado da arena do FutEdu Summit, com as arquibancadas ao fundo.',
+    en: 'A delegation lined up on the FutEdu Summit arena pitch, with the stands behind them.',
+    es: 'Delegación alineada en el césped de la arena del FutEdu Summit, con las gradas al fondo.',
+  }),
+  doAcervo('polo-poco-verde-plateia', {
+    pt: 'Crianças sentadas lado a lado no ginásio de Poço Verde, acompanhando a abertura do polo.',
+    en: 'Children sitting side by side in the Poço Verde sports hall, following the opening of the hub.',
+    es: 'Niños sentados uno al lado del otro en el gimnasio de Poço Verde, siguiendo la apertura del polo.',
+  }),
+]
 
 /**
  * GALERIA DO CORAÇÃO VALENTE
@@ -287,11 +451,133 @@ export const galeriaCoracaoValente: MediaAsset[] = [
 ]
 
 /**
- * Álbuns oficiais por projeto. É o que a página do projeto usa enquanto o
- * cliente não montar a galeria dele pelo painel.
+ * GALERIA DO FUTSAL NA ESCOLA
+ * ===========================
+ * O álbum do projeto na quadra coberta, na ordem da atividade: a turma
+ * reunida, a equipe que conduz, o treino, a partida e a despedida.
+ */
+export const galeriaFutsalNaEscola: MediaAsset[] = [
+  doAcervo('futsal-na-escola-turma', {
+    pt: 'Turma do Futsal na Escola reunida na quadra coberta, com os coletes e as bolas do projeto.',
+    en: 'The Futsal na Escola group gathered on the indoor court, with the project’s bibs and balls.',
+    es: 'El grupo de Futsal na Escola reunido en la cancha cubierta, con los petos y los balones del proyecto.',
+  }),
+  doAcervo('futsal-na-escola-equipe', {
+    pt: 'Equipe de professores do projeto posa no meio da quadra, de uniforme.',
+    en: 'The project’s teaching staff pose in the middle of the court, in kit.',
+    es: 'El equipo de profesores del proyecto posa en el centro de la cancha, con uniforme.',
+  }),
+  doAcervo('futsal-na-escola-treino', {
+    pt: 'Jovens disputam a bola durante o treino, com o mural da quadra ao fundo.',
+    en: 'Teenagers going for the ball during training, with the court’s mural behind them.',
+    es: 'Jóvenes disputan el balón durante el entrenamiento, con el mural de la cancha al fondo.',
+  }),
+  doAcervo('futsal-na-escola-uniforme', {
+    pt: 'Menino de uniforme do projeto na quadra, antes do início da atividade.',
+    en: 'A boy in the project’s kit on the court, before the activity starts.',
+    es: 'Un niño con el uniforme del proyecto en la cancha, antes del inicio de la actividad.',
+  }),
+  doAcervo('futsal-na-escola-professor', {
+    pt: 'Professor conduz a atividade no meio da quadra, com a turma alinhada na lateral.',
+    en: 'A coach leads the activity in the middle of the court, with the group lined up along the side.',
+    es: 'Un profesor conduce la actividad en el centro de la cancha, con el grupo alineado en la banda.',
+  }),
+  doAcervo('futsal-na-escola-jogo', {
+    pt: 'Partida em andamento na quadra coberta, durante a atividade do projeto.',
+    en: 'A match under way on the indoor court during the project activity.',
+    es: 'Partido en marcha en la cancha cubierta, durante la actividad del proyecto.',
+  }),
+  doAcervo('futsal-na-escola-lateral', {
+    pt: 'Grupo sentado na lateral acompanha a partida enquanto os outros jogam.',
+    en: 'A group sitting on the sideline follows the match while the others play.',
+    es: 'Un grupo sentado en la banda sigue el partido mientras los demás juegan.',
+  }),
+  doAcervo('futsal-na-escola-fim-da-atividade', {
+    pt: 'Turma reunida na quadra ao fim da atividade, entre risadas.',
+    en: 'The group gathered on the court at the end of the activity, laughing together.',
+    es: 'El grupo reunido en la cancha al final de la actividad, entre risas.',
+  }),
+]
+
+/**
+ * GALERIA DO FUTEDU SUMMIT
+ * ========================
+ * O álbum do encontro de Curitiba, na ordem em que o evento acontece: a
+ * chegada, as delegações, a formação, a cerimônia com os certificados e o
+ * torneio que fecha a programação.
+ */
+export const galeriaFuteduSummit: MediaAsset[] = [
+  doAcervo('futedu-summit-portico', {
+    pt: 'Pórtico de boas-vindas do FutEdu Summit sobre a alameda de entrada, em Curitiba.',
+    en: 'The FutEdu Summit welcome arch over the entrance walkway, in Curitiba, Brazil.',
+    es: 'Pórtico de bienvenida del FutEdu Summit sobre la alameda de entrada, en Curitiba, Brasil.',
+  }),
+  doAcervo('futedu-summit-delegacoes', {
+    pt: 'Atletas e educadores das delegações posam para a foto oficial diante do painel do Summit.',
+    en: 'Athletes and educators from the delegations pose for the official photo in front of the Summit banner.',
+    es: 'Atletas y educadores de las delegaciones posan para la foto oficial frente al panel del Summit.',
+  }),
+  doAcervo('futedu-summit-formacao', {
+    pt: 'Palestrante conduz uma das formações do Summit para os participantes na sala de aula.',
+    en: 'A speaker leads one of the Summit’s training sessions for participants in the classroom.',
+    es: 'Un ponente conduce una de las formaciones del Summit para los participantes en el aula.',
+  }),
+  doAcervo('futedu-summit-certificado', {
+    pt: 'Entrega de certificado no palco do Summit, com o painel do evento ao fundo.',
+    en: 'A certificate handed over on the Summit stage, with the event banner behind.',
+    es: 'Entrega de certificado en el escenario del Summit, con el panel del evento al fondo.',
+  }),
+  doAcervo('futedu-summit-na-arena', {
+    pt: 'Delegação perfilada no gramado da arena, com as arquibancadas vazias ao fundo.',
+    en: 'A delegation lined up on the arena pitch, with the empty stands behind them.',
+    es: 'Delegación alineada en el césped de la arena, con las gradas vacías al fondo.',
+  }),
+  doAcervo('futedu-summit-participantes', {
+    pt: 'Participantes do Summit reunidos no palco, diante do painel com as marcas do evento.',
+    en: 'Summit participants gathered on stage, in front of the banner with the event’s brands.',
+    es: 'Participantes del Summit reunidos en el escenario, frente al panel con las marcas del evento.',
+  }),
+  doAcervo('futedu-summit-time-na-arena', {
+    pt: 'Time de uniforme amarelo posa para a foto no gramado da arena, ao lado da comissão técnica.',
+    en: 'A team in yellow kit poses for a photo on the arena pitch, beside the coaching staff.',
+    es: 'Un equipo con uniforme amarillo posa para la foto en el césped de la arena, junto al cuerpo técnico.',
+  }),
+  doAcervo('futedu-summit-jogo-na-quadra', {
+    pt: 'Partida de futsal na quadra durante o Summit, com as crianças divididas em coletes.',
+    en: 'A futsal match on the court during the Summit, with the children split by bibs.',
+    es: 'Partido de futsal en la cancha durante el Summit, con los niños divididos por petos.',
+  }),
+  doAcervo('futedu-summit-torneio', {
+    pt: 'Times e comissões reunidos no campo ao fim da tarde, no torneio do Summit.',
+    en: 'Teams and staff gathered on the pitch at dusk during the Summit tournament.',
+    es: 'Equipos y cuerpos técnicos reunidos en el campo al final de la tarde, en el torneo del Summit.',
+  }),
+  doAcervo('futedu-summit-hidratacao', {
+    pt: 'Meninos de uniforme pegam garrafas de água na mesa, no intervalo das partidas.',
+    en: 'Boys in kit pick up water bottles from the table during the break between matches.',
+    es: 'Niños con uniforme cogen botellas de agua de la mesa, en el descanso entre partidos.',
+  }),
+  doAcervo('futedu-summit-palco', {
+    pt: 'Palco do FutEdu Summit durante a cerimônia, com o painel do evento ao fundo.',
+    en: 'The FutEdu Summit stage during the ceremony, with the event banner behind.',
+    es: 'Escenario del FutEdu Summit durante la ceremonia, con el panel del evento al fondo.',
+  }),
+  doAcervo('futedu-summit-painel-de-marcas', {
+    pt: 'Participante diante do painel de marcas do Summit, no gramado sintético do evento.',
+    en: 'A participant in front of the Summit’s sponsor banner, on the event’s artificial turf.',
+    es: 'Un participante frente al panel de marcas del Summit, en el césped sintético del evento.',
+  }),
+]
+
+/**
+ * Álbuns por projeto. É o que a página do projeto usa enquanto o cliente
+ * não montar a galeria dele pelo painel. Os três têm hoje o álbum do
+ * próprio projeto, fotografado no lugar onde ele acontece.
  */
 const galerias: Record<string, MediaAsset[]> = {
   'coracao-valente': galeriaCoracaoValente,
+  'futsal-na-escola': galeriaFutsalNaEscola,
+  'futedu-summit': galeriaFuteduSummit,
 }
 
 /**

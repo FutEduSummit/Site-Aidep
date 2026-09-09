@@ -1,36 +1,25 @@
 import { lerNoticias } from '@/lib/cms/leitura'
-import { exampleContentEnabled } from '@/lib/example-content'
-import { exampleNews } from './news-example'
 import type { NewsArticle } from './types'
 
 /**
  * NOTÍCIAS
  * ========
- * A fonte da verdade é o painel do cliente (`/admin/noticias`), gravado na
- * tabela `noticias` do Supabase.
+ * A única fonte é o painel do cliente (`/admin/noticias`), gravado na
+ * tabela `noticias` do Supabase. Notícia que não está no banco não
+ * aparece no site — não há lista de reserva no código, e o conteúdo de
+ * demonstração de `news-example.ts` não chega mais à página. Ele
+ * continua no repositório só para `npm run conteudo:semear`, que grava
+ * essas notícias no banco quando alguém quer o site preenchido para uma
+ * apresentação.
  *
- * Enquanto não houver nenhuma notícia publicada lá — ou se o Supabase
- * estiver fora do ar —, valem as notícias abaixo: as escritas à mão em
- * `estaticas` e, quando o conteúdo de exemplo está ligado (o padrão), as de
- * demonstração de `news-example.ts`. Assim a página nunca fica quebrada e
- * a demonstração continua disponível até o conteúdo real entrar.
- *
- * Com `NEXT_PUBLIC_EXAMPLE_CONTENT=0` e a tabela vazia, a lista é vazia:
- * a Home não renderiza a seção, a página de Notícias exibe o estado vazio
+ * Com a tabela vazia — ou com o Supabase fora do ar — a lista é vazia: a
+ * Home não renderiza a seção, a página de Notícias exibe o estado vazio
  * institucional e o sitemap não gera URLs de notícia.
  */
 
-/** Notícias escritas diretamente no código. Normalmente vazio. */
-const estaticas: NewsArticle[] = []
-
-const reserva: NewsArticle[] = exampleContentEnabled
-  ? [...estaticas, ...exampleNews]
-  : estaticas
-
-/** Tudo o que está no ar, da mais recente para a mais antiga. */
+/** Tudo o que está publicado no banco, da mais recente para a mais antiga. */
 export async function getArticles(limit?: number): Promise<NewsArticle[]> {
-  const doPainel = await lerNoticias()
-  const todas = doPainel ?? reserva
+  const todas = (await lerNoticias()) ?? []
 
   const ordenadas = [...todas].sort((a, b) => b.date.localeCompare(a.date))
   return typeof limit === 'number' ? ordenadas.slice(0, limit) : ordenadas

@@ -174,9 +174,10 @@ async function prepararVideos() {
     }
 
     if (!reaproveitar('videos') || !existsSync(saidaVideo)) {
-      /* O filme institucional aparece grande e é o que se assiste até o
-         fim: ganha mais resolução e mais teto de bitrate. Os clipes da
-         fileira aparecem em cartões de ~280 px e são vistos de relance. */
+      /* Os dois abrem no mesmo player de ~448 px, mas o filme
+         institucional é o que se assiste até o fim: ganha mais resolução
+         e mais teto de bitrate. Os clipes são vistos de relance, e na
+         fileira aparecem como prévia muda em cartões de ~248 px. */
       const lado = video.destaque ? [720, 1280] : [540, 960]
       const crf = video.destaque ? '29' : '30'
       const teto = video.destaque ? '1100k' : '900k'

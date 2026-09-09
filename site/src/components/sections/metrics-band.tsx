@@ -45,7 +45,7 @@ export function MetricsBand({
   const bannerTone = surface === 'brand' ? 'brand' : surface === 'dark' ? 'dark' : 'light'
 
   return (
-    <Section id={id} surface={surface} ariaLabelledby={`${id}-title`}>
+    <Section id={id} surface={surface} ariaLabelledby={`${id}-title`} overPhoto={Boolean(mediaKey)}>
       {mediaKey ? (
         <SectionBanner mediaKey={mediaKey} tone={bannerTone} strength="strong" />
       ) : null}

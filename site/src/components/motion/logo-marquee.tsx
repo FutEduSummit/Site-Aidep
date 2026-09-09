@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
 import { useReducedMotionSafe } from '@/hooks/use-media'
+import { PartnerLogo } from '@/components/ui/partner-logo'
 import type { Partner } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
@@ -43,14 +43,7 @@ export function LogoMarquee({
       className="flex shrink-0 items-center justify-center px-[clamp(1.25rem,3vw,3rem)]"
     >
       {partner.logo ? (
-        <Image
-          src={partner.logo.src}
-          alt={partner.logo.alt[locale]}
-          width={partner.logo.width}
-          height={partner.logo.height}
-          sizes="(max-width: 768px) 40vw, 220px"
-          className="h-[clamp(1.75rem,3.5vw,2.75rem)] w-auto object-contain"
-        />
+        <PartnerLogo partner={partner} locale={locale} size="sm" />
       ) : (
         <span
           title={pendingLabel}

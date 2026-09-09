@@ -22,6 +22,22 @@ export const primaryNav: NavItem[] = [
   { href: '/donate', key: 'donate' },
 ]
 
+/**
+ * Um projeto no submenu de "Projetos".
+ *
+ * A lista é montada no servidor (o layout já conhece o idioma e os
+ * projetos publicados) e chega pronta ao header: só o necessário para
+ * desenhar a linha, sem carregar o projeto inteiro para o navegador.
+ */
+export type ProjectNavItem = {
+  slug: string
+  name: string
+  summary: string
+}
+
+/** Quantos projetos o submenu mostra antes de remeter ao índice. */
+export const PROJECTS_MENU_LIMIT = 5
+
 export const footerInstitutional: NavItem[] = [
   { href: '/transparency', key: 'transparency' },
   { href: '/partners', key: 'partners' },

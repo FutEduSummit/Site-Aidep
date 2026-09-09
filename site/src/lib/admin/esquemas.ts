@@ -244,3 +244,18 @@ export function sugerirSlug(texto: string): string {
     .replace(/^-+|-+$/g, '')
     .slice(0, 80)
 }
+
+/* ------------------------------------------------------------------ */
+/* Senha                                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Tamanho mínimo da senha do painel — o mesmo número que o formulário
+ * cobra antes de enviar, que a ação confere antes de gravar e que
+ * `scripts/criar-admin.mjs` exige no terminal.
+ *
+ * O Supabase tem o próprio mínimo (Authentication → Policies). Se o do
+ * projeto for maior, é ele que manda: a mensagem de recusa dele chega ao
+ * formulário como está.
+ */
+export const SENHA_MINIMA = 8

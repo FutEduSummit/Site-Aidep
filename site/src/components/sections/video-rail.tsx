@@ -35,8 +35,12 @@ function relogio(segundos: number) {
  * =================
  * O acervo de vídeo da AIDEP é inteiro vertical, gravado no celular de
  * quem estava lá. A fileira segue esse formato em vez de brigar com ele:
- * cartões 9/16 que correm na horizontal, o filme institucional na frente,
- * maior, e os clipes dos polos em seguida.
+ * cartões 9/16 de medida única que correm na horizontal, o filme
+ * institucional na frente e os clipes dos polos em seguida.
+ *
+ * Todos os cartões têm a mesma largura de propósito. O filme se destaca
+ * pela tarja "Filme" e pela posição — não pelo tamanho: cartão maior no
+ * meio de uma fileira quebrava o ritmo da rolagem e desalinhava a grade.
  *
  * Como cada cartão se comporta:
  *
@@ -121,22 +125,14 @@ export function VideoRail({
           ref={trilho}
           className="w-full overflow-x-auto overscroll-x-contain [scrollbar-width:thin]"
         >
-          {/* Alinhados pela base: as legendas ficam todas na mesma linha,
-              e é o cartão do filme que sobe acima dos outros. */}
-          <ul className="container-site flex items-end gap-4">
+          {/* Mesma largura para todos, então mesma altura: as capas e as
+              legendas ficam alinhadas topo e base sem nenhum ajuste. */}
+          <ul className="container-site flex items-stretch gap-4">
             {videos.map((video, indice) => {
               const destaque = Boolean(video.featured)
 
               return (
-                <li
-                  key={video.src}
-                  className={cn(
-                    'shrink-0',
-                    destaque
-                      ? 'w-[min(76vw,21rem)]'
-                      : 'w-[min(58vw,15.5rem)]',
-                  )}
-                >
+                <li key={video.src} className="w-[min(58vw,15.5rem)] shrink-0">
                   <button
                     type="button"
                     onClick={() => setAberto(indice)}
@@ -148,7 +144,7 @@ export function VideoRail({
                       src={video.poster}
                       alt=""
                       fill
-                      sizes={destaque ? '(max-width: 1024px) 76vw, 336px' : '(max-width: 1024px) 58vw, 248px'}
+                      sizes="(max-width: 1024px) 58vw, 248px"
                       className={cn(
                         'object-cover transition-transform duration-700 ease-brand',
                         'fine:motion-safe:group-hover/clipe:scale-105',
@@ -189,12 +185,7 @@ export function VideoRail({
                       <span className="text-micro uppercase tracking-[0.14em] text-white/75">
                         {video.place}
                       </span>
-                      <span
-                        className={cn(
-                          'font-semibold tracking-[-0.02em] text-balance',
-                          destaque ? 'text-h4' : 'text-small leading-snug',
-                        )}
-                      >
+                      <span className="text-small font-semibold leading-snug tracking-[-0.02em] text-balance">
                         {video.title[locale]}
                       </span>
                       <span className="sr-only">{video.description[locale]}</span>

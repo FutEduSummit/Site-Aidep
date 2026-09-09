@@ -99,6 +99,59 @@ pré-lançamento e não é indexado.
    **Importar projetos do site** para trazer Coração Valente, Futsal na
    Escola e FutEdu Summit do código para o painel.
 
+### Esqueci a senha
+
+Na tela de entrada, **Esqueceu a senha? → Receba um link por e-mail**. O
+cliente informa o endereço, recebe um link do Supabase e escolhe a senha
+nova em `/admin/nova-senha` — sem depender de ninguém no terminal.
+
+O caminho, em quatro passos:
+
+```
+/admin/recuperar-senha  →  e-mail do Supabase  →  /admin/auth/confirmar  →  /admin/nova-senha
+```
+
+Duas coisas precisam estar configuradas no Supabase para o link funcionar:
+
+1. **Authentication → URL Configuration → Redirect URLs.** Acrescente todo
+   endereço de onde o painel é usado:
+
+   ```
+   https://aidepoficial.com/admin/auth/confirmar
+   http://localhost:3000/admin/auth/confirmar
+   ```
+
+   Fora dessa lista o Supabase ignora o endereço de volta e joga a pessoa na
+   Site URL do projeto: o e-mail chega, o link não leva a lugar nenhum.
+
+2. **Authentication → Emails → SMTP Settings.** O serviço de e-mail que já
+   vem no Supabase só entrega para membros da organização do projeto e
+   permite poucos envios por hora — serve para testar, não para o cliente.
+   Ligue um SMTP próprio (Resend, Brevo, SendGrid, o e-mail do domínio…)
+   antes do lançamento.
+
+Detalhes que valem saber:
+
+- O link vale **uma hora** e só pode ser usado **uma vez**.
+- Ele precisa ser aberto **no mesmo navegador** que pediu o e-mail: a outra
+  metade da chave fica num cookie daquele navegador. Abrindo no celular um
+  link pedido no computador, a tela explica o que aconteceu e oferece pedir
+  outro. Para liberar qualquer aparelho, troque o modelo de e-mail
+  (**Authentication → Emails → Reset Password**) por um que use
+  `{{ .TokenHash }}`:
+
+  ```html
+  <a href="{{ .SiteURL }}/admin/auth/confirmar?token_hash={{ .TokenHash }}&type=recovery">
+    Criar senha nova
+  </a>
+  ```
+
+  `/admin/auth/confirmar` aceita as duas formas de link — não é preciso
+  mexer em código para trocar de uma para a outra.
+- Quem perdeu também o acesso ao e-mail continua atendido pelo terminal:
+  `npm run admin:criar <email> <senha>` troca a senha e mantém tudo o que a
+  pessoa já publicou.
+
 ### Encher o painel com o conteúdo de demonstração
 
 ```bash
@@ -146,9 +199,14 @@ exibição — os três idiomas mostram o mesmo texto.
 | Categorias | `documento_categorias` | Os selos coloridos da coluna Categoria |
 
 **Enquanto uma tabela estiver vazia, o site usa o conteúdo estático de
-`src/content`** — os projetos do briefing, as notícias e os documentos de
-exemplo. Assim que houver uma linha publicada, o banco manda sozinho. Se o
-Supabase cair, o site volta ao conteúdo estático em vez de quebrar.
+`src/content`** — os projetos do briefing e os documentos de exemplo.
+Assim que houver uma linha publicada, o banco manda sozinho. Se o Supabase
+cair, o site volta ao conteúdo estático em vez de quebrar.
+
+**As notícias são a exceção: elas vêm só do banco.** Não há lista de
+reserva no código — notícia que não está na tabela `noticias` não aparece
+no site. Tabela vazia ou Supabase fora do ar, a lista fica vazia e a página
+exibe o estado vazio institucional.
 
 Publicou, o site atualiza na hora: cada ação do painel chama `updateTag`
 sobre a etiqueta de cache do conteúdo.
@@ -156,13 +214,29 @@ sobre a etiqueta de cache do conteúdo.
 ### Documentos: o que é automático
 
 Ao escolher um PDF, o painel envia o arquivo, **desenha a primeira página no
-próprio navegador** e sobe a imagem como miniatura da coluna "Imagem" — o
+próprio navegador** e sobe a imagem como miniatura da coluna "Prévia" — o
 cliente não precisa recortar nada. Formato e tamanho também são preenchidos
-sozinhos. Se o PDF não permitir (protegido, corrompido), a linha fica com o
-ícone do formato e ele pode enviar uma imagem à mão.
+sozinhos. Se o PDF não permitir (protegido, corrompido), ele pode enviar uma
+imagem à mão.
 
-Na página pública, clicar no título ou na miniatura **abre o documento
-dentro da própria página**, sem tirar o visitante do site.
+Sob o título de cada linha aparece **o ícone do formato**: a arte
+colorida do PDF e a do CSV, de `public/images/formatos/`, no lugar da sigla
+escrita — o `alt` da imagem continua sendo "PDF" ou "CSV", então quem
+navega por leitor de tela ouve o formato como antes. Formato sem arte
+própria (XLSX, DOC, imagem) fica no ícone de traço com a sigla ao lado; o
+registro das artes está em `src/components/ui/document-format.tsx`.
+
+**A coluna "Prévia" não fica vazia mesmo sem essa miniatura.** Se o
+documento não tem miniatura guardada — semeado direto no banco, servido de
+`/public`, geração falhada — ou se a miniatura guardada não carrega, a
+própria página desenha a primeira página do PDF no navegador de quem
+visita, sob demanda, à medida que a linha se aproxima da tela (ver
+`src/lib/previa-pdf.ts` e `src/components/ui/document-preview.tsx`).
+Planilha e documento de texto não têm página para desenhar: nesses casos
+fica o ícone do formato.
+
+Na página pública, clicar no título ou na prévia **abre o documento dentro
+da própria página**, sem tirar o visitante do site.
 
 ### Segurança
 
@@ -212,7 +286,7 @@ Os scripts de QA usam `puppeteer-core` com o Chrome instalado na máquina
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | URL pública, usada em canonical, hreflang, sitemap e Open Graph. Padrão: `https://aidepoficial.com` |
 | `CONTACT_WEBHOOK_URL` | Endpoint que recebe os formulários. **Enquanto não estiver definida, os formulários validam os dados, informam que o envio não está habilitado e oferecem o e-mail institucional — nunca exibem sucesso falso.** |
-| `NEXT_PUBLIC_EXAMPLE_CONTENT` | `0` desliga as notícias e os documentos de exemplo. Ligado por padrão. |
+| `NEXT_PUBLIC_EXAMPLE_CONTENT` | `0` desliga os documentos de exemplo da Transparência. Ligado por padrão. Não afeta as notícias, que vêm só do banco. |
 | `PEXELS_API_KEY` | Só para rodar `npm run images:stock`. As fotos já baixadas estão versionadas. |
 | `ACERVO_ORIGEM` | Só para rodar `npm run acervo`. Caminho da pasta bruta `Vídeos e Fotos`. Padrão: `../Vídeos e Fotos` |
 
@@ -243,7 +317,7 @@ mobile, pelo rodapé e pelos botões da própria Home:
 | Âncora | Seção |
 | --- | --- |
 | `#a-aidep` | apresentação da associação e propósito |
-| `#publico-atendido` | público atendido — seção própria, uma faixa por público |
+| `#publico-atendido` | público atendido — um cartão por público, em trilho horizontal |
 | `#impacto` | números consolidados e resultados por projeto |
 | `#contato` | formulário e canais, no fim da página |
 
@@ -269,6 +343,7 @@ public/brand/             logotipos oficiais, por idioma e por versão
 public/images/acervo/     fotografias oficiais da AIDEP, preparadas por npm run acervo
 public/videos/            vídeos oficiais (MP4) e suas capas
 public/images/stock/      fotografias de banco (Pexels) — nenhuma gerada por IA
+public/images/formatos/   ícones de formato de arquivo (PDF, CSV) da tabela de Transparência
 public/documentos/        documentos da Transparência
 public/og/                imagens Open Graph compostas a partir da marca
 src/
@@ -304,7 +379,7 @@ Nada de texto ou dado institucional mora dentro de componentes.
 | Projetos (reserva; o normal é o painel) | `src/content/projects.ts` |
 | Números de impacto | `src/content/impact.ts` |
 | Parceiros | `src/content/partners.ts` |
-| Notícias (reserva; o normal é o painel) | `src/content/news.ts` |
+| Notícias (leitura do banco; escreve-se pelo painel) | `src/content/news.ts` |
 | Documentos de transparência (reserva; o normal é o painel) | `src/content/documents.ts` |
 | Fotografias, galerias e posts do Instagram | `src/content/media.ts` |
 | Vídeos (título, legenda e lugar) | `src/content/videos.ts` |
@@ -339,11 +414,12 @@ Algumas seções não têm moldura ao lado do texto: a fotografia ocupa a seçã
 inteira, sangrada, com o conteúdo por cima — o Hero da Home, a faixa de
 números, as chamadas de parceria e doação, a abertura de cada página interna
 e a capa de cada projeto. Quem cuida disso é
-`src/components/ui/section-banner.tsx`.
+`src/components/ui/section-banner.tsx` — e, na abertura da Home, o
+carrossel descrito adiante.
 
 | Chave | Onde aparece |
 | --- | --- |
-| `home.hero` | abertura da Página inicial |
+| `home.hero` | abertura da Página inicial (primeiro quadro do carrossel) |
 | `home.impact.banner` | faixa de números consolidados |
 | `home.partnership.banner` | chamada de parceria |
 | `home.donate.banner` | chamada de doação (Home, Projetos, Transparência) |
@@ -356,6 +432,33 @@ título. Um véu escuro (ou verde, na superfície da marca) é aplicado por cima
 para o texto continuar legível sobre qualquer fotografia — sem ele o
 contraste dependeria da imagem que estivesse no ar. Sem foto cadastrada, a
 seção volta ao fundo sólido da superfície, sem buraco visual.
+
+O véu e o degradê moram em `src/lib/banner-veil.ts`, um único lugar para as
+duas peças que exibem faixa: a de fotografia única e o carrossel abaixo.
+
+### O carrossel da abertura
+
+A Página inicial não tem uma foto de abertura, tem um álbum: as fotografias
+passam em travessia cruzada atrás do título, cada uma no ar por 6,5 s. Quem
+desenha é `src/components/ui/banner-carousel.tsx`; o álbum é
+`carrosselDaHome`, em `src/content/media.ts` — para trocar as fotos, mexa
+só nessa lista, na ordem em que elas devem passar.
+
+Valem as mesmas duas regras das faixas de fundo (larga, com espaço livre à
+esquerda), e mais três cuidados:
+
+- **a primeira foto é a da abertura** — é a única que carrega com
+  prioridade, e o segundo quadro só entra no ar depois que ela termina,
+  para não dividir banda com o maior download da página;
+- **o rodízio para** quando o sistema pede menos movimento
+  (`prefers-reduced-motion`) e quando a aba sai de vista — a foto fica
+  parada, e os indicadores continuam passando à mão;
+- **foto em pé não entra** — sangrada na largura toda, sobraria dela só uma
+  tira do meio.
+
+Os indicadores ficam no rodapé da abertura, ao lado da chamada de rolagem,
+no traço inclinado do símbolo. O quadro no ar é marcado pela cor e pela
+largura do traço — nunca só pela cor.
 
 ### O acervo da AIDEP
 
@@ -402,12 +505,24 @@ caminho, use `ACERVO_ORIGEM`.
 ### As fotografias que estão no ar hoje
 
 **Nenhuma imagem deste projeto é gerada por IA.** As chaves principais estão
-com fotografia oficial da AIDEP (acima). As que ainda não têm — o
-paradesporto, as capas de Futsal na Escola e FutEdu Summit e as notícias de
-exemplo — seguem preenchidas por **fotografias de banco do
-[Pexels](https://www.pexels.com/api/)** (licença de uso comercial livre),
-baixadas para `public/images/stock/` e versionadas junto com o código, cada
-uma com o crédito do fotógrafo.
+com fotografia oficial da AIDEP (acima). O que ainda não tem foto própria —
+o paradesporto e as notícias de exemplo — segue preenchido por
+**fotografias de banco do [Pexels](https://www.pexels.com/api/)** (licença
+de uso comercial livre), baixadas para `public/images/stock/` e versionadas
+junto com o código, cada uma com o crédito do fotógrafo.
+
+**Os três projetos têm hoje o álbum do próprio projeto**, fotografado onde
+ele acontece: o Coração Valente nos polos de Sergipe, o FutEdu Summit em
+Curitiba (o pórtico de entrada, as delegações, a formação, a cerimônia dos
+certificados e o torneio) e o Futsal na Escola na quadra coberta. Cada um
+entra em `galerias`, em `src/content/media.ts`, pelo slug do projeto.
+
+Foi o que dispensou o arranjo anterior: enquanto esses dois não tinham foto
+própria, eram ilustrados pelo acervo institucional da associação, com o
+crédito **Acervo AIDEP** e legenda que não atribuía a cena ao projeto. Com a
+fotografia real no ar, aquelas entradas saíram — e com elas o helper
+`doAcervoInstitucional`. Se o caso voltar a aparecer, o padrão está no
+histórico do arquivo.
 
 Elas aparecem sempre, sem interruptor e sem variável de ambiente: é assim
 que o site pode ser navegado e apresentado com todas as imagens no lugar
@@ -457,9 +572,13 @@ guardada em `public/images/stock/.picks.json` e sobrevive ao `--force`.
 
 Todo o acervo de vídeo é vertical, gravado no celular de quem estava no
 polo. O site segue esse formato em vez de brigar com ele: uma **fileira de
-cartões 9/16** que corre na horizontal, com o filme institucional na frente,
-maior. Aparece na Home (`#home-videos`) e na página de cada projeto que
-tenha vídeo cadastrado.
+cartões 9/16 de medida única** que corre na horizontal, com o filme
+institucional na frente. Aparece na Home (`#home-videos`) e na página de
+cada projeto que tenha vídeo cadastrado.
+
+Todos os cartões têm a mesma largura: o filme se destaca pela tarja
+**Filme** e pela posição, não pelo tamanho — cartão maior no meio da
+fileira quebrava o ritmo da rolagem e desalinhava as legendas.
 
 Como o cartão se comporta:
 
@@ -485,36 +604,41 @@ espanhol vê o aviso de que o vídeo é falado em português.
 | `src/components/sections/video-rail.tsx` | a fileira de cartões |
 | `src/components/ui/video-player.tsx` | o vídeo em tela cheia |
 
-### Ver o site com notícias e documentos no lugar
+### Ver o site com documentos no lugar
 
-A AIDEP ainda não entregou notícias nem documentos. Para que as páginas
-possam ser avaliadas preenchidas, o site carrega **por padrão** um
-**conteúdo de exemplo**: seis notícias e doze documentos de transparência,
-nos três idiomas. Para desligar: `NEXT_PUBLIC_EXAMPLE_CONTENT=0`.
+A AIDEP ainda não entregou os documentos de transparência. Para que a página
+possa ser avaliada preenchida, o site carrega **por padrão** um **conteúdo de
+exemplo**: doze documentos, nos três idiomas. Para desligar:
+`NEXT_PUBLIC_EXAMPLE_CONTENT=0`.
 
 | Arquivo | O que é |
 | --- | --- |
-| `src/content/news-example.ts` | notícias de demonstração (escritas à mão) |
 | `src/content/documents-example.ts` | registro dos documentos — **gerado**, não edite |
 | `scripts/lib/example-documents.mjs` | lista e texto dos documentos de exemplo |
 | `public/documentos/exemplo/` | os arquivos PDF/CSV, gerados por `npm run docs:example` |
+| `src/content/news-example.ts` | notícias de demonstração — **não vão mais ao ar**; só `npm run conteudo:semear` as usa, e elas então passam a existir no banco |
 
-Com o conteúdo de exemplo ligado, dá para avaliar a listagem de notícias, a
-página de leitura, as notícias relacionadas, a seção da Home, e na
-Transparência os filtros por ano e categoria, a busca, a visualização e o
-download — tudo funcionando. Desligado, as listas voltam a ser vazias: a
-Home não renderiza a seção de notícias, as duas páginas exibem o estado
-vazio institucional e o sitemap não gera URLs de notícia.
+Com o conteúdo de exemplo ligado, dá para avaliar na Transparência os
+filtros por ano e categoria, a busca, a prévia da primeira página, a
+visualização e o download — tudo funcionando. Desligado, a lista volta a ser
+vazia e a página exibe o estado vazio institucional.
 
-> Nada disso é conteúdo da AIDEP. As notícias não relatam fato ocorrido,
-> não trazem números de atendimento e não atribuem fala a pessoa real; cada
-> documento tem a palavra EXEMPLO marcada na página e um aviso de conteúdo
-> fictício. O gate é `NEXT_PUBLIC_EXAMPLE_CONTENT` — ver
-> `src/lib/example-content.ts`.
+**As notícias não passam por esse gate.** A página de Notícias mostra
+exclusivamente o que está publicado na tabela `noticias`; sem nenhuma
+linha lá, a Home não renderiza a seção, a página exibe o estado vazio
+institucional e o sitemap não gera URLs de notícia. Para avaliar a listagem
+preenchida, semeie o banco com `npm run conteudo:semear`.
 
-Quando o conteúdo real chegar: escreva as notícias na lista `published` de
-`src/content/news.ts` e os documentos na lista `published` de
-`src/content/documents.ts`, e apague os arquivos de exemplo.
+> Nada disso é conteúdo da AIDEP. As notícias de demonstração não relatam
+> fato ocorrido, não trazem números de atendimento e não atribuem fala a
+> pessoa real; cada documento tem a palavra EXEMPLO marcada na página e um
+> aviso de conteúdo fictício. O gate dos documentos é
+> `NEXT_PUBLIC_EXAMPLE_CONTENT` — ver `src/lib/example-content.ts`.
+
+Quando o conteúdo real chegar: publique as notícias pelo painel
+(`/admin/noticias`) e os documentos por `/admin/documentos`, ou escreva os
+documentos na lista `publicados` de `src/content/documents.ts`, e apague os
+arquivos de exemplo.
 
 ### Publicar uma notícia
 
@@ -522,10 +646,8 @@ Pelo painel: **`/admin/noticias` → Escrever notícia**. A notícia aparece na
 listagem, na Home, no sitemap, nas notícias relacionadas do projeto e ganha
 página própria com dados estruturados de artigo.
 
-Pelo código, se for preciso: acrescente um objeto `NewsArticle` na lista
-`estaticas` de `src/content/news.ts`. Vale apenas enquanto a tabela
-`noticias` estiver vazia — havendo qualquer notícia no painel, é o painel
-que manda.
+**Só pelo painel.** Notícia não se escreve mais no código: `content/news.ts`
+apenas lê a tabela `noticias`, e o que não está lá não aparece no site.
 
 ### Publicar um documento de transparência
 
@@ -566,3 +688,20 @@ servida localmente a partir dos arquivos oficiais.
 
 Os logotipos em `public/brand/` são os arquivos entregues, sem qualquer
 alteração: não foram rotacionados, distorcidos, recortados nem recoloridos.
+
+### A barra de rolagem
+
+A barra da página também é da marca: polegar no verde AIDEP e trilho no
+cinza da papelaria (`#F6F6F6`), em `src/app/globals.css`. Vale só para a
+barra da página — as áreas que rolam por dentro (tabelas largas, trilhos de
+vídeo, painéis) ficam com a barra do sistema, que se adapta sozinha ao fundo
+claro ou escuro de cada uma.
+
+Duas decisões que parecem detalhe e não são:
+
+- **a largura é a do sistema.** Em barra fina o verde vira um fio de 10px
+  que quase não se lê, e o alvo de arrasto encolhe junto;
+- **o espaço da barra fica reservado** (`scrollbar-gutter: stable`). Sem
+  isso, tudo o que tranca a rolagem — o menu do celular, a janela de
+  documento, a foto em tela cheia — some com a barra e desloca a página
+  inteira alguns pixels para o lado no instante em que abre.

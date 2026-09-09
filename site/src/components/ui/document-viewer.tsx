@@ -3,6 +3,7 @@
 import { Download, ExternalLink, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef } from 'react'
+import { SpreadsheetView } from '@/components/ui/spreadsheet-view'
 import type { InstitutionalDocument } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
 import { urlDeDownload } from '@/lib/documentos'
@@ -17,6 +18,13 @@ type Props = {
 const exibiveis = new Set(['pdf', 'imagem'])
 
 /**
+ * Planilha que é texto: o navegador não a desenha, mas o site sabe ler o
+ * arquivo e montar a grade (ver `SpreadsheetView`). `.xlsx` é zip
+ * binário e não entra aqui — continua no caminho do download.
+ */
+const planilhas = new Set(['csv'])
+
+/**
  * VISUALIZADOR DE DOCUMENTO
  * =========================
  * Abre o arquivo dentro da própria página, sem mandar o visitante para
@@ -28,9 +36,14 @@ const exibiveis = new Set(['pdf', 'imagem'])
  * de origem ao fechar, fechar no Esc e marcar o resto da página como
  * inerte para leitores de tela.
  *
- * Planilha e documento de texto o navegador não desenha; nesse caso a
- * janela diz isso com clareza e oferece o download, em vez de mostrar um
- * quadro cinza vazio.
+ * PDF e imagem o navegador desenha sozinho, num `<iframe>`. Planilha em
+ * CSV ele não desenha, mas é texto: o site lê o arquivo e monta a grade
+ * dentro da própria janela (ver `SpreadsheetView`) — é o que interessa a
+ * quem está conferindo repasses, e não um arquivo baixando.
+ *
+ * O que sobra — `.xlsx`, `.doc`, `.docx` — é formato binário que só abre
+ * em programa instalado; nesse caso a janela diz isso com clareza e
+ * oferece o download, em vez de mostrar um quadro cinza vazio.
  */
 export function DocumentViewer({ document: doc, locale, onClose }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null)
@@ -47,6 +60,7 @@ export function DocumentViewer({ document: doc, locale, onClose }: Props) {
   const tActions = useTranslations('actions')
 
   const podeExibir = doc ? exibiveis.has(doc.format) : false
+  const ehPlanilha = doc ? planilhas.has(doc.format) : false
 
   return (
     <dialog
@@ -115,6 +129,8 @@ export function DocumentViewer({ document: doc, locale, onClose }: Props) {
               title={doc.title[locale]}
               className="min-h-0 flex-1 border-0 bg-paper-3"
             />
+          ) : ehPlanilha ? (
+            <SpreadsheetView key={doc.id} doc={doc} locale={locale} />
           ) : (
             <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 bg-paper-3 px-6 text-center">
               <p className="max-w-[44ch] text-body text-(--fg-muted)">

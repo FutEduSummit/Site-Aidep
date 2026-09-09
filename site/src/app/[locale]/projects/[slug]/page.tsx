@@ -6,11 +6,11 @@ import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { ContentBlock } from '@/components/sections/content-block'
 import { CoverageSection } from '@/components/sections/coverage-section'
 import { CtaBand } from '@/components/sections/cta-band'
-import { MetricsBand } from '@/components/sections/metrics-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { ProjectGallery } from '@/components/sections/project-gallery'
 import { VideoRail } from '@/components/sections/video-rail'
 import { NewsCard } from '@/components/ui/news-card'
+import { PartnerLogo } from '@/components/ui/partner-logo'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { getArticlesByProject } from '@/content/news'
@@ -105,7 +105,7 @@ export default async function ProjectPage({ params }: Props) {
         media={coverOf(project)}
         aside={
           <dl className="flex flex-col gap-6">
-            {project.metrics.slice(0, 2).map((metric) => (
+            {project.metrics.map((metric) => (
               <div key={metric.id} className="border-t border-(--border) pt-5">
                 <dd className="flex items-baseline gap-1 text-h2 font-extrabold tracking-[-0.045em]">
                   {new Intl.NumberFormat(locale).format(metric.value)}
@@ -189,16 +189,6 @@ export default async function ProjectPage({ params }: Props) {
         surface="light"
       />
 
-      <MetricsBand
-        id="project-metrics"
-        metrics={project.metrics}
-        locale={locale}
-        surface="dark"
-        size="md"
-        columns={3}
-        title={t('labels.numbers')}
-      />
-
       {/* Metodologia — publicada assim que o conteúdo for fornecido. */}
       {project.methodology ? (
         <Section surface="light" ariaLabelledby="project-method-title">
@@ -278,10 +268,16 @@ export default async function ProjectPage({ params }: Props) {
               id="project-partners-title"
               title={t('labels.partners')}
             />
-            <ul className="flex flex-wrap gap-x-10 gap-y-4">
+            <ul className="flex flex-wrap items-start gap-x-12 gap-y-8">
               {projectPartners.map((partner) => (
-                <li key={partner.id} className="text-h4 font-semibold">
-                  {partner.name}
+                <li key={partner.id} className="flex flex-col gap-4">
+                  <PartnerLogo
+                    partner={partner}
+                    locale={locale}
+                    size="md"
+                    align="left"
+                  />
+                  <span className="text-h4 font-semibold">{partner.name}</span>
                 </li>
               ))}
             </ul>

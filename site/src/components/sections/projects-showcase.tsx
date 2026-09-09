@@ -109,7 +109,6 @@ function StickyProject({
   const start = index / total
 
   const scale = useTransform(progress, [start, 1], [1, isLast ? 1 : 0.93])
-  const opacity = useTransform(progress, [start, 1], [1, isLast ? 1 : 0.45])
 
   const formatter = new Intl.NumberFormat(localeTag[locale])
   const number = String(index + 1).padStart(2, '0')
@@ -120,7 +119,6 @@ function StickyProject({
       className="sticky"
       style={{
         scale,
-        opacity,
         transformOrigin: 'center top',
         top: `calc(7rem + ${index * 1.75}rem)`,
       }}

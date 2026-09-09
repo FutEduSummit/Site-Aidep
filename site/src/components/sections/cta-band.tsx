@@ -50,7 +50,7 @@ export function CtaBand({
   const hasBanner = Boolean(mediaKey && getMedia(mediaKey))
 
   return (
-    <Section surface={surface} ariaLabelledby={`${id}-title`}>
+    <Section surface={surface} ariaLabelledby={`${id}-title`} overPhoto={hasBanner}>
       {hasBanner && mediaKey ? (
         <SectionBanner mediaKey={mediaKey} tone={bannerTone} />
       ) : (

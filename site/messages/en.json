@@ -19,6 +19,7 @@
     "mobileLabel": "Site navigation",
     "footerLabel": "Footer navigation",
     "currentPage": "Current page",
+    "projectsSubmenu": "Show projects",
     "sectionsLabel": "On this page",
     "aboutSection": "About AIDEP",
     "audienceSection": "People served",
@@ -59,7 +60,9 @@
     "scrollProgress": "Page reading progress",
     "imagePending": "Institutional image not available yet",
     "partnersMarquee": "AIDEP partners and supporters",
-    "externalLink": "opens in a new tab"
+    "externalLink": "opens in a new tab",
+    "carouselLabel": "Opening photographs",
+    "carouselGoTo": "Show opening photograph {number}"
   },
   "home": {
     "hero": {
@@ -115,20 +118,6 @@
       "paragraphs": [
         "For AIDEP, sport and parasport are not the destination. They are the means through which education, inclusion and social transformation happen — in communities, in schools and in spaces of knowledge.",
         "That is why sport and parasport sit side by side in the name of the association: the same structure, the same care and the same technical standard for everyone."
-      ],
-      "pillars": [
-        {
-          "title": "Education",
-          "text": "Learning on and off the court, with continuity and follow-up."
-        },
-        {
-          "title": "Inclusion",
-          "text": "Spaces where nobody has to prove they deserve to be there."
-        },
-        {
-          "title": "Social transformation",
-          "text": "Results that show up in the community, not only on the scoreboard."
-        }
       ]
     },
     "videos": {
@@ -268,7 +257,6 @@
       "objective": "Objective",
       "audience": "People served",
       "locations": "Where it operates",
-      "numbers": "Numbers",
       "presentation": "Overview",
       "methodology": "Methodology",
       "gallery": "Gallery",
@@ -386,7 +374,7 @@
       "category": "Category",
       "content": "Content",
       "date": "Date",
-      "image": "Image",
+      "preview": "Preview",
       "download": "Download",
       "perPage": "Items per page",
       "sortBy": "Sort by {column}",
@@ -397,7 +385,13 @@
       "pageOf": "Page {current} of {total}"
     },
     "viewer": {
-      "notEmbeddable": "Your browser cannot display {format} files inside the page. Download the file to open it on your computer."
+      "notEmbeddable": "Your browser cannot display {format} files inside the page. Download the file to open it on your computer.",
+      "loading": "Loading the spreadsheet…",
+      "unreadable": "This spreadsheet could not be read here. Download the file to open it on your computer.",
+      "sheetCaption": "Contents of the {title} spreadsheet",
+      "rowNumber": "Row",
+      "sheetSummary": "{rows} rows · {columns} columns",
+      "truncated": "Showing the first {shown} of {total} rows. Download the file for the full spreadsheet."
     }
   },
   "partners": {

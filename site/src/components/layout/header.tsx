@@ -3,17 +3,31 @@
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'motion/react'
 import { Menu, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/layout/language-switcher'
+import {
+  ProjectsMenu,
+  ProjectsSubnav,
+} from '@/components/layout/projects-menu'
 import { Link, usePathname } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { getLockup } from '@/lib/brand'
 import { DURATION, EASE, STAGGER } from '@/lib/motion'
-import { homeSections, isActivePath, primaryNav } from '@/lib/nav'
+import {
+  homeSections,
+  isActivePath,
+  primaryNav,
+  type ProjectNavItem,
+} from '@/lib/nav'
 import { cn } from '@/lib/utils'
 
-export function Header() {
+/**
+ * `projects` chega do layout: com projetos publicados, o item "Projetos"
+ * ganha o submenu com nome, chamada e ícone de cada um. Sem eles — banco
+ * vazio ou fora do ar — o item volta a ser o link simples de sempre.
+ */
+export function Header({ projects = [] }: { projects?: ProjectNavItem[] }) {
   const t = useTranslations('nav')
   const tA11y = useTranslations('a11y')
   const locale = useLocale() as Locale
@@ -122,16 +136,21 @@ export function Header() {
             aria-label={tA11y('logoHome')}
             className="relative flex items-center py-2"
           >
-            <span className="relative block h-9 w-auto lg:h-12">
+            {/* A marca institucional é o primeiro sinal de quem publica a
+                página: ocupa a altura que o header permite, e não a menor
+                que caberia. Sobre a fotografia da abertura a versão branca
+                ganha uma sombra rasa — sem ela, o descritivo miúdo sob
+                "AIDEP" desaparece em foto de céu claro ou de quadra. */}
+            <span className="relative block h-11 w-auto lg:h-15">
               <Image
                 src={lockupColor.src}
                 alt=""
                 width={lockupColor.width}
                 height={lockupColor.height}
                 priority
-                sizes="180px"
+                sizes="200px"
                 className={cn(
-                  'h-9 w-auto transition-opacity duration-300 ease-brand lg:h-12',
+                  'h-11 w-auto transition-opacity duration-300 ease-brand lg:h-15',
                   scrolled && !open ? 'opacity-100' : 'opacity-0',
                 )}
               />
@@ -141,9 +160,9 @@ export function Header() {
                 width={lockupWhite.width}
                 height={lockupWhite.height}
                 priority
-                sizes="180px"
+                sizes="200px"
                 className={cn(
-                  'absolute inset-0 h-9 w-auto transition-opacity duration-300 ease-brand lg:h-12',
+                  'absolute inset-0 h-11 w-auto drop-shadow-[0_2px_10px_rgb(10_10_10/0.55)] transition-opacity duration-300 ease-brand lg:h-15',
                   scrolled && !open ? 'opacity-0' : 'opacity-100',
                 )}
               />
@@ -159,9 +178,8 @@ export function Header() {
           >
             {primaryNav.map((item) => {
               const active = isActivePath(pathname, item.href)
-              return (
+              const link = (
                 <Link
-                  key={item.href}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
@@ -185,6 +203,18 @@ export function Header() {
                   ) : null}
                 </Link>
               )
+
+              /* "Projetos" mantém o link para o índice e ganha a lista dos
+                 projetos ao lado; os outros itens seguem link direto. */
+              if (item.key === 'projects' && projects.length > 0) {
+                return (
+                  <ProjectsMenu key={item.href} projects={projects}>
+                    {link}
+                  </ProjectsMenu>
+                )
+              }
+
+              return <Fragment key={item.href}>{link}</Fragment>
             })}
           </nav>
 
@@ -273,6 +303,15 @@ export function Header() {
                         <span className="sr-only"> ({t('currentPage')})</span>
                       ) : null}
                     </Link>
+
+                    {/* Sem hover em telas pequenas: os projetos ficam
+                        listados abertos sob o item. */}
+                    {item.key === 'projects' && projects.length > 0 ? (
+                      <ProjectsSubnav
+                        projects={projects}
+                        onNavigate={() => setOpen(false)}
+                      />
+                    ) : null}
                   </motion.div>
                 )
               })}

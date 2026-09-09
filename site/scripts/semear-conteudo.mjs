@@ -5,8 +5,9 @@
  *
  * Leva para o Supabase o conteúdo que hoje mora no código:
  *
- *   • as 3 notícias mais recentes de `content/news-example.ts`, com a capa
- *     que o site já usa para cada uma;
+ *   • as 3 notícias mais recentes de `content/news-example.ts` — sem capa
+ *     enviada, porque a fotografia de cada uma já está registrada no
+ *     acervo (`content/media.ts`, chave `noticia.<slug>`);
  *   • os 12 documentos de `content/documents-example.ts` — o arquivo sobe
  *     para o Storage e a miniatura da primeira página é gerada aqui, do
  *     mesmo jeito que o painel faz quando o cliente envia um PDF.
@@ -195,7 +196,6 @@ const tipoDoFormato = {
 
 async function semearNoticias() {
   const { exampleNews } = await import('../src/content/news-example.ts')
-  const { stockMedia } = await import('../src/content/media-stock.ts')
 
   const escolhidas = [...exampleNews]
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -204,10 +204,13 @@ async function semearNoticias() {
   console.log(`\nNotícias (${escolhidas.length})`)
 
   const linhas = escolhidas.map((noticia) => {
-    /* A capa continua sendo o arquivo que já está em /public: não há por
-       que copiar para o Storage uma imagem que o site já serve. */
-    const capa = stockMedia[noticia.coverKey] ?? null
-
+    /* A notícia entra sem capa de propósito. Quem dá a fotografia é o
+       acervo: `content/media.ts` registra a chave `noticia.<slug>` de cada
+       uma destas notícias, e `coverOf()` cai nela quando a linha do banco
+       não traz capa enviada. Assim a demonstração já nasce com fotografia
+       da associação — nada de imagem de banco — e o texto alternativo mora
+       num lugar só. Quando o cliente subir a capa dele pelo painel, ela
+       passa na frente. */
     return {
       slug: noticia.slug,
       titulo: noticia.title,
@@ -216,11 +219,11 @@ async function semearNoticias() {
       corpo: noticia.body,
       data: noticia.date,
       autor: noticia.author ?? null,
-      capa_url: capa?.src ?? null,
+      capa_url: null,
       capa_path: null,
-      capa_largura: capa?.width ?? null,
-      capa_altura: capa?.height ?? null,
-      capa_alt: capa?.alt ?? noticia.title,
+      capa_largura: null,
+      capa_altura: null,
+      capa_alt: {},
       projetos_relacionados: noticia.relatedProjectSlugs ?? [],
       publicado: true,
     }

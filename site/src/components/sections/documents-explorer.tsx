@@ -7,14 +7,14 @@ import {
   ChevronRight,
   Download,
   Eye,
-  FileText,
   Search,
 } from 'lucide-react'
-import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useId, useMemo, useState } from 'react'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { SelectControl, inputClasses } from '@/components/forms/fields'
+import { DocumentFormatBadge } from '@/components/ui/document-format'
+import { DocumentPreview } from '@/components/ui/document-preview'
 import { DocumentViewer } from '@/components/ui/document-viewer'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Container, Section } from '@/components/ui/section'
@@ -51,7 +51,7 @@ const opcoesPorPagina = [10, 25, 50] as const
 /* Declaradas aqui fora, e não dentro do explorador: componente criado
    durante a renderização é um componente novo a cada tecla digitada na
    busca — o React desmonta e remonta a subárvore inteira, o que apagaria
-   o estado e recarregaria cada miniatura. */
+   o estado da tabela. */
 
 function Ordenador({
   campo,
@@ -117,28 +117,6 @@ function Selo({
   )
 }
 
-function Miniatura({ doc }: { doc: InstitutionalDocument }) {
-  return (
-    <span className="relative flex h-18 w-14 shrink-0 items-center justify-center overflow-hidden border border-(--border) bg-paper-3">
-      {doc.thumbnail ? (
-        <Image
-          src={doc.thumbnail.src}
-          alt=""
-          fill
-          sizes="56px"
-          className="object-cover object-top"
-        />
-      ) : (
-        <FileText
-          aria-hidden="true"
-          className="size-5 text-(--fg-subtle)"
-          strokeWidth={1.5}
-        />
-      )}
-    </span>
-  )
-}
-
 function BotaoVisualizar({
   doc,
   rotulo,
@@ -182,12 +160,14 @@ function BotaoBaixar({
 /**
  * EXPLORADOR DE DOCUMENTOS DA TRANSPARÊNCIA
  * =========================================
- * Tabela com título, categoria, conteúdo, data, miniatura e download —
+ * Tabela com título, categoria, conteúdo, data, prévia e download —
  * ordenável por qualquer coluna, com busca, filtro por ano e por
  * categoria, e paginação.
  *
- * O clique no título ou na miniatura abre o arquivo dentro da própria
- * página (ver `DocumentViewer`), sem tirar o visitante do site.
+ * Cada linha mostra a primeira página do documento (ver
+ * `DocumentPreview`), e o clique no título ou na prévia abre o arquivo
+ * dentro da própria página (ver `DocumentViewer`), sem tirar o visitante
+ * do site.
  *
  * Sem documento publicado, exibe o estado vazio institucional: nenhum
  * documento, número ou valor é inventado para preencher a tela.
@@ -469,7 +449,7 @@ export function DocumentsExplorer({
                           scope="col"
                           className="py-4 pr-6 text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)"
                         >
-                          {t('table.image')}
+                          {t('table.preview')}
                         </th>
                         <th
                           scope="col"
@@ -487,13 +467,16 @@ export function DocumentsExplorer({
                           className="border-b border-(--border) align-top transition-colors duration-200 ease-brand hover:bg-(--overlay)"
                         >
                           <th scope="row" className="max-w-[22rem] py-5 pr-6">
-                            <button
-                              type="button"
-                              onClick={() => setAberto(doc)}
-                              className="link-underline text-left text-body font-semibold tracking-[-0.01em]"
-                            >
-                              {doc.title[locale]}
-                            </button>
+                            <div className="flex flex-col items-start gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => setAberto(doc)}
+                                className="link-underline text-left text-body font-semibold tracking-[-0.01em]"
+                              >
+                                {doc.title[locale]}
+                              </button>
+                              <DocumentFormatBadge doc={doc} />
+                            </div>
                           </th>
 
                           <td className="py-5 pr-6">
@@ -519,7 +502,11 @@ export function DocumentsExplorer({
                               })}
                               className="block transition-opacity duration-200 ease-brand hover:opacity-75"
                             >
-                              <Miniatura doc={doc} />
+                              <DocumentPreview
+                              doc={doc}
+                              className="h-28 w-20"
+                              sizes="80px"
+                            />
                             </button>
                           </td>
 
@@ -551,7 +538,7 @@ export function DocumentsExplorer({
                             title: doc.title[locale],
                           })}
                         >
-                          <Miniatura doc={doc} />
+                          <DocumentPreview doc={doc} />
                         </button>
 
                         <div className="flex min-w-0 flex-col gap-2">
@@ -565,6 +552,7 @@ export function DocumentsExplorer({
 
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                             <Selo doc={doc} categories={categories} locale={locale} />
+                            <DocumentFormatBadge doc={doc} />
                             <span className="text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
                               <time dateTime={doc.publishedAt}>
                                 {formatDate(doc.publishedAt, localeTag[locale])}
