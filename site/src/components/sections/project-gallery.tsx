@@ -12,6 +12,7 @@ import { PhotoLightbox } from '@/components/ui/photo-lightbox'
 import { Container, Section, type Surface } from '@/components/ui/section'
 import type { MediaAsset } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { DISTANCE } from '@/lib/motion'
 
 type ProjectGalleryProps = {
@@ -216,6 +217,7 @@ export function ProjectGallery({
                       >
                         <Image
                           src={foto.src}
+                          quality={QUALIDADE_DA_IMAGEM}
                           alt={foto.alt[locale]}
                           fill
                           sizes="(max-width: 640px) 55vw, (max-width: 1024px) 38vw, 28vw"

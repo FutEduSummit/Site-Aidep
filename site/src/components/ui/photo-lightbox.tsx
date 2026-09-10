@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef } from 'react'
 import type { MediaAsset } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 
 type PhotoLightboxProps = {
   photos: MediaAsset[]
@@ -129,6 +130,7 @@ export function PhotoLightbox({
             <Image
               key={foto.src}
               src={foto.src}
+              quality={QUALIDADE_DA_IMAGEM}
               alt={foto.alt[locale]}
               fill
               sizes="(max-width: 1024px) 100vw, 84rem"

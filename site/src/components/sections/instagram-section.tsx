@@ -12,6 +12,7 @@ import { Container, Section } from '@/components/ui/section'
 import { instagramPosts } from '@/content/media'
 import { site } from '@/content/site'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 
 /**
  * Instagram.
@@ -82,6 +83,7 @@ export function InstagramSection({ locale }: { locale: Locale }) {
                     alt={post.image.alt[locale]}
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 22vw"
+                    quality={QUALIDADE_DA_IMAGEM}
                     className="object-cover transition-transform duration-700 ease-brand fine:motion-safe:group-hover/post:scale-105"
                   />
                 </a>

@@ -30,6 +30,21 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
+    /**
+     * O otimizador do Next recomprime toda imagem que passa por
+     * `next/image`, e o padrão dele é `qualities: [75]` — que em AVIF vira
+     * q47, bem abaixo do q78 4:4:4 com que `scripts/preparar-acervo.mjs`
+     * grava o acervo. O efeito era o acervo ser preparado com cuidado e
+     * servido recomprimido: a queixa de "imagem sem resolução" na faixa do
+     * esporte da Página inicial.
+     *
+     * Esta lista é a de valores **permitidos** — pedido fora dela volta 400.
+     * O 90 é o que os componentes de imagem pedem, e a conta que justifica
+     * o número está em `src/lib/image-quality.ts`, junto da constante. O 75
+     * fica porque continua sendo o padrão de quem não pede nada: a
+     * miniatura desfocada do `placeholder="blur"` e as imagens do painel.
+     */
+    qualities: [75, 90],
     deviceSizes: [360, 390, 640, 768, 1024, 1280, 1440, 1920, 2560],
     imageSizes: [16, 32, 48, 56, 64, 96, 128, 256, 384],
     remotePatterns: supabaseRemotePattern(),

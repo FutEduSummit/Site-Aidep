@@ -1,3 +1,4 @@
+import { type ArquivoDeImagem, imagensDoAcervo } from '@/content/acervo'
 import type {
   CategoryColor,
   DocumentCategoryEntry,
@@ -42,6 +43,41 @@ import type {
 const CAPA_LARGURA_PADRAO = 1600
 const CAPA_ALTURA_PADRAO = 900
 
+/**
+ * O ACERVO GRAVADO NO BANCO SEGUE O FORMATO DE HOJE
+ * =================================================
+ * Capa e galeria chegam de dois lugares. Do Storage do Supabase, quando o
+ * painel envia o arquivo — URL absoluta, com a medida gravada junto. Ou do
+ * acervo do próprio site, quando o conteúdo foi publicado por
+ * `npm run projetos:publicar` / `conteudo:publicar`: aí o que está no
+ * banco é um caminho `/images/acervo/…`, isto é, uma referência a um
+ * arquivo cujo formato **o site controla**.
+ *
+ * E o formato mudou: o acervo saiu de WebP para AVIF (ver
+ * `scripts/preparar-acervo.mjs`). O que foi publicado antes da troca
+ * aponta para arquivo que não existe mais — a galeria do Coração Valente
+ * ficou com cinco 404 no primeiro teste depois da conversão.
+ *
+ * Em vez de confiar na extensão gravada, o nome é resolvido no registro
+ * gerado. São duas consequências, as duas boas: o banco deixa de ficar
+ * preso ao formato do dia em que foi publicado, e largura e altura passam
+ * a vir do arquivo que está no ar — a capa do Coração Valente, por
+ * exemplo, foi republicada em 2560 px e o banco ainda diz 2000.
+ *
+ * URL de Storage e qualquer caminho fora de `/images/acervo/` passam
+ * intactos.
+ */
+const PREFIXO_DO_ACERVO = '/images/acervo/'
+
+function doAcervoPublicado(src: string): ArquivoDeImagem | null {
+  if (!src.startsWith(PREFIXO_DO_ACERVO)) return null
+
+  const nome = src.slice(PREFIXO_DO_ACERVO.length).replace(/\.[a-z0-9]+$/i, '')
+  const registro: Record<string, ArquivoDeImagem> = imagensDoAcervo
+
+  return registro[nome] ?? null
+}
+
 const coresValidas: CategoryColor[] = [
   'verde',
   'azul',
@@ -77,6 +113,8 @@ function imagem(
   if (!url) return null
 
   const descricao = textoOpcional(alt) ?? altPadrao
+  const doAcervo = doAcervoPublicado(url)
+  if (doAcervo) return { ...doAcervo, alt: descricao }
 
   return {
     src: url,
@@ -261,11 +299,18 @@ function paraGaleria(bruto: unknown, alt: Localized): MediaAsset[] {
     const foto = (item ?? {}) as Record<string, unknown>
     if (typeof foto.src !== 'string' || !foto.src) continue
 
+    const descricao = textoOpcional(foto.alt) ?? alt
+    const doAcervo = doAcervoPublicado(foto.src)
+    if (doAcervo) {
+      fotos.push({ ...doAcervo, alt: descricao })
+      continue
+    }
+
     fotos.push({
       src: foto.src,
       width: Number(foto.width) > 0 ? Number(foto.width) : CAPA_LARGURA_PADRAO,
       height: Number(foto.height) > 0 ? Number(foto.height) : CAPA_ALTURA_PADRAO,
-      alt: textoOpcional(foto.alt) ?? alt,
+      alt: descricao,
     })
   }
 

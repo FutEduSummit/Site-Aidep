@@ -40,7 +40,13 @@ export const fotos = [
   { nome: 'polo-estancia-comemoracao', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_1074.JPG', largura: 2560 },
   { nome: 'polo-estancia-comemoracao-2', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_1072.JPG', largura: 2560 },
   { nome: 'polo-estancia-time-no-campo', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_0858.heic', largura: 2560 },
-  { nome: 'polo-estancia-turma-reunida', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_0855.heic', largura: 2000 },
+  /* Capa do Coração Valente, e por isso 2560 em vez dos 2000 da régua de
+     galeria: na Página inicial esta moldura ocupa 56% da largura da tela
+     (`sections/projects-showcase.tsx`) e é 16/10 contra os 16/9 da foto —
+     em monitor grande com DPR 2, o recorte pede 2150 px de arquivo. Em 2000
+     a capa chegava esticada 1,19×. O original tem 5712×3212, a folga
+     existe. */
+  { nome: 'polo-estancia-turma-reunida', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_0855.heic', largura: 2560 },
   { nome: 'polo-estancia-roda-no-gramado', origem: 'Polo Estância -20260907T135055Z-1-001/Polo Estância/IMG_0897.heic', largura: 2560 },
   /* A foto do professor com o menino no colo abre a faixa do esporte na
      Página inicial, e o original é o menor arquivo do lote de Estância:

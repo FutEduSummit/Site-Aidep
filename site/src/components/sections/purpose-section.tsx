@@ -13,7 +13,7 @@ export function PurposeSection() {
   const items = t.raw('items') as PurposeItem[]
 
   return (
-    <Section surface="light" ariaLabelledby="home-purpose-title">
+    <Section surface="dark" ariaLabelledby="home-purpose-title">
       <Container className="flex flex-col gap-stack">
         <SectionHeader
           id="home-purpose-title"

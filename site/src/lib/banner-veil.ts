@@ -60,20 +60,19 @@ export type BannerStrength = 'base' | 'strong'
 const layers = {
   dark: {
     /* A coluna de texto vai até cerca de 44% da largura: o degradê segura
-       ali e abre de vez a partir dos 78%, que é onde a fotografia aparece
-       praticamente limpa — o véu de base ficou baixo (12%) justamente para
-       o último quinto não ser uma versão acinzentada da foto. A camada de
-       baixo é pela chamada de rolagem e pelos controles do carrossel, que
-       ficam na beirada inferior. */
+       ali e abre de vez a partir dos 88%, que é onde a fotografia aparece
+       praticamente limpa — o véu de base fica baixo (20%) justamente para
+       a beirada direita não ser uma versão acinzentada da foto. A camada
+       de baixo é pelos controles do carrossel, na beirada inferior. */
     base: [
-      'bg-ink-950/12',
-      'bg-linear-to-r from-ink-950/80 from-0% via-ink-950/42 via-44% to-transparent to-78%',
-      'bg-linear-to-t from-ink-950/28 from-0% to-transparent to-30%',
+      'bg-ink-950/20',
+      'bg-linear-to-r from-ink-950/90 from-0% via-ink-950/56 via-50% to-transparent to-88%',
+      'bg-linear-to-t from-ink-950/42 from-0% to-transparent to-40%',
     ],
     strong: [
-      'bg-ink-950/34',
-      'bg-linear-to-b from-ink-950/50 from-0% via-ink-950/18 via-42% to-ink-950/74 to-100%',
-      'bg-linear-to-r from-ink-950/56 from-0% via-ink-950/18 via-62% to-transparent to-100%',
+      'bg-ink-950/42',
+      'bg-linear-to-b from-ink-950/60 from-0% via-ink-950/26 via-42% to-ink-950/82 to-100%',
+      'bg-linear-to-r from-ink-950/66 from-0% via-ink-950/26 via-62% to-transparent to-100%',
     ],
   },
   brand: {

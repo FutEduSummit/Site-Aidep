@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
-import { PartnerForm } from '@/components/forms/partner-form'
 import { PageHero } from '@/components/sections/page-hero'
+import { buttonClasses } from '@/components/ui/button'
 import { PartnerLogo } from '@/components/ui/partner-logo'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import { institutionalSupport, partners } from '@/content/partners'
+import { site } from '@/content/site'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
 
@@ -31,6 +32,7 @@ export default async function PartnersPage({ params }: Props) {
   setRequestLocale(locale)
 
   const t = await getTranslations({ locale, namespace: 'partners' })
+  const tActions = await getTranslations({ locale, namespace: 'actions' })
   const whyItems = t.raw('why.items') as WhyItem[]
 
   return (
@@ -148,10 +150,25 @@ export default async function PartnersPage({ params }: Props) {
             title={t('form.title')}
             description={t('form.description')}
           />
-          <div className="lg:grid lg:grid-cols-12">
-            <div className="lg:col-span-8">
-              <PartnerForm />
-            </div>
+          {/* Sem formulário: quem quer conversar escreve para o e-mail
+              institucional ou chama no Instagram. Os dois canais já são os
+              que a associação acompanha todo dia — um formulário no meio só
+              adiaria a mesma conversa. */}
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+            <a
+              href={`mailto:${site.contact.email}?subject=${encodeURIComponent(t('form.subject'))}`}
+              className={buttonClasses('accent', 'lg')}
+            >
+              {tActions('sendEmail')}
+            </a>
+            <a
+              href={site.social.instagram.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="link-underline text-h4 font-semibold tracking-[-0.02em]"
+            >
+              {site.social.instagram.handle}
+            </a>
           </div>
         </Container>
       </Section>

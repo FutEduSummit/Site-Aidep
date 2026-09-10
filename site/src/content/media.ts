@@ -553,6 +553,29 @@ export const carrosselDaHome: MediaAsset[] = [
  * O álbum do projeto, na ordem em que a história se conta: a chegada às
  * comunidades, a inauguração dos polos, a entrega dos materiais, o treino
  * e a competição. Entra em `content/projects.ts` como galeria do projeto.
+ *
+ * O QUE A SEGUNDA VARREDURA DO ACERVO TROUXE
+ * ------------------------------------------
+ * São 41 fotografias, dezesseis a mais que na primeira curadoria. As novas
+ * não são outro ângulo do que já estava aqui — são as cenas que faltavam,
+ * e cada uma entra ao lado da irmã temática, não no fim da lista:
+ *
+ * - **O dia de atividade no Distrito Federal.** O campo de terra da
+ *   comunidade, o professor junto à trave, quem espera a vez sentado no
+ *   muro, a entrega do lanche em três tempos, a foto da turma sob a tenda
+ *   e o aquecimento no gramado sintético. A pasta "Fotos Recebidas" tinha
+ *   73 arquivos e só cinco estavam publicados.
+ * - **Os materiais antes de chegarem à criança.** Mochila, camisa, cone,
+ *   bola, caixa de chuteira e as medalhas da Copinha — a subpasta
+ *   "Materiais" estava inteira de fora. É o que dá lastro visual à
+ *   prestação de contas: mostra onde o recurso do período foi parar.
+ * - **Duas cenas dos polos de Sergipe.** A fala de abertura em Estância e
+ *   a plateia de Poço Verde vista de perto.
+ *
+ * Não entrou muito mais do que isso, e o motivo está em
+ * `scripts/lib/acervo.mjs`: metade do acervo bruto é a mesma pose
+ * fotografada três, quatro, cinco vezes. Publicar o quadro seguinte de uma
+ * fotografia que já está na galeria faz a página parecer defeito.
  */
 export const galeriaCoracaoValente: MediaAsset[] = [
   doAcervo('polo-estancia-comemoracao', {

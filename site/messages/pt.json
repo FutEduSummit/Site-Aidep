@@ -32,7 +32,6 @@
     "seeProjects": "Ver todos os projetos",
     "seeProject": "Conhecer o projeto",
     "seeImpact": "Ver o impacto",
-    "seeAudience": "Ver o público atendido",
     "seeNews": "Ver todas as notícias",
     "seeTransparency": "Acessar a transparência",
     "seePartners": "Ver parceiros",
@@ -74,8 +73,7 @@
         "por meio do esporte",
         "e do paradesporto."
       ],
-      "lead": "Polos esportivos em comunidades, futsal dentro da escola e formação para quem ensina. A AIDEP organiza o que faz o esporte chegar e continuar.",
-      "scroll": "Role para conhecer"
+      "lead": "Polos esportivos em comunidades, futsal dentro da escola e formação para quem ensina. A AIDEP organiza o que faz o esporte chegar e continuar."
     },
     "about": {
       "eyebrow": "A AIDEP",
@@ -150,7 +148,7 @@
       "title": "Cada ponto é uma quadra com gente dentro.",
       "summary": "{cities, plural, one {# cidade} other {# cidades}} · {hubs, plural, one {# polo} other {# polos}}",
       "hubs": "{count, plural, one {# polo} other {# polos}}",
-      "hint": "Arraste para mover · role para aproximar",
+      "hint": "Arraste para mover · use + e − para aproximar",
       "close": "Fechar a ficha da cidade",
       "seeProject": "Conhecer o projeto",
       "mapLabel": "Mapa do Brasil com as cidades atendidas pelos projetos da AIDEP, um alfinete em cada uma.",
@@ -160,8 +158,7 @@
       "filters": {
         "label": "Filtrar o mapa por projeto",
         "all": "Todos os projetos"
-      },
-      "openMaps": "Ver no Google Maps"
+      }
     }
   },
   "approach": {
@@ -438,7 +435,8 @@
     "form": {
       "eyebrow": "Seja parceiro",
       "title": "Vamos conversar sobre uma parceria.",
-      "description": "Preencha os dados abaixo. A equipe da AIDEP retornará o contato pelo e-mail informado."
+      "description": "Escreva para o e-mail institucional da AIDEP ou chame a associação no Instagram. A equipe retorna o contato pelo mesmo canal.",
+      "subject": "Proposta de parceria"
     }
   },
   "donate": {
@@ -526,77 +524,6 @@
       "address": "Localização",
       "social": "Redes sociais",
       "pending": "Ainda não disponível"
-    },
-    "form": {
-      "eyebrow": "Formulário",
-      "title": "Envie uma mensagem."
-    }
-  },
-  "forms": {
-    "fields": {
-      "name": "Nome",
-      "namePlaceholder": "Como podemos chamar você",
-      "email": "E-mail",
-      "emailPlaceholder": "seu@email.com",
-      "phone": "Telefone",
-      "phoneOptional": "Telefone (opcional)",
-      "phonePlaceholder": "(00) 00000-0000",
-      "subject": "Assunto",
-      "subjectPlaceholder": "Resumo do contato",
-      "message": "Mensagem",
-      "messagePlaceholder": "Conte o que você precisa",
-      "interest": "Tipo de interesse",
-      "interestPlaceholder": "Selecione uma opção",
-      "organization": "Instituição",
-      "organizationPlaceholder": "Nome da empresa ou órgão",
-      "role": "Cargo",
-      "rolePlaceholder": "Sua função na instituição",
-      "consent": "Autorizo a AIDEP a utilizar os dados enviados para responder a este contato.",
-      "optional": "opcional",
-      "required": "obrigatório"
-    },
-    "interests": {
-      "partnership": "Parceria institucional",
-      "donation": "Doação e apoio",
-      "projects": "Projetos",
-      "press": "Imprensa",
-      "other": "Outro assunto"
-    },
-    "partnerTypes": {
-      "company": "Empresa",
-      "public": "Órgão público",
-      "school": "Escola ou instituição de ensino",
-      "club": "Clube ou entidade esportiva",
-      "other": "Outro"
-    },
-    "labels": {
-      "partnerType": "Tipo de instituição",
-      "proposal": "Como imagina a parceria"
-    },
-    "errors": {
-      "name": "Informe seu nome completo.",
-      "email": "Informe um e-mail válido.",
-      "phone": "Informe um telefone válido.",
-      "subject": "Informe o assunto do contato.",
-      "message": "Escreva uma mensagem com pelo menos 20 caracteres.",
-      "interest": "Selecione o tipo de interesse.",
-      "organization": "Informe o nome da instituição.",
-      "partnerType": "Selecione o tipo de instituição.",
-      "consent": "É necessário autorizar o uso dos dados para enviar.",
-      "summary": "Revise os campos destacados abaixo."
-    },
-    "submit": {
-      "send": "Enviar mensagem",
-      "sendPartnership": "Enviar proposta",
-      "sending": "Enviando…",
-      "successTitle": "Mensagem enviada.",
-      "successDescription": "Recebemos seu contato e retornaremos pelo e-mail informado.",
-      "errorTitle": "Não foi possível enviar.",
-      "errorDescription": "Tente novamente em instantes ou escreva diretamente para o e-mail da associação.",
-      "unconfiguredTitle": "Envio ainda não habilitado.",
-      "unconfiguredDescription": "O serviço de envio deste formulário ainda não foi configurado, por isso a mensagem não foi transmitida. Seus dados foram validados e podem ser enviados agora por e-mail, com um clique.",
-      "mailtoAction": "Enviar por e-mail",
-      "newMessage": "Enviar outra mensagem"
     }
   },
   "footer": {

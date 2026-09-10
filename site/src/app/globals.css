@@ -90,18 +90,22 @@
   --text-h3--line-height: 1.25;
   --text-h2: clamp(1.75rem, 1.4rem + 1.55vw, 3rem);
   --text-h2--line-height: 1.14;
-  --text-h1: clamp(2.25rem, 1.72rem + 2.35vw, 4.125rem);
-  --text-h1--line-height: 1.06;
+  /* Título de seção. Desceu junto com a abertura da Página inicial: se
+     ficasse na medida antiga passaria o título do Hero em monitor, e o
+     assunto de uma seção não pode se anunciar mais alto que a página. */
+  --text-h1: clamp(2rem, 1.55rem + 2vw, 3.5rem);
+  --text-h1--line-height: 1.08;
   --text-display: clamp(2.25rem, 1.4rem + 3.4vw, 4.5rem);
   --text-display--line-height: 0.98;
   --text-display-xl: clamp(2rem, 1.05rem + 4.4vw, 5rem);
   --text-display-xl--line-height: 0.94;
-  /* Abertura da Página inicial: o teto de `display`, para o título não
-     crescer sozinho em monitor grande e continuar acima do `h1` da
-     primeira seção, com o piso de `display-xl`, para as linhas do título
-     caberem em tela de 390px sem quebrar no meio. */
-  --text-hero: clamp(2rem, 1.15rem + 3.4vw, 4.5rem);
-  --text-hero--line-height: 0.98;
+  /* Abertura da Página inicial. Na medida de `display` as três linhas do
+     título tomavam metade da primeira dobra e abafavam a fotografia
+     atrás; esta é bem abaixo dela. O piso é baixo o bastante para as
+     linhas caberem em tela de 390px sem quebrar no meio, e o teto
+     continua um degrau acima do `text-h1` das seções. */
+  --text-hero: clamp(1.75rem, 1rem + 2.7vw, 3.75rem);
+  --text-hero--line-height: 1.02;
   --text-metric: clamp(2.75rem, 1.7rem + 4.65vw, 6.25rem);
   --text-metric--line-height: 0.9;
 
@@ -550,30 +554,6 @@
 @media (hover: hover) and (pointer: fine) {
   .link-underline:hover {
     background-size: 100% 1px;
-  }
-}
-
-/* =========================================================================
-   A ROTA DO MAPA (Página inicial)
-   A luz que corre pela linha que liga as cidades atendidas. O tracejado
-   soma 300 unidades — traço mais intervalo — e o deslocamento anda
-   exatamente isso, então o ciclo fecha sem emenda.
-
-   O movimento reduzido é atendido pelo bloco geral no fim deste arquivo:
-   a linha continua desenhada, só para de correr.
-   ========================================================================= */
-@keyframes aidep-rota {
-  from {
-    stroke-dashoffset: 0;
-  }
-  to {
-    stroke-dashoffset: -300;
-  }
-}
-
-@layer components {
-  .rota-viva {
-    animation: aidep-rota 5s linear infinite;
   }
 }
 

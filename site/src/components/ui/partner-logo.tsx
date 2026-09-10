@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { Partner } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { cn } from '@/lib/utils'
 
 /**
@@ -86,6 +87,12 @@ export function PartnerLogo({
         width={partner.logo.width}
         height={partner.logo.height}
         sizes="(max-width: 768px) 45vw, 200px"
+        /* Logomarca é traço e tipografia, não fotografia: é o desenho que
+           mais sofre com recompressão — o AVIF põe halo em volta da letra
+           antes de embaçar qualquer foto. Em 200 px o arquivo é de poucos
+           quilobytes em qualquer qualidade, então aqui não há troca a
+           fazer. Ver `lib/image-quality.ts`. */
+        quality={QUALIDADE_DA_IMAGEM}
         /* A altura manda; a largura acompanha a proporção do arquivo, até
            o teto. `object-contain` cobre o caso do teto: aí a logo encolhe
            junto em vez de ser cortada. */

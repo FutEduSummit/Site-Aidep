@@ -1,6 +1,6 @@
 'use client'
 
-import { MapPin, Move3d, Navigation, X } from 'lucide-react'
+import { MapPin, Move3d, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Reveal } from '@/components/motion/reveal'
@@ -279,14 +279,7 @@ export function ReachMap({ cidades, projetos, cabecalho }: ReachMapProps) {
  * A FICHA DA CIDADE
  * =================
  * O que se sabe de uma cidade: quais projetos atuam nela, quantos polos
- * cada um mantém, o caminho para a página do projeto e o endereço no
- * Google Maps.
- *
- * O link do Maps usa a coordenada, e não o nome da cidade: o nome dá
- * margem a homônimo — Itabaiana existe em Sergipe e na Paraíba — e a
- * coordenada é exatamente a mesma que pôs o alfinete no mapa. O formato
- * `?api=1&query=lat,lng` é o endereço documentado do Google para isso, e
- * funciona igual no aplicativo do celular e no navegador.
+ * cada um mantém e o caminho para a página do projeto.
  */
 function FichaDaCidade({
   cidade,
@@ -298,8 +291,6 @@ function FichaDaCidade({
   className?: string
 }) {
   const t = useTranslations('home.reach')
-
-  const noMapa = `https://www.google.com/maps/search/?api=1&query=${cidade.lat},${cidade.lng}`
 
   return (
     <article
@@ -347,16 +338,6 @@ function FichaDaCidade({
       </dl>
 
       <div className="mt-5 flex flex-col gap-3">
-        <a
-          href={noMapa}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="inline-flex min-h-11 items-center justify-center gap-2.5 bg-(--accent) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-(--accent-contrast) transition-opacity duration-200 ease-brand hover:opacity-90"
-        >
-          <Navigation aria-hidden="true" className="size-4" />
-          {t('openMaps')}
-        </a>
-
         {cidade.projetos.length === 1 ? (
           <ArrowLink
             href={{

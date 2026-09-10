@@ -72,99 +72,11 @@ type InteractiveBrazilMapProps = {
  */
 const ZOOM = { min: 1, max: 9, naCidade: 4.5 }
 
-/** Quanto um passo de roda mexe no zoom, por unidade de `deltaY`. */
-const PASSO_DA_RODA = 0.0016
-
 /** Quanto cada toque nos botões de mais e menos aproxima. */
 const PASSO_DO_BOTAO = 1.8
 
 /** O centro da moldura, em coordenadas do viewBox. */
 const CENTRO = { x: VB.x + VB.largura / 2, y: VB.y + VB.altura / 2 }
-
-/**
- * Até onde duas cidades contam como o mesmo nó da rota, em unidades do
- * viewBox. São os 30 que equivalem a pouco mais de um grau — o desenho tem
- * cerca de 25,5 unidades por grau de longitude.
- */
-const RAIO_DO_AGRUPAMENTO = 30
-
-/**
- * Os nós da rota: as cidades reunidas em grupos, e cada grupo no centro
- * dos seus.
- *
- * Sem isto a rota vira um rabisco. Doze das vinte e nove cidades estão em
- * Sergipe, dentro de um grau e meio umas das outras: ligá-las em fila
- * desenharia um novelo do tamanho de uma cabeça de alfinete, e os traços
- * que importam — os que atravessam o país — se perderiam nele.
- *
- * De norte a sul, que no desenho é y crescente: a linha desce o país como
- * a lista ao lado desce as cidades.
- */
-function nosDaRota(cidades: { x: number; y: number }[]) {
-  const nos: { x: number; y: number; quantos: number }[] = []
-
-  for (const cidade of cidades) {
-    const perto = nos.find(
-      (no) =>
-        Math.abs(no.x / no.quantos - cidade.x) < RAIO_DO_AGRUPAMENTO &&
-        Math.abs(no.y / no.quantos - cidade.y) < RAIO_DO_AGRUPAMENTO,
-    )
-
-    if (perto) {
-      perto.x += cidade.x
-      perto.y += cidade.y
-      perto.quantos += 1
-    } else {
-      nos.push({ x: cidade.x, y: cidade.y, quantos: 1 })
-    }
-  }
-
-  return nos
-    .map((no) => ({ x: no.x / no.quantos, y: no.y / no.quantos }))
-    .sort((a, b) => a.y - b.y)
-}
-
-/**
- * Quanto cada arco se afasta da reta que liga os dois nós, como fração do
- * comprimento dela — e o teto desse afastamento, em unidades do viewBox.
- *
- * Numa curva quadrática a barriga do arco chega à metade do desvio do
- * ponto de controle, então 0,3 aqui é um arco de 15% do trecho: o bastante
- * para se ler como arco de mapa de voo, longe do semicírculo que faria a
- * rota parecer um enfeite.
- */
-const CURVATURA = 0.3
-const CURVA_MAXIMA = 200
-
-/**
- * A rota inteira num caminho só: uma curva quadrática por trecho, todas
- * curvando para o mesmo lado.
- *
- * Para leste, que é onde há espaço. As cidades se concentram na faixa
- * litorânea, e um arco que sobe pelo interior passaria por cima dos
- * estados acesos; sobre o Atlântico ele tem o fundo escuro só para si.
- */
-function arcosDaRota(nos: { x: number; y: number }[]): string {
-  const partes = [`M${nos[0].x} ${nos[0].y}`]
-
-  for (let i = 0; i + 1 < nos.length; i += 1) {
-    const de = nos[i]
-    const para = nos[i + 1]
-    const dx = para.x - de.x
-    const dy = para.y - de.y
-    const comprimento = Math.hypot(dx, dy) || 1
-    const desvio = Math.min(CURVA_MAXIMA, comprimento * CURVATURA)
-
-    /* A normal ao trecho, girada sempre para o mesmo lado: é isso que faz
-       os arcos lerem como um caminho, e não como traços soltos. */
-    const cx = (de.x + para.x) / 2 + (dy / comprimento) * desvio
-    const cy = (de.y + para.y) / 2 - (dx / comprimento) * desvio
-
-    partes.push(`Q${cx} ${cy} ${para.x} ${para.y}`)
-  }
-
-  return partes.join(' ')
-}
 
 /**
  * A entrada dos alfinetes, de norte a sul, uma única vez. É a mesma
@@ -396,63 +308,6 @@ export function InteractiveBrazilMap({
     }
   }, [caixa])
 
-  /** O caminho de volta: um ponto da tela, em coordenadas do mapa. */
-  const emCoordenadas = useCallback(
-    (clientX: number, clientY: number, de: Vista) => {
-      const naTela = moldura.current?.getBoundingClientRect()
-      if (!naTela || desenho.escala === 0) return null
-
-      const vbX = (clientX - naTela.left - desenho.folgaX) / desenho.escala + VB.x
-      const vbY = (clientY - naTela.top - desenho.folgaY) / desenho.escala + VB.y
-
-      return { x: (vbX - de.x) / de.k, y: (vbY - de.y) / de.k }
-    },
-    [desenho],
-  )
-
-  /* ---------------------------------------------------------------- */
-  /* Roda                                                             */
-  /* ---------------------------------------------------------------- */
-
-  useEffect(() => {
-    const alvo = moldura.current
-    if (!alvo) return
-
-    function aoRolar(evento: WheelEvent) {
-      const de = atual.current
-      const afastando = evento.deltaY > 0
-
-      /* A roda só é nossa quando ainda tem o que fazer. No Brasil inteiro
-         rolar para baixo desce a página; no zoom máximo rolar para cima
-         sobe. É o que impede a seção de virar um poço. */
-      if (afastando && de.k <= ZOOM.min + 0.001) return
-      if (!afastando && de.k >= ZOOM.max - 0.001) return
-
-      evento.preventDefault()
-      pararVoo()
-
-      const ancora = emCoordenadas(evento.clientX, evento.clientY, de)
-      if (!ancora) return
-
-      /* Multiplicativo: um passo de roda vale sempre a mesma *fração* do
-         zoom, então aproximar de longe anda muito e de perto anda pouco —
-         que é como todo mapa se comporta. */
-      const k = entre(de.k * (1 - evento.deltaY * PASSO_DA_RODA), ZOOM.min, ZOOM.max)
-
-      /* E a cidade sob o ponteiro não sai de baixo dele. */
-      mudarVista(
-        presa({
-          k,
-          x: ancora.x * de.k + de.x - ancora.x * k,
-          y: ancora.y * de.k + de.y - ancora.y * k,
-        }),
-      )
-    }
-
-    alvo.addEventListener('wheel', aoRolar, { passive: false })
-    return () => alvo.removeEventListener('wheel', aoRolar)
-  }, [emCoordenadas, mudarVista, pararVoo])
-
   /* ---------------------------------------------------------------- */
   /* Arrasto                                                          */
   /* ---------------------------------------------------------------- */
@@ -595,15 +450,6 @@ export function InteractiveBrazilMap({
     return ufs
   }, [cidades, aceso])
 
-  /* A linha que liga as cidades — só as do recorte no ar, porque ligar
-     cidades que o filtro apagou seria desenhar uma atuação que a lista ao
-     lado não lista. Com uma cidade só não há rota: um ponto não é um
-     caminho. */
-  const rota = useMemo(() => {
-    const nos = nosDaRota(cidades.filter((cidade) => aceso(cidade.id)))
-    return nos.length > 1 ? arcosDaRota(nos) : null
-  }, [cidades, aceso])
-
   /* Em SVG não há z-index: quem manda é a ordem do documento. Doze cidades
      de Sergipe ficam a poucos pixels umas das outras, então o alfinete em
      foco vai para o fim da lista e passa a ser desenhado por cima dos
@@ -656,8 +502,8 @@ export function InteractiveBrazilMap({
          vinte e nove alfinetes iguais — e é o que o globo fazia antes
          daqui, com este mesmo tom.
 
-         Tudo o mais no mapa é o verde da marca, a rota inclusive. Se o
-         âmbar aparecesse também nela, deixaria de significar "é esta".
+         Tudo o mais no mapa é o verde da marca. Se o âmbar aparecesse
+         em mais alguma coisa, deixaria de significar "é esta".
 
          Não é o `--color-continent-asia` do manual, que por acaso tem o
          mesmo valor: aquele é de uso restrito à comunicação sobre a Ásia.
@@ -710,49 +556,6 @@ export function InteractiveBrazilMap({
                 />
               ))}
             </g>
-
-            {/* A ROTA
-                Dois traços sobre a mesma trilha: o de baixo é o arco
-                contínuo, fraco, que mostra o caminho inteiro; o de cima é
-                um tracejado que corre por ele. Era assim no globo — lá o
-                brilho vinha de um shader, aqui do `stroke-dashoffset`, e o
-                efeito é o mesmo.
-
-                `non-scaling-stroke` nos dois: aproximar nove vezes não
-                pode engrossar a linha nove vezes. */}
-            {rota ? (
-              <g
-                fill="none"
-                strokeLinecap="round"
-                className="pointer-events-none"
-              >
-                {/* O forro escuro, mais largo que a linha. A rota é verde e
-                    atravessa justamente os estados acesos, que também são
-                    verdes: sem esta sombra por baixo ela sumiria em cima
-                    deles e só apareceria sobre o mar. É o mesmo recurso de
-                    qualquer mapa impresso — a estrada tem contorno para
-                    poder cruzar qualquer fundo. */}
-                <path
-                  d={rota}
-                  strokeWidth={5}
-                  vectorEffect="non-scaling-stroke"
-                  className="stroke-(--bg)/85"
-                />
-                <path
-                  d={rota}
-                  strokeWidth={1.8}
-                  vectorEffect="non-scaling-stroke"
-                  className="stroke-(--accent)/70"
-                />
-                <path
-                  d={rota}
-                  strokeWidth={1.8}
-                  strokeDasharray="40 260"
-                  vectorEffect="non-scaling-stroke"
-                  className="rota-viva stroke-(--accent)"
-                />
-              </g>
-            ) : null}
 
             {desenhaveis.map((cidade) => {
               const escolhido = cidade.id === escolhida

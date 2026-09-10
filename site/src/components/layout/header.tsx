@@ -13,6 +13,7 @@ import {
 import { Link, usePathname } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { getLockup } from '@/lib/brand'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { DURATION, EASE, STAGGER } from '@/lib/motion'
 import {
   homeSections,
@@ -149,6 +150,7 @@ export function Header({ projects = [] }: { projects?: ProjectNavItem[] }) {
                 height={lockupColor.height}
                 priority
                 sizes="200px"
+                quality={QUALIDADE_DA_IMAGEM}
                 className={cn(
                   'h-11 w-auto transition-opacity duration-300 ease-brand lg:h-15',
                   scrolled && !open ? 'opacity-100' : 'opacity-0',
@@ -161,6 +163,7 @@ export function Header({ projects = [] }: { projects?: ProjectNavItem[] }) {
                 height={lockupWhite.height}
                 priority
                 sizes="200px"
+                quality={QUALIDADE_DA_IMAGEM}
                 className={cn(
                   'absolute inset-0 h-11 w-auto drop-shadow-[0_2px_10px_rgb(10_10_10/0.55)] transition-opacity duration-300 ease-brand lg:h-15',
                   scrolled && !open ? 'opacity-0' : 'opacity-100',

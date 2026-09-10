@@ -8,6 +8,7 @@ import { site } from '@/content/site'
 import { Link } from '@/i18n/navigation'
 import type { Locale } from '@/i18n/routing'
 import { getLockup, symbolMark } from '@/lib/brand'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { footerInstitutional, homeSections, primaryNav } from '@/lib/nav'
 
 export function Footer() {
@@ -48,6 +49,7 @@ export function Footer() {
                 width={lockup.width}
                 height={lockup.height}
                 sizes="200px"
+                quality={QUALIDADE_DA_IMAGEM}
                 className="h-32 w-auto"
               />
             </Link>

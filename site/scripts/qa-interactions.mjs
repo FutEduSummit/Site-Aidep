@@ -1,7 +1,7 @@
 /**
  * Testa as interações críticas: menu mobile, indicação da página atual,
  * abertura de toda rota na primeira seção, troca de idioma preservando a
- * página, validação do formulário e ausência de falso sucesso no envio.
+ * página e os canais de contato no fim da página inicial.
  */
 import puppeteer from 'puppeteer-core'
 
@@ -119,60 +119,29 @@ await browser.setCookie({
   await page.close()
 }
 
-/* ---------- 3. Formulário de contato ---------- */
+/* ---------- 3. Canais de contato ---------- */
 {
   const page = await browser.newPage()
   await page.setViewport({ width: 1440, height: 900 })
   await page.goto(BASE + '/pt#contato', { waitUntil: 'networkidle2' })
 
-  await page.click('form button[type="submit"]')
-  await new Promise((r) => setTimeout(r, 700))
-
-  const errors = await page.evaluate(() => ({
-    invalid: document.querySelectorAll('form [aria-invalid="true"]').length,
-    described: [...document.querySelectorAll('form [aria-describedby]')].filter((el) =>
-      document.getElementById(el.getAttribute('aria-describedby')),
-    ).length,
-    messages: [...document.querySelectorAll('form p')]
-      .map((p) => p.textContent)
-      .filter((t) => t && t.length > 5).length,
-  }))
-  check('validação bloqueia envio vazio', errors.invalid >= 4, `${errors.invalid} campos`)
-  check('erros ligados por aria-describedby', errors.described >= 4)
-
-  await page.evaluate(() => {
-    const setValue = (el, value) => {
-      const setter = Object.getOwnPropertyDescriptor(
-        el instanceof HTMLTextAreaElement
-          ? HTMLTextAreaElement.prototype
-          : HTMLInputElement.prototype,
-        'value',
-      ).set
-      setter.call(el, value)
-      el.dispatchEvent(new Event('input', { bubbles: true }))
+  const canais = await page.evaluate(() => {
+    const secao = document.getElementById('contato')
+    if (!secao) return null
+    const href = (seletor) => secao.querySelector(seletor)?.getAttribute('href') ?? null
+    return {
+      formularios: secao.querySelectorAll('form').length,
+      email: href('a[href^="mailto:"]'),
+      instagram: href('a[href*="instagram.com"]'),
+      itens: secao.querySelectorAll('dt').length,
     }
-    const form = document.querySelector('form')
-    setValue(form.querySelector('input[type="text"]'), 'Maria Aparecida')
-    setValue(form.querySelector('input[type="email"]'), 'maria@exemplo.com')
-    const texts = form.querySelectorAll('input[type="text"]')
-    setValue(texts[texts.length - 1], 'Proposta de parceria esportiva')
-    setValue(
-      form.querySelector('textarea'),
-      'Gostaria de entender como apoiar os polos esportivos da associação neste ano.',
-    )
-    form.querySelector('input[type="checkbox"]').click()
   })
 
-  await new Promise((r) => setTimeout(r, 400))
-  await page.click('form button[type="submit"]')
-  await new Promise((r) => setTimeout(r, 1800))
-
-  const status = await page.evaluate(() => {
-    const box = document.querySelector('[role="status"]')
-    return box ? box.textContent : null
-  })
-  check('sem endpoint, não exibe sucesso falso', Boolean(status) && !/enviada\./i.test(status ?? ''), status?.slice(0, 90))
-  check('oferece alternativa por e-mail', /e-mail/i.test(status ?? ''))
+  check('seção de contato existe', Boolean(canais))
+  check('não há formulário na seção', canais?.formularios === 0, String(canais?.formularios))
+  check('e-mail institucional em mailto:', Boolean(canais?.email), canais?.email ?? '')
+  check('Instagram linkado', Boolean(canais?.instagram), canais?.instagram ?? '')
+  check('todos os canais listados', (canais?.itens ?? 0) >= 4, `${canais?.itens} canais`)
 
   await page.close()
 }

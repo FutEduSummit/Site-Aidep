@@ -32,7 +32,6 @@
     "seeProjects": "See all projects",
     "seeProject": "Explore the project",
     "seeImpact": "See the impact",
-    "seeAudience": "See who we serve",
     "seeNews": "See all news",
     "seeTransparency": "Go to transparency",
     "seePartners": "See partners",
@@ -74,8 +73,7 @@
         "through sport",
         "and parasport."
       ],
-      "lead": "Sports hubs in communities, futsal inside the school and training for the people who teach. AIDEP builds what makes sport arrive and stay.",
-      "scroll": "Scroll to explore"
+      "lead": "Sports hubs in communities, futsal inside the school and training for the people who teach. AIDEP builds what makes sport arrive and stay."
     },
     "about": {
       "eyebrow": "About AIDEP",
@@ -150,7 +148,7 @@
       "title": "Every point is a court with people on it.",
       "summary": "{cities, plural, one {# city} other {# cities}} · {hubs, plural, one {# hub} other {# hubs}}",
       "hubs": "{count, plural, one {# hub} other {# hubs}}",
-      "hint": "Drag to pan · scroll to zoom",
+      "hint": "Drag to pan · use + and − to zoom",
       "close": "Close the city panel",
       "seeProject": "See the project",
       "mapLabel": "Map of Brazil with the cities served by AIDEP’s projects, one pin on each.",
@@ -160,8 +158,7 @@
       "filters": {
         "label": "Filter the map by project",
         "all": "All projects"
-      },
-      "openMaps": "Open in Google Maps"
+      }
     }
   },
   "approach": {
@@ -438,7 +435,8 @@
     "form": {
       "eyebrow": "Become a partner",
       "title": "Let us talk about a partnership.",
-      "description": "Fill in the fields below. The AIDEP team will get back to you at the email address provided."
+      "description": "Write to AIDEP’s institutional email or reach out on Instagram. The team replies through the same channel.",
+      "subject": "Partnership proposal"
     }
   },
   "donate": {
@@ -526,77 +524,6 @@
       "address": "Location",
       "social": "Social media",
       "pending": "Not available yet"
-    },
-    "form": {
-      "eyebrow": "Form",
-      "title": "Send a message."
-    }
-  },
-  "forms": {
-    "fields": {
-      "name": "Name",
-      "namePlaceholder": "What should we call you",
-      "email": "Email",
-      "emailPlaceholder": "you@email.com",
-      "phone": "Phone",
-      "phoneOptional": "Phone (optional)",
-      "phonePlaceholder": "+00 00 00000-0000",
-      "subject": "Subject",
-      "subjectPlaceholder": "A short summary",
-      "message": "Message",
-      "messagePlaceholder": "Tell us what you need",
-      "interest": "Type of interest",
-      "interestPlaceholder": "Select an option",
-      "organization": "Institution",
-      "organizationPlaceholder": "Company or public body name",
-      "role": "Role",
-      "rolePlaceholder": "Your role at the institution",
-      "consent": "I authorise AIDEP to use the data submitted to reply to this message.",
-      "optional": "optional",
-      "required": "required"
-    },
-    "interests": {
-      "partnership": "Institutional partnership",
-      "donation": "Donation and support",
-      "projects": "Projects",
-      "press": "Press",
-      "other": "Other subject"
-    },
-    "partnerTypes": {
-      "company": "Company",
-      "public": "Public body",
-      "school": "School or educational institution",
-      "club": "Club or sports body",
-      "other": "Other"
-    },
-    "labels": {
-      "partnerType": "Type of institution",
-      "proposal": "How you picture the partnership"
-    },
-    "errors": {
-      "name": "Please enter your full name.",
-      "email": "Please enter a valid email address.",
-      "phone": "Please enter a valid phone number.",
-      "subject": "Please enter the subject of your message.",
-      "message": "Please write a message with at least 20 characters.",
-      "interest": "Please select the type of interest.",
-      "organization": "Please enter the name of the institution.",
-      "partnerType": "Please select the type of institution.",
-      "consent": "You need to authorise the use of your data to submit.",
-      "summary": "Please review the highlighted fields below."
-    },
-    "submit": {
-      "send": "Send message",
-      "sendPartnership": "Send proposal",
-      "sending": "Sending…",
-      "successTitle": "Message sent.",
-      "successDescription": "We have received your message and will reply to the email address provided.",
-      "errorTitle": "The message could not be sent.",
-      "errorDescription": "Please try again in a moment or write directly to the email address of the association.",
-      "unconfiguredTitle": "Submission not enabled yet.",
-      "unconfiguredDescription": "The sending service for this form has not been configured yet, so the message was not transmitted. Your details were validated and can be sent by email right now, in one click.",
-      "mailtoAction": "Send by email",
-      "newMessage": "Send another message"
     }
   },
   "footer": {

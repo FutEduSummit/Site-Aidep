@@ -9,24 +9,28 @@ import {
   type BannerStrength,
   type BannerTone,
 } from '@/lib/banner-veil'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { cn } from '@/lib/utils'
 
 /** Tempo que cada fotografia fica no ar, em milissegundos. */
-export const PERMANENCIA_DA_FOTO = 6500
+export const PERMANENCIA_DA_FOTO = 2500
 
 /**
- * Piso de permanência para o quadro de vídeo. Uma tomada de quatro
- * segundos e meio passaria rápido demais para ser vista; abaixo deste
- * limite o vídeo dá mais de uma volta antes de o rodízio virar.
+ * Folga somada à duração da tomada no quadro de vídeo.
+ *
+ * O `<video>` não começa a tocar no instante em que é montado — ele ainda
+ * decodifica o primeiro quadro e entra por fade. Sem esta folga o rodízio
+ * viraria em cima dos últimos quadros do filme, e a tomada nunca chegaria
+ * a terminar de passar.
  */
-export const PERMANENCIA_MINIMA_DO_VIDEO = 7000
+export const FOLGA_DO_VIDEO = 500
 
 /**
  * RODÍZIO DAS FOTOGRAFIAS
  * =======================
  * O índice mora aqui, e não dentro do carrossel, porque quem desenha os
- * indicadores é a seção — o Hero alinha os traços com a chamada de rolagem,
- * no rodapé da abertura. O componente de fundo é só a pintura.
+ * controles é a seção — o Hero alinha as setas e o contador no rodapé da
+ * abertura. O componente de fundo é só a pintura.
  *
  * A troca é agendada quadro a quadro com `setTimeout`, não com um intervalo
  * contínuo: assim uma escolha manual reinicia a contagem em vez de trocar a
@@ -149,6 +153,7 @@ export function BannerCarousel({
         <div key={foto.src} className="absolute inset-0">
           <Image
             src={foto.src}
+            quality={QUALIDADE_DA_IMAGEM}
             alt=""
             fill
             priority={priority && posicao === 0}
@@ -156,11 +161,16 @@ export function BannerCarousel({
             onLoad={posicao === 0 ? () => setAberturaPronta(true) : undefined}
             onError={posicao === 0 ? () => setAberturaPronta(true) : undefined}
             className={cn(
-              'object-cover transition-opacity duration-1000 ease-brand',
+              'object-cover transition-opacity duration-500 ease-brand',
               /* `scale` e não `transform`: as utilidades de escala do
                  Tailwind v4 escrevem a propriedade `scale`, e uma transição
-                 declarada sobre `transform` não a animaria. */
-              'motion-safe:transition-[opacity,scale] motion-safe:duration-[1600ms]',
+                 declarada sobre `transform` não a animaria.
+
+                 A travessia é curta porque a permanência também é: com
+                 2,5s no ar, 1,6s de cruzamento deixaria o rodízio em
+                 transição quase o tempo todo, e nenhuma fotografia
+                 chegaria a ser vista parada. */
+              'motion-safe:transition-[opacity,scale] motion-safe:duration-[800ms]',
               posicao === index ? 'opacity-100' : 'opacity-0 motion-safe:scale-[1.045]',
             )}
             style={foto.position ? { objectPosition: foto.position } : undefined}
@@ -185,7 +195,10 @@ export function BannerCarousel({
 /**
  * O VÍDEO DA ABERTURA
  * ===================
- * Um `<video>` mudo, em laço, por cima da capa que já está na tela.
+ * Um `<video>` mudo, de uma volta só, por cima da capa que já está na
+ * tela. Sem `loop`: o quadro fica no ar o tempo da tomada e o rodízio
+ * vira logo depois dela — repetir o filme no mesmo quadro só atrasaria a
+ * próxima fotografia.
  *
  * Ele entra por fade quando o primeiro quadro chega (`onPlaying`), e não
  * quando o elemento é montado: sem isso o vídeo pisca preto por cima da
@@ -210,7 +223,6 @@ function VideoDeFundo({ src, position }: { src: string; position?: string }) {
     <video
       src={src}
       muted
-      loop
       autoPlay
       playsInline
       preload="auto"
@@ -219,7 +231,7 @@ function VideoDeFundo({ src, position }: { src: string; position?: string }) {
       onPlaying={() => setEstado('tocando')}
       onError={() => setEstado('falhou')}
       className={cn(
-        'absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-brand',
+        'absolute inset-0 size-full object-cover transition-opacity duration-500 ease-brand',
         estado === 'tocando' ? 'opacity-100' : 'opacity-0',
       )}
       style={position ? { objectPosition: position } : undefined}

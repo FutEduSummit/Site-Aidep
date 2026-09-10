@@ -3,15 +3,15 @@
 import { motion, useScroll, useTransform } from 'motion/react'
 import { useRef, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { MagneticButton } from '@/components/motion/magnetic'
 import { SplitTextReveal } from '@/components/motion/animated-text'
 import { ButtonAnchor } from '@/components/ui/anchor-link'
 import { ButtonLink } from '@/components/ui/button'
 import {
   BannerCarousel,
+  FOLGA_DO_VIDEO,
   PERMANENCIA_DA_FOTO,
-  PERMANENCIA_MINIMA_DO_VIDEO,
   useBannerRotation,
 } from '@/components/ui/banner-carousel'
 import { Container, Section } from '@/components/ui/section'
@@ -30,16 +30,16 @@ const enter = (delay: number) => ({
 /**
  * Quanto tempo o quadro `posicao` fica no ar, em milissegundos.
  *
- * A fotografia usa a permanência padrão do rodízio (o `undefined` deixa o
- * hook decidir); o vídeo pede o tempo da tomada, com um piso de sete
- * segundos para a de quatro segundos e meio não passar antes de ser
- * vista — abaixo do piso ela simplesmente dá mais de uma volta.
+ * A fotografia usa a permanência padrão do rodízio, curta; o vídeo pede o
+ * tempo de uma tomada — uma só, mais a folga de partida. Não há piso nem
+ * teto: cortar a tomada no meio para acompanhar o passo das fotografias
+ * mostraria só o começo de cada filme, e repeti-la atrasaria o rodízio.
  */
 function permanenciaDoQuadro(posicao: number): number {
   const video = carrosselDaHome[posicao]?.video
   if (!video) return PERMANENCIA_DA_FOTO
 
-  return Math.max(video.duration * 1000, PERMANENCIA_MINIMA_DO_VIDEO)
+  return video.duration * 1000 + FOLGA_DO_VIDEO
 }
 
 /**
@@ -76,9 +76,8 @@ export function HomeHero() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
   const grafismoY = useTransform(scrollYProgress, [0, 1], [0, 140])
 
-  /* O quadro de vídeo fica no ar o tempo da tomada — com um piso, para a
-     tomada curta não passar antes de ser vista. A fotografia mantém a
-     permanência padrão do rodízio. */
+  /* O quadro de vídeo fica no ar o tempo de uma tomada, e só uma. A
+     fotografia mantém a permanência padrão do rodízio. */
   const { index, goTo } = useBannerRotation(
     carrosselDaHome.length,
     permanenciaDoQuadro,
@@ -135,8 +134,10 @@ export function HomeHero() {
               {t('eyebrow')}
             </motion.p>
 
-            {/* `text-hero` — teto de `display`, um degrau acima do `text-h1`
-                da primeira seção, e piso baixo o bastante para as três
+            {/* `text-hero` — um degrau acima do `text-h1` da primeira
+                seção, sem chegar perto do `display`: a abertura é a
+                fotografia, e o título por cima dela não pode tomar a
+                dobra inteira. O piso é baixo o bastante para as três
                 linhas caberem em tela pequena sem quebrar no meio. */}
             <SplitTextReveal
               as="h1"
@@ -172,14 +173,6 @@ export function HomeHero() {
         </Container>
 
         <Container className="relative z-10 flex items-center justify-between gap-6">
-          <motion.p
-            className="hidden items-center gap-3 text-micro uppercase tracking-[0.18em] text-(--fg-subtle) lg:flex"
-            {...enter(0.95)}
-          >
-            <ArrowDown aria-hidden="true" className="size-4 motion-safe:animate-bounce" />
-            {t('scroll')}
-          </motion.p>
-
           {/* Setas de navegação do rodízio. Passar à mão é o que dá
               controle sobre o carrossel: dois alvos de 44px, na mesma
               linha e no mesmo desenho dos controles da fileira de vídeos.

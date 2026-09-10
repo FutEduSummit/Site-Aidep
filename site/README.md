@@ -284,7 +284,7 @@ Scripts disponíveis:
 | `npm run docs:example` | gera os documentos de exemplo da Transparência (PDF/CSV) |
 | `npm run qa:pages <url>` | percorre todas as rotas nos 3 idiomas em 6 larguras e reporta overflow, erros de console, imagens deformadas ou invisíveis, links quebrados e problemas de estrutura |
 | `npm run qa:motion <url>` | audita o site com `prefers-reduced-motion: reduce` |
-| `npm run qa:interactions <url>` | testa menu mobile, troca de idioma, formulário e skip link |
+| `npm run qa:interactions <url>` | testa menu mobile, troca de idioma e skip link |
 | `npm run qa:shots <url> <pasta>` | captura telas para revisão visual |
 
 Os scripts de QA usam `puppeteer-core` com o Chrome instalado na máquina
@@ -297,7 +297,6 @@ Os scripts de QA usam `puppeteer-core` com o Chrome instalado na máquina
 | Variável | Efeito |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | URL pública, usada em canonical, hreflang, sitemap e Open Graph. Padrão: `https://aidepoficial.com` |
-| `CONTACT_WEBHOOK_URL` | Endpoint que recebe os formulários. **Enquanto não estiver definida, os formulários validam os dados, informam que o envio não está habilitado e oferecem o e-mail institucional — nunca exibem sucesso falso.** |
 | `NEXT_PUBLIC_EXAMPLE_CONTENT` | `0` desliga os documentos de exemplo da Transparência. Ligado por padrão. Não afeta as notícias, que vêm só do banco. |
 | `PEXELS_API_KEY` | Só para rodar `npm run images:stock`. As fotos já baixadas estão versionadas. |
 | `ACERVO_ORIGEM` | Só para rodar `npm run acervo`. Caminho da pasta bruta `Vídeos e Fotos`. Padrão: `../Vídeos e Fotos` |
@@ -331,7 +330,7 @@ mobile, pelo rodapé e pelos botões da própria Home:
 | `#a-aidep` | apresentação da associação e propósito |
 | `#publico-atendido` | público atendido — um cartão por público, em trilho horizontal |
 | `#impacto` | números consolidados e resultados por projeto |
-| `#contato` | formulário e canais, no fim da página |
+| `#contato` | canais de contato da associação, no fim da página |
 
 Duas regras de navegação valem em todo o site:
 
@@ -365,12 +364,12 @@ src/
   components/sections/    blocos de página (hero, projetos, impacto…)
   components/ui/          botões, cartões, molduras, acordeão, estados vazios
   components/motion/      biblioteca de movimento (Reveal, Parallax, Counter…)
-  components/forms/       campos, status de envio, formulários
+  components/forms/       campos de formulário reaproveitados nos filtros
   content/                dados institucionais (fonte da verdade)
   content/mundo.ts        máscara de terra firme do globo (gerada)
   hooks/                  media queries reativas e seguras para SSR
   i18n/                   routing, navegação e configuração do next-intl
-  lib/                    design tokens de movimento, marca, SEO, formulários
+  lib/                    design tokens de movimento, marca, SEO
   fonts/                  Sora (arquivos oficiais)
   proxy.ts                roteamento de idiomas e URLs traduzidas
 ```
@@ -417,8 +416,8 @@ O caminho normal passa pelo acervo (ver **O acervo da AIDEP**, abaixo):
    nos três idiomas.
 
 Para uma foto avulsa que não venha do acervo, basta colocar o arquivo em
-`public/images/…` (WebP ou AVIF, quando possível) e escrever o objeto com
-`src`, `width`, `height` e `alt` à mão na chave.
+`public/images/…` (AVIF, de preferência — é o formato do acervo) e escrever
+o objeto com `src`, `width`, `height` e `alt` à mão na chave.
 
 Enquanto a chave estiver `null`, `getMedia()` entrega a fotografia de banco
 equivalente (ver abaixo). Sem nenhuma das duas, a moldura exibe o painel
@@ -526,11 +525,19 @@ npm run acervo -- --videos     # só os vídeos
 | `scripts/lib/acervo.mjs` | a curadoria: o que entra, com que nome e em que tamanho — **é aqui que você mexe** |
 | `scripts/preparar-acervo.mjs` | converte, redimensiona, tira metadado e gera o registro |
 | `src/content/acervo.ts` | medidas e durações reais dos arquivos — **gerado**, não edite |
-| `public/images/acervo/` | as fotografias em WebP |
-| `public/videos/` | os vídeos em MP4 e as capas em WebP |
+| `public/images/acervo/` | as fotografias em AVIF |
+| `public/videos/` | os vídeos em MP4 e as capas em AVIF |
+| `src/lib/image-quality.ts` | a qualidade com que o `next/image` **entrega** essas fotografias |
 
-Três coisas que o script faz e vale saber:
+Quatro coisas que o script faz e vale saber:
 
+- **Grava em AVIF, com croma completo.** O WebP guarda cor em 4:2:0 — um
+  valor de cor para cada quadrado de dois por dois pixels, sem opção —, e
+  era o que borrava o verde da marca contra o branco do uniforme. O AVIF
+  aceita 4:4:4: cor por pixel. Sai em `quality: 78`, o mesmo peso que o
+  WebP 88 anterior tinha, carregando mais informação. O HEIC do iPhone
+  passa por um PNG temporário no caminho, e não mais por um JPEG: nenhuma
+  compressão com perda antes da que vale.
 - **Tira todo o metadado.** O acervo é de celular e carrega GPS, aparelho e
   data. Nada disso vai ao ar: publicar a coordenada da quadra onde as
   crianças treinam não é opção.
@@ -544,6 +551,14 @@ Precisa de `ffmpeg` e `ffprobe` no PATH (`winget install Gyan.FFmpeg` ·
 `brew install ffmpeg`): são eles que decodificam o HEIC do iPhone e
 recomprimem o vídeo. A pasta bruta é lida de `../Vídeos e Fotos` — outro
 caminho, use `ACERVO_ORIGEM`.
+
+**O arquivo em `public/` não é o arquivo que o visitante baixa.** Toda
+fotografia passa pelo `next/image`, que a recomprime no servidor na largura
+que a tela pediu — o que está em `public/images/acervo/` é o negativo, e é
+por isso que ele é gravado com mais qualidade do que a entrega precisa. Essa
+segunda passagem tem número próprio, em `src/lib/image-quality.ts`, e ele
+precisa estar em `images.qualities` no `next.config.ts` — o otimizador
+responde 400 a qualquer valor fora daquela lista.
 
 ### As fotografias que estão no ar hoje
 

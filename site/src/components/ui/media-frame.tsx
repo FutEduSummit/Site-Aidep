@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { symbolMark } from '@/lib/brand'
 import type { MediaAsset } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { cn } from '@/lib/utils'
 
 type MediaFrameProps = {
@@ -20,6 +21,56 @@ const panelTone = {
   light: 'bg-paper-3',
   dark: 'bg-ink-900',
   brand: 'bg-brand-800',
+}
+
+/**
+ * QUANTA LARGURA A FOTOGRAFIA PRECISA — NÃO QUANTA A MOLDURA MEDE
+ * ==============================================================
+ * `sizes` diz ao `next/image` que largura de arquivo pedir, e a conta
+ * natural é a largura da moldura. Ela está errada sempre que o
+ * `object-cover` recorta pelos lados: numa moldura em pé (5/6) com uma
+ * fotografia deitada (3/2), o recorte joga fora 45% da largura do arquivo,
+ * e o que sobra é esticado para encher a moldura.
+ *
+ * Era o caso da faixa do esporte na Página inicial — a foto do professor
+ * com o menino no colo. Medido: moldura de 1325×1590 px de tela recebendo
+ * uma entrega de 1440×956, ou seja, **1,66× de esticada**. É o tipo de
+ * imagem macia que nenhuma qualidade de compressão conserta, porque o pixel
+ * não foi pedido.
+ *
+ * O fator é `proporção da foto ÷ proporção da moldura`, e só vale quando a
+ * foto é mais deitada que a moldura. No caso contrário — foto em pé em
+ * moldura deitada — o recorte tira altura, a largura já basta, e o fator é
+ * 1. Nada muda para as dezenas de molduras em que foto e moldura combinam.
+ *
+ * Pedir mais não desperdiça: o otimizador redimensiona com
+ * `withoutEnlargement`, então pedir 2560 de um arquivo de 2048 devolve
+ * 2048 — e nunca um 2048 inflado.
+ */
+function fatorDoRecorte(media: MediaAsset, ratio: string): number {
+  const [largura, altura] = ratio.split('/').map((parte) => Number(parte.trim()))
+  const daMoldura = largura / altura
+  const daFoto = media.width / media.height
+
+  if (!Number.isFinite(daMoldura) || !Number.isFinite(daFoto) || daMoldura <= 0) {
+    return 1
+  }
+
+  return Math.max(1, daFoto / daMoldura)
+}
+
+/**
+ * Aplica o fator a cada medida em `vw` do `sizes`, com teto em 100vw — a
+ * largura da janela é o máximo que existe. Medida em `px` ou `rem` passa
+ * intacta: nenhuma moldura do site usa, e reescrever às cegas seria pior
+ * que não mexer.
+ */
+function sizesDoRecorte(sizes: string, fator: number): string {
+  if (fator <= 1.02) return sizes
+
+  return sizes.replace(/(\d+(?:\.\d+)?)vw/g, (_, medida: string) => {
+    return `${Math.min(100, Math.round(Number(medida) * fator))}vw`
+  })
 }
 
 /**
@@ -54,8 +105,9 @@ export function MediaFrame({
           src={media.src}
           alt={media.alt[locale]}
           fill
-          sizes={sizes}
+          sizes={sizesDoRecorte(sizes, fatorDoRecorte(media, ratio))}
           priority={priority}
+          quality={QUALIDADE_DA_IMAGEM}
           className="object-cover"
           style={media.position ? { objectPosition: media.position } : undefined}
         />

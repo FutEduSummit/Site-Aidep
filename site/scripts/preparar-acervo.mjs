@@ -7,9 +7,9 @@
  * acervo bruto para o formato que o site serve e escreve o registro de
  * dimensões em `src/content/acervo.ts`.
  *
- *   fotografia  HEIC/JPEG  →  public/images/acervo/<nome>.webp
- *   vídeo       MOV 4K     →  public/videos/<nome>.mp4  +  <nome>.webp (capa)
- *   abertura    MP4 drone  →  public/videos/<nome>.mp4  +  <nome>.webp (capa)
+ *   fotografia  HEIC/JPEG  →  public/images/acervo/<nome>.avif
+ *   vídeo       MOV 4K     →  public/videos/<nome>.mp4  +  <nome>.avif (capa)
+ *   abertura    MP4 drone  →  public/videos/<nome>.mp4  +  <nome>.avif (capa)
  *
  * Três decisões que valem explicar:
  *
@@ -27,8 +27,10 @@
  *    gerado por este script: largura, altura e duração saem do arquivo
  *    pronto. É o que garante que nenhuma moldura do site erre a proporção.
  *
- * Requisitos: `ffmpeg` e `ffprobe` no PATH (o HEIC do iPhone é decodificado
- * por eles; o `sharp` só lê AVIF). Sem eles o script explica e para.
+ * Requisitos: `ffmpeg` e `ffprobe` no PATH. São eles que decodificam o HEIC
+ * do iPhone — o `sharp` distribuído no npm **escreve** AVIF mas não **lê**
+ * HEIC (o libheif vem sem o decodificador HEVC). Sem eles o script explica
+ * e para.
  */
 
 import { execFile } from 'node:child_process'
@@ -50,37 +52,52 @@ const registro = path.join(raizProjeto, 'src/content/acervo.ts')
 const temporarios = path.join(raizProjeto, 'scripts/.cache/acervo')
 
 /**
- * COMPRESSÃO DAS FOTOGRAFIAS
- * ==========================
- * O acervo já esteve publicado em `quality: 78`, e a queixa foi direta:
- * imagem de má qualidade. Em 78 o WebP põe blocos visíveis exatamente
- * onde este acervo mais tem área lisa — camisa de uniforme, parede de
- * ginásio, gramado ao sol.
+ * COMPRESSÃO DAS FOTOGRAFIAS — AVIF
+ * =================================
+ * O acervo já esteve em WebP `quality: 78`, e a queixa foi direta: imagem
+ * de má qualidade. Foi para WebP 88, e os blocos sumiram. Agora sai em
+ * **AVIF**, e o motivo não é a moda do formato: é o croma.
  *
- * O ajuste tem três partes, e as três importam:
+ * O WebP lossy guarda cor em 4:2:0 — um valor de cor para cada quadrado
+ * de dois por dois pixels, sempre, sem opção. `smartSubsample` só escolhe
+ * melhor *qual* valor jogar fora. Era o que borrava o verde da marca
+ * contra o branco do uniforme e a linha do campo contra o gramado. O AVIF
+ * aceita **4:4:4**: cor por pixel, como no original.
  *
- * - `quality: 88` — o joelho da curva do WebP para fotografia. De 78
- *   para 88 o arquivo cresce cerca de 60%, e é aí que os blocos somem;
- *   de 88 para 95 ele dobra de novo sem diferença que se veja na tela.
- * - `smartSubsample` — sem isto o WebP joga fora três quartos da
- *   informação de cor. É o que borrava o verde da marca contra o branco
- *   do uniforme, e custa quase nada.
- * - `effort: 6` — o codificador procura mais antes de decidir. É tempo
- *   de máquina na hora de preparar o acervo, não peso para quem visita.
+ * As três partes do ajuste, medidas neste acervo (2560 px):
  *
- * Somado à largura maior em `lib/acervo.mjs` (2560 px nas faixas
- * sangradas), o acervo passou de 12 MB para cerca de 30 MB — que
- * continua sendo menos do que uma única foto do original, e nenhuma
- * página serve mais que algumas delas.
+ * - `quality: 78` — na escala do AVIF, que não é a do WebP. Um q78 4:4:4
+ *   dá o mesmo peso do WebP 88 que estava publicado (585 kB no quadro de
+ *   abertura, 169 kB na foto da formação) carregando bem mais informação:
+ *   croma completo e textura preservada onde o WebP já alisava.
+ * - `chromaSubsampling: '4:4:4'` — o ponto todo da troca. Custa de 4% a
+ *   8% de arquivo sobre o 4:2:0 e devolve a cor que o WebP não guardava.
+ * - `effort: 6` — o codificador procura mais antes de decidir. Medido
+ *   aqui, `effort` acima de 4 quase não muda o tamanho, mas gasta o
+ *   orçamento de bits melhor dentro dele. É tempo de máquina na hora de
+ *   preparar o acervo, não peso para quem visita.
+ *
+ * ESTE ARQUIVO NÃO É O QUE O VISITANTE BAIXA
+ * ------------------------------------------
+ * O `next/image` recomprime tudo no servidor, na largura que a tela pede
+ * (ver `next.config.ts` e `lib/image-quality.ts`). O que este script
+ * produz é o **negativo**: quanto mais informação ele guardar, melhor o
+ * resultado dessa segunda passagem. Por isso a qualidade daqui é mais
+ * alta que a da entrega — e por isso 4:4:4 importa mesmo que a entrega
+ * reduza de novo.
  */
 const QUALIDADE_DA_FOTO = {
-  quality: 88,
+  quality: 78,
   effort: 6,
-  smartSubsample: true,
+  chromaSubsampling: '4:4:4',
 }
 
-/** Mesma conversa para a capa do vídeo, que também é fotografia. */
-const QUALIDADE_DA_CAPA = { quality: 84, effort: 6, smartSubsample: true }
+/**
+ * Mesma conversa para a capa do vídeo, que também é fotografia. Um degrau
+ * abaixo porque ela é o quadro parado de um vídeo já comprimido: o
+ * detalhe fino que o q78 preservaria não existe no arquivo de origem.
+ */
+const QUALIDADE_DA_CAPA = { quality: 72, effort: 6, chromaSubsampling: '4:4:4' }
 
 const soFaltantes = process.argv.includes('--faltantes')
 /* Sem `--fotos` nem `--videos`, faz os dois. */
@@ -125,16 +142,52 @@ function kb(bytes) {
     : `${Math.round(bytes / 1000)} kB`
 }
 
-/** Decodifica HEIC para um JPEG temporário; os demais formatos o sharp lê direto. */
-async function comoJpeg(arquivo) {
+/**
+ * Apaga o arquivo que a rodada anterior publicou em WebP. Até esta troca o
+ * acervo saía em `.webp`; sem esta limpeza os dois formatos ficariam lado a
+ * lado em `public/` — o antigo iria para o repositório sem nada apontando
+ * para ele, dobrando o peso do que é versionado.
+ *
+ * Só é chamado depois de o `.avif` estar no lugar: apagar antes deixaria a
+ * imagem sem arquivo nenhum se a rodada fosse interrompida no meio.
+ */
+async function apagarWebpAntigo(caminhoAvif) {
+  await rm(caminhoAvif.replace(/\.avif$/, '.webp'), { force: true })
+}
+
+/**
+ * Decodifica HEIC para um PNG temporário; os demais formatos o sharp lê
+ * direto.
+ *
+ * PNG, e não JPEG. Este arquivo é só a ponte entre o ffmpeg e o sharp, e um
+ * JPEG no meio do caminho põe uma compressão com perda **antes** da que
+ * vale — a do AVIF. Metade do acervo é HEIC de iPhone e passava por aqui:
+ * era uma geração de perda que ninguém pediu, em sessenta fotografias. O
+ * PNG temporário é grande (20 MB para um arquivo de 12 MP) e vive os poucos
+ * segundos até o AVIF ficar pronto.
+ *
+ * A conversão é tentada mais de uma vez de propósito: o ffmpeg abre um
+ * decodificador por ladrilho do HEIC e, com a máquina ocupada, falha com
+ * "Cannot allocate memory" num arquivo que converte sem queixa na tentativa
+ * seguinte.
+ */
+async function comoPng(arquivo) {
   if (!/\.heic$/i.test(arquivo)) return { caminho: arquivo, temporario: false }
 
   await mkdir(temporarios, { recursive: true })
-  const saida = path.join(temporarios, `${path.basename(arquivo)}.jpg`)
-  /* Sem -vf: o HEIC do iPhone vem em ladrilhos e o ffmpeg monta a imagem
-     por filtergraph próprio — um filtro simples aqui derruba a conversão. */
-  await exec('ffmpeg', ['-v', 'error', '-i', arquivo, '-frames:v', '1', '-update', '1', '-q:v', '2', '-y', saida])
-  return { caminho: saida, temporario: true }
+  const saida = path.join(temporarios, `${path.basename(arquivo)}.png`)
+
+  for (let tentativa = 1; ; tentativa += 1) {
+    try {
+      /* Sem -vf: o HEIC do iPhone vem em ladrilhos e o ffmpeg monta a imagem
+         por filtergraph próprio — um filtro simples aqui derruba a conversão. */
+      await exec('ffmpeg', ['-v', 'error', '-i', arquivo, '-frames:v', '1', '-update', '1', '-y', saida])
+      return { caminho: saida, temporario: true }
+    } catch (erro) {
+      if (tentativa === 3) throw erro
+      await new Promise((seguir) => setTimeout(seguir, 1500 * tentativa))
+    }
+  }
 }
 
 async function prepararFotos() {
@@ -143,7 +196,7 @@ async function prepararFotos() {
 
   for (const foto of fotos) {
     const entrada = path.join(origem, foto.origem)
-    const saida = path.join(destinoFotos, `${foto.nome}.webp`)
+    const saida = path.join(destinoFotos, `${foto.nome}.avif`)
 
     if (!existsSync(entrada)) {
       console.error(`  ! ${foto.nome}: original não encontrado — ${foto.origem}`)
@@ -151,31 +204,42 @@ async function prepararFotos() {
     }
     if (reaproveitar('fotos') && existsSync(saida)) {
       const meta = await sharp(saida).metadata()
+      await apagarWebpAntigo(saida)
       registrados.push({ nome: foto.nome, width: meta.width, height: meta.height })
       continue
     }
 
-    const { caminho, temporario } = await comoJpeg(entrada)
-    const info = await sharp(caminho)
-      /* `rotate()` sem argumento aplica a orientação do EXIF e a descarta —
-         é o que impede a foto de celular de sair deitada. */
-      .rotate()
-      .resize({
-        width: foto.largura,
-        withoutEnlargement: true,
-        /* Lanczos com nitidez de volta: reduzir uma foto de 12 MP para
-           2560 px sempre come detalhe, e sem esta correção o resultado
-           chega macio demais — foi metade da queixa de qualidade. */
-        kernel: 'lanczos3',
-      })
-      .sharpen({ sigma: 0.6, m1: 0.4, m2: 1.6 })
-      .webp(QUALIDADE_DA_FOTO)
-      .toFile(saida)
+    /* Uma fotografia que não converte não derruba as outras 128: o erro é
+       relatado e a rodada segue. Quem cobra a falta é o `tsc` — a chave sem
+       arquivo desaparece do registro e `content/media.ts` para de compilar,
+       em vez de o site publicar uma imagem quebrada. Rodar de novo com
+       `--faltantes` retoma só o que ficou. */
+    try {
+      const { caminho, temporario } = await comoPng(entrada)
+      const info = await sharp(caminho)
+        /* `rotate()` sem argumento aplica a orientação do EXIF e a descarta —
+           é o que impede a foto de celular de sair deitada. */
+        .rotate()
+        .resize({
+          width: foto.largura,
+          withoutEnlargement: true,
+          /* Lanczos com nitidez de volta: reduzir uma foto de 12 MP para
+             2560 px sempre come detalhe, e sem esta correção o resultado
+             chega macio demais — foi metade da queixa de qualidade. */
+          kernel: 'lanczos3',
+        })
+        .sharpen({ sigma: 0.6, m1: 0.4, m2: 1.6 })
+        .avif(QUALIDADE_DA_FOTO)
+        .toFile(saida)
 
-    if (temporario) await rm(caminho, { force: true })
+      if (temporario) await rm(caminho, { force: true })
+      await apagarWebpAntigo(saida)
 
-    registrados.push({ nome: foto.nome, width: info.width, height: info.height })
-    console.log(`  ✓ ${foto.nome}.webp  ${info.width}×${info.height}  ${kb(info.size)}`)
+      registrados.push({ nome: foto.nome, width: info.width, height: info.height })
+      console.log(`  ✓ ${foto.nome}.avif  ${info.width}×${info.height}  ${kb(info.size)}`)
+    } catch (erro) {
+      console.error(`  ! ${foto.nome}: ${String(erro.message).split('\n')[0]}`)
+    }
   }
 
   return registrados
@@ -210,7 +274,7 @@ async function prepararVideos() {
   for (const video of videos) {
     const entrada = path.join(origem, video.origem)
     const saidaVideo = path.join(destinoVideos, `${video.nome}.mp4`)
-    const saidaCapa = path.join(destinoVideos, `${video.nome}.webp`)
+    const saidaCapa = path.join(destinoVideos, `${video.nome}.avif`)
 
     if (!existsSync(entrada)) {
       console.error(`  ! ${video.nome}: original não encontrado — ${video.origem}`)
@@ -266,9 +330,11 @@ async function prepararVideos() {
         '-v', 'error', '-ss', String(video.poster ?? 1), '-i', saidaVideo,
         '-frames:v', '1', '-update', '1', '-q:v', '2', '-y', bruto,
       ])
-      await sharp(bruto).webp(QUALIDADE_DA_CAPA).toFile(saidaCapa)
+      await sharp(bruto).avif(QUALIDADE_DA_CAPA).toFile(saidaCapa)
       await rm(bruto, { force: true })
     }
+
+    await apagarWebpAntigo(saidaCapa)
 
     const [{ width, height }, segundos, arquivo] = await Promise.all([
       dimensoes(saidaVideo),
@@ -315,7 +381,7 @@ async function prepararAberturas() {
   for (const abertura of aberturas) {
     const entrada = path.join(origem, abertura.origem)
     const saidaVideo = path.join(destinoVideos, `${abertura.nome}.mp4`)
-    const saidaCapa = path.join(destinoVideos, `${abertura.nome}.webp`)
+    const saidaCapa = path.join(destinoVideos, `${abertura.nome}.avif`)
 
     if (!existsSync(entrada)) {
       console.error(`  ! ${abertura.nome}: original não encontrado — ${abertura.origem}`)
@@ -366,10 +432,12 @@ async function prepararAberturas() {
       await sharp(bruto)
         .resize({ width: 2560, withoutEnlargement: true, kernel: 'lanczos3' })
         .sharpen({ sigma: 0.6, m1: 0.4, m2: 1.6 })
-        .webp(QUALIDADE_DA_FOTO)
+        .avif(QUALIDADE_DA_FOTO)
         .toFile(saidaCapa)
       await rm(bruto, { force: true })
     }
+
+    await apagarWebpAntigo(saidaCapa)
 
     const [{ width, height }, segundos, arquivo, capa] = await Promise.all([
       dimensoes(saidaVideo),
@@ -397,7 +465,7 @@ async function prepararAberturas() {
 
 function gerarRegistro(fotosProntas, videosProntos, aberturasProntas) {
   const linhasFoto = fotosProntas
-    .map((f) => `  '${f.nome}': { src: '/images/acervo/${f.nome}.webp', width: ${f.width}, height: ${f.height} },`)
+    .map((f) => `  '${f.nome}': { src: '/images/acervo/${f.nome}.avif', width: ${f.width}, height: ${f.height} },`)
     .join('\n')
 
   const linhasVideo = videosProntos
@@ -405,7 +473,7 @@ function gerarRegistro(fotosProntas, videosProntos, aberturasProntas) {
       (v) =>
         `  '${v.nome}': {\n` +
         `    src: '/videos/${v.nome}.mp4',\n` +
-        `    poster: '/videos/${v.nome}.webp',\n` +
+        `    poster: '/videos/${v.nome}.avif',\n` +
         `    width: ${v.width},\n` +
         `    height: ${v.height},\n` +
         `    duration: ${v.duracao},\n` +
@@ -418,7 +486,7 @@ function gerarRegistro(fotosProntas, videosProntos, aberturasProntas) {
       (v) =>
         `  '${v.nome}': {\n` +
         `    src: '/videos/${v.nome}.mp4',\n` +
-        `    poster: '/videos/${v.nome}.webp',\n` +
+        `    poster: '/videos/${v.nome}.avif',\n` +
         `    width: ${v.width},\n` +
         `    height: ${v.height},\n` +
         `    duration: ${v.duracao},\n` +

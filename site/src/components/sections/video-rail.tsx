@@ -11,6 +11,7 @@ import { VideoPlayer } from '@/components/ui/video-player'
 import type { VideoAsset } from '@/content/types'
 import { usePointerFine, useReducedMotionSafe } from '@/hooks/use-media'
 import type { Locale } from '@/i18n/routing'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { cn } from '@/lib/utils'
 
 type VideoRailProps = {
@@ -509,6 +510,7 @@ function Cartao({
       >
         <Image
           src={video.poster}
+          quality={QUALIDADE_DA_IMAGEM}
           alt=""
           fill
           draggable={false}

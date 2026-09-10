@@ -6,7 +6,6 @@ import { GrowLine } from '@/components/motion/grow-line'
 import { ParallaxImage } from '@/components/motion/parallax'
 import { Reveal } from '@/components/motion/reveal'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
-import { ArrowAnchor } from '@/components/ui/anchor-link'
 import { MediaFrame } from '@/components/ui/media-frame'
 import { Container, Section } from '@/components/ui/section'
 import { getMedia } from '@/content/media'
@@ -16,7 +15,6 @@ type Highlight = { term: string; detail: string }
 
 export function HomeAbout({ locale }: { locale: Locale }) {
   const t = useTranslations('home.about')
-  const tActions = useTranslations('actions')
 
   const paragraphs = t.raw('paragraphs') as string[]
   const highlights = t.raw('highlights') as Highlight[]
@@ -45,12 +43,6 @@ export function HomeAbout({ locale }: { locale: Locale }) {
                 </Reveal>
               ))}
             </div>
-
-            <Reveal delay={0.2} distance={24} className="mt-10">
-              <ArrowAnchor href="#publico-atendido">
-                {tActions('seeAudience')}
-              </ArrowAnchor>
-            </Reveal>
           </div>
 
           <div className="flex flex-col gap-10 lg:col-span-4 lg:col-start-9">

@@ -6,6 +6,7 @@ import {
   type BannerStrength,
   type BannerTone,
 } from '@/lib/banner-veil'
+import { QUALIDADE_DA_IMAGEM } from '@/lib/image-quality'
 import { cn } from '@/lib/utils'
 
 type SectionBannerProps = {
@@ -63,6 +64,7 @@ export function SectionBanner({
     >
       <Image
         src={media.src}
+        quality={QUALIDADE_DA_IMAGEM}
         alt=""
         fill
         priority={priority}

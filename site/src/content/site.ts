@@ -28,8 +28,13 @@ export const site = {
   contact: {
     /** Confirmado na papelaria institucional oficial. */
     email: 'atendimento@aidepoficial.com',
-    /** Pendente de confirmação — o bloco de telefone fica oculto. */
-    phone: null as string | null,
+    /**
+     * PROVISÓRIO — número fictício, só para o canal de telefone não ficar
+     * vazio enquanto o oficial não vem. Para trocar depois basta esta
+     * linha: ela é a única fonte do telefone no site, e o `tel:` do link
+     * sai dela sozinho. Voltar para `null` esconde o canal de novo.
+     */
+    phone: '(46) 99999-0000' as string | null,
     /** Endereço completo ainda não fornecido. */
     street: null as string | null,
     city: 'Pato Branco',
@@ -65,15 +70,3 @@ export const site = {
 } as const
 
 export type SiteConfig = typeof site
-
-/**
- * O envio dos formulários só é habilitado com um canal configurado: e-mail
- * (Resend) ou webhook. Só tem valor no servidor — em código de cliente as
- * variáveis privadas não são expostas e a constante é sempre `false`.
- */
-export const contactEndpointConfigured = Boolean(
-  (process.env.RESEND_API_KEY &&
-    process.env.CONTACT_TO_EMAIL &&
-    process.env.CONTACT_FROM_EMAIL) ||
-    process.env.CONTACT_WEBHOOK_URL,
-)
