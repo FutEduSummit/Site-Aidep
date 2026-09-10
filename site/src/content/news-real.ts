@@ -47,9 +47,9 @@ export const realNews: NewsArticle[] = [
       es: 'Coração Valente abre polos en doce municipios de Sergipe',
     },
     excerpt: {
-      pt: 'De fevereiro a abril, o projeto inaugurou polos esportivos da capital ao sertão — de Aracaju e Nossa Senhora do Socorro a Canindé de São Francisco, Poço Verde e Tobias Barreto.',
-      en: 'Between February and April the project opened sports hubs from the state capital to the backlands — from Aracaju and Nossa Senhora do Socorro to Canindé de São Francisco, Poço Verde and Tobias Barreto.',
-      es: 'De febrero a abril el proyecto inauguró polos deportivos de la capital al sertón — de Aracaju y Nossa Senhora do Socorro a Canindé de São Francisco, Poço Verde y Tobias Barreto.',
+      pt: 'De fevereiro a abril, o projeto inaugurou polos esportivos da capital ao sertão: de Aracaju e Nossa Senhora do Socorro a Canindé de São Francisco, Poço Verde e Tobias Barreto.',
+      en: 'Between February and April the project opened sports hubs from the state capital to the backlands: from Aracaju and Nossa Senhora do Socorro to Canindé de São Francisco, Poço Verde and Tobias Barreto.',
+      es: 'De febrero a abril el proyecto inauguró polos deportivos de la capital al sertón: de Aracaju y Nossa Senhora do Socorro a Canindé de São Francisco, Poço Verde y Tobias Barreto.',
     },
     body: {
       pt: [
@@ -65,9 +65,9 @@ export const realNews: NewsArticle[] = [
         {
           type: 'list',
           items: [
-            'Grande Aracaju — Aracaju, Nossa Senhora do Socorro e Barra dos Coqueiros',
-            'Agreste e sertão — Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes e Propriá',
-            'Centro-sul — Boquim, Estância, Poço Verde e Tobias Barreto',
+            'Grande Aracaju: Aracaju, Nossa Senhora do Socorro e Barra dos Coqueiros',
+            'Agreste e sertão: Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes e Propriá',
+            'Centro-sul: Boquim, Estância, Poço Verde e Tobias Barreto',
           ],
         },
         { type: 'heading', text: 'Como é o dia de abertura' },
@@ -77,7 +77,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Somando os dois territórios do projeto — Sergipe e o Distrito Federal —, o Coração Valente atende 2.500 crianças e adolescentes.',
+          text: 'Somando os dois territórios do projeto, Sergipe e o Distrito Federal, o Coração Valente atende 2.500 crianças e adolescentes.',
         },
       ],
       en: [
@@ -93,9 +93,9 @@ export const realNews: NewsArticle[] = [
         {
           type: 'list',
           items: [
-            'Greater Aracaju — Aracaju, Nossa Senhora do Socorro and Barra dos Coqueiros',
-            'Agreste and backlands — Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes and Propriá',
-            'Central-south — Boquim, Estância, Poço Verde and Tobias Barreto',
+            'Greater Aracaju: Aracaju, Nossa Senhora do Socorro and Barra dos Coqueiros',
+            'Agreste and backlands: Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes and Propriá',
+            'Central-south: Boquim, Estância, Poço Verde and Tobias Barreto',
           ],
         },
         { type: 'heading', text: 'What opening day looks like' },
@@ -105,7 +105,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Across both of the project’s territories — Sergipe and the Federal District — Coração Valente reaches 2,500 children and teenagers.',
+          text: 'Across both of the project’s territories, Sergipe and the Federal District, Coração Valente reaches 2,500 children and teenagers.',
         },
       ],
       es: [
@@ -121,9 +121,9 @@ export const realNews: NewsArticle[] = [
         {
           type: 'list',
           items: [
-            'Gran Aracaju — Aracaju, Nossa Senhora do Socorro y Barra dos Coqueiros',
-            'Agreste y sertón — Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes y Propriá',
-            'Centro-sur — Boquim, Estância, Poço Verde y Tobias Barreto',
+            'Gran Aracaju: Aracaju, Nossa Senhora do Socorro y Barra dos Coqueiros',
+            'Agreste y sertón: Itabaiana, Nossa Senhora da Glória, Canindé de São Francisco, Nossa Senhora de Lourdes y Propriá',
+            'Centro-sur: Boquim, Estância, Poço Verde y Tobias Barreto',
           ],
         },
         { type: 'heading', text: 'Cómo es el día de apertura' },
@@ -133,7 +133,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Sumando los dos territorios del proyecto — Sergipe y el Distrito Federal —, Coração Valente atiende a 2.500 niños y adolescentes.',
+          text: 'Sumando los dos territorios del proyecto, Sergipe y el Distrito Federal, Coração Valente atiende a 2.500 niños y adolescentes.',
         },
       ],
     },
@@ -160,7 +160,7 @@ export const realNews: NewsArticle[] = [
       pt: [
         {
           type: 'paragraph',
-          text: 'A Copa Coração Valente reúne os polos do projeto em uma competição entre municípios. Para a maioria das crianças e adolescentes é a primeira vez que jogam fora da própria comunidade — e é isso que a competição existe para fazer.',
+          text: 'A Copa Coração Valente reúne os polos do projeto em uma competição entre municípios. Para a maioria das crianças e adolescentes é a primeira vez que jogam fora da própria comunidade, e é isso que a competição existe para fazer.',
         },
         { type: 'heading', text: 'Por que uma competição' },
         {
@@ -183,7 +183,7 @@ export const realNews: NewsArticle[] = [
       en: [
         {
           type: 'paragraph',
-          text: 'The Coração Valente Cup brings the project’s hubs together in a competition between municipalities. For most of the children and teenagers it is the first time they play outside their own community — and that is what the tournament exists to do.',
+          text: 'The Coração Valente Cup brings the project’s hubs together in a competition between municipalities. For most of the children and teenagers it is the first time they play outside their own community, and that is what the tournament exists to do.',
         },
         { type: 'heading', text: 'Why a competition' },
         {
@@ -206,7 +206,7 @@ export const realNews: NewsArticle[] = [
       es: [
         {
           type: 'paragraph',
-          text: 'La Copa Coração Valente reúne los polos del proyecto en una competencia entre municipios. Para la mayoría de los niños y adolescentes es la primera vez que juegan fuera de su propia comunidad — y para eso existe la competencia.',
+          text: 'La Copa Coração Valente reúne los polos del proyecto en una competencia entre municipios. Para la mayoría de los niños y adolescentes es la primera vez que juegan fuera de su propia comunidad, y para eso existe la competencia.',
         },
         { type: 'heading', text: 'Por qué una competencia' },
         {
@@ -250,7 +250,7 @@ export const realNews: NewsArticle[] = [
       pt: [
         {
           type: 'paragraph',
-          text: 'Além de Sergipe, o Coração Valente atua em sete regiões administrativas do Distrito Federal. São 700 crianças atendidas — o segundo território do projeto, e o que mostra que o modelo não depende de estar perto da sede.',
+          text: 'Além de Sergipe, o Coração Valente atua em sete regiões administrativas do Distrito Federal. São 700 crianças atendidas. É o segundo território do projeto, e o que mostra que o modelo não depende de estar perto da sede.',
         },
         { type: 'heading', text: 'As regiões atendidas' },
         {
@@ -272,7 +272,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'As regiões administrativas do DF não são municípios, e por isso cada polo é referenciado pela própria comunidade — é assim que eles aparecem no mapa de atuação da associação.',
+          text: 'As regiões administrativas do DF não são municípios, e por isso cada polo é referenciado pela própria comunidade. É assim que eles aparecem no mapa de atuação da associação.',
         },
       ],
       en: [
@@ -300,13 +300,13 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'The Federal District’s administrative regions are not municipalities, so each hub is identified by its own community — which is how they appear on the association’s coverage map.',
+          text: 'The Federal District’s administrative regions are not municipalities, so each hub is identified by its own community, which is how they appear on the association’s coverage map.',
         },
       ],
       es: [
         {
           type: 'paragraph',
-          text: 'Además de Sergipe, Coração Valente actúa en siete regiones administrativas del Distrito Federal. Son 700 niños atendidos — el segundo territorio del proyecto, y el que muestra que el modelo no depende de estar cerca de la sede.',
+          text: 'Además de Sergipe, Coração Valente actúa en siete regiones administrativas del Distrito Federal. Son 700 niños atendidos. Es el segundo territorio del proyecto, y el que muestra que el modelo no depende de estar cerca de la sede.',
         },
         { type: 'heading', text: 'Las regiones atendidas' },
         {
@@ -328,7 +328,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Las regiones administrativas del DF no son municipios, y por eso cada polo se identifica por su propia comunidad — así aparecen en el mapa de actuación de la asociación.',
+          text: 'Las regiones administrativas del DF no son municipios, y por eso cada polo se identifica por su propia comunidad. Así aparecen en el mapa de actuación de la asociación.',
         },
       ],
     },
@@ -351,9 +351,9 @@ export const realNews: NewsArticle[] = [
       es: 'Futsal na Escola está en doce ciudades',
     },
     excerpt: {
-      pt: 'O projeto leva o futsal para dentro da grade escolar e alcança 600 pessoas — estudantes, professores e a comunidade em volta de cada quadra.',
-      en: 'The project brings futsal into the school timetable and reaches 600 people — students, teachers and the community around each court.',
-      es: 'El proyecto lleva el futsal dentro del horario escolar y alcanza a 600 personas — estudiantes, profesores y la comunidad alrededor de cada cancha.',
+      pt: 'O projeto leva o futsal para dentro da grade escolar e alcança 600 pessoas: estudantes, professores e a comunidade em volta de cada quadra.',
+      en: 'The project brings futsal into the school timetable and reaches 600 people: students, teachers and the community around each court.',
+      es: 'El proyecto lleva el futsal dentro del horario escolar y alcanza a 600 personas: estudiantes, profesores y la comunidad alrededor de cada cancha.',
     },
     body: {
       pt: [
@@ -364,7 +364,7 @@ export const realNews: NewsArticle[] = [
         { type: 'heading', text: 'Por que dentro da escola' },
         {
           type: 'paragraph',
-          text: 'Um polo esportivo depende de a criança decidir ir até ele. Na escola, ela já está lá — e o futsal deixa de disputar com a rotina para virar parte dela. É a diferença entre oferecer uma oportunidade e colocá-la no caminho de quem passa.',
+          text: 'Um polo esportivo depende de a criança decidir ir até ele. Na escola, ela já está lá, e o futsal deixa de disputar com a rotina para virar parte dela. É a diferença entre oferecer uma oportunidade e colocá-la no caminho de quem passa.',
         },
         {
           type: 'paragraph',
@@ -383,12 +383,12 @@ export const realNews: NewsArticle[] = [
       en: [
         {
           type: 'paragraph',
-          text: 'Futsal na Escola is AIDEP’s project inside the school environment. It currently runs in twelve cities and reaches 600 people — students, teachers and the wider school community.',
+          text: 'Futsal na Escola is AIDEP’s project inside the school environment. It currently runs in twelve cities and reaches 600 people: students, teachers and the wider school community.',
         },
         { type: 'heading', text: 'Why inside the school' },
         {
           type: 'paragraph',
-          text: 'A sports hub depends on a child deciding to go there. At school, they are already there — and futsal stops competing with the routine and becomes part of it. That is the difference between offering an opportunity and putting it in the path of the people walking by.',
+          text: 'A sports hub depends on a child deciding to go there. At school, they are already there, and futsal stops competing with the routine and becomes part of it. That is the difference between offering an opportunity and putting it in the path of the people walking by.',
         },
         {
           type: 'paragraph',
@@ -412,7 +412,7 @@ export const realNews: NewsArticle[] = [
         { type: 'heading', text: 'Por qué dentro de la escuela' },
         {
           type: 'paragraph',
-          text: 'Un polo deportivo depende de que el niño decida ir hasta él. En la escuela ya está allí — y el futsal deja de disputar con la rutina para volverse parte de ella. Es la diferencia entre ofrecer una oportunidad y ponerla en el camino de quien pasa.',
+          text: 'Un polo deportivo depende de que el niño decida ir hasta él. En la escuela ya está allí, y el futsal deja de disputar con la rutina para volverse parte de ella. Es la diferencia entre ofrecer una oportunidad y ponerla en el camino de quien pasa.',
         },
         {
           type: 'paragraph',
@@ -452,7 +452,7 @@ export const realNews: NewsArticle[] = [
       pt: [
         {
           type: 'paragraph',
-          text: 'O Futsal na Escola não funciona com técnico visitante. Quem dá a aula é o professor da própria escola, formado na metodologia do projeto — e é essa escolha que decide se a atividade continua depois que o convênio termina.',
+          text: 'O Futsal na Escola não funciona com técnico visitante. Quem dá a aula é o professor da própria escola, formado na metodologia do projeto, e é essa escolha que decide se a atividade continua depois que o convênio termina.',
         },
         { type: 'heading', text: 'A formação' },
         {
@@ -461,7 +461,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Cada professor formado leva a metodologia para dentro do próprio trabalho — inclusive para as turmas que o projeto não atende diretamente.',
+          text: 'Cada professor formado leva a metodologia para dentro do próprio trabalho, inclusive para as turmas que o projeto não atende diretamente.',
         },
         { type: 'heading', text: 'O uniforme' },
         {
@@ -472,7 +472,7 @@ export const realNews: NewsArticle[] = [
       en: [
         {
           type: 'paragraph',
-          text: 'Futsal na Escola does not run on visiting coaches. Lessons are led by the school’s own teachers, trained in the project’s method — and that choice is what decides whether the activity survives once the agreement ends.',
+          text: 'Futsal na Escola does not run on visiting coaches. Lessons are led by the school’s own teachers, trained in the project’s method, and that choice is what decides whether the activity survives once the agreement ends.',
         },
         { type: 'heading', text: 'The training' },
         {
@@ -481,7 +481,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Every teacher trained takes the method into their own work — including with the classes the project does not reach directly.',
+          text: 'Every teacher trained takes the method into their own work, including with the classes the project does not reach directly.',
         },
         { type: 'heading', text: 'The kit' },
         {
@@ -492,7 +492,7 @@ export const realNews: NewsArticle[] = [
       es: [
         {
           type: 'paragraph',
-          text: 'Futsal na Escola no funciona con entrenador visitante. Quien da la clase es el profesor de la propia escuela, formado en la metodología del proyecto — y esa elección decide si la actividad continúa después de que el convenio termina.',
+          text: 'Futsal na Escola no funciona con entrenador visitante. Quien da la clase es el profesor de la propia escuela, formado en la metodología del proyecto, y esa elección decide si la actividad continúa después de que el convenio termina.',
         },
         { type: 'heading', text: 'La formación' },
         {
@@ -501,7 +501,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Cada profesor formado lleva la metodología a su propio trabajo — incluso a los grupos que el proyecto no atiende directamente.',
+          text: 'Cada profesor formado lleva la metodología a su propio trabajo, incluso a los grupos que el proyecto no atiende directamente.',
         },
         { type: 'heading', text: 'El uniforme' },
         {
@@ -546,7 +546,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Nada disso é exclusivo do esporte — é o que a escola trabalha o dia inteiro. A diferença é que na quadra a consequência é imediata e todo mundo vê, e por isso a lição pega.',
+          text: 'Nada disso é exclusivo do esporte: é o que a escola trabalha o dia inteiro. A diferença é que na quadra a consequência é imediata e todo mundo vê, e por isso a lição pega.',
         },
         {
           type: 'paragraph',
@@ -569,7 +569,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'None of that is unique to sport — it is what school works on all day. The difference is that on the court the consequence is immediate and everyone sees it, which is why the lesson sticks.',
+          text: 'None of that is unique to sport: it is what school works on all day. The difference is that on the court the consequence is immediate and everyone sees it, which is why the lesson sticks.',
         },
         {
           type: 'paragraph',
@@ -592,7 +592,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Nada de eso es exclusivo del deporte — es lo que la escuela trabaja todo el día. La diferencia es que en la cancha la consecuencia es inmediata y todos la ven, y por eso la lección prende.',
+          text: 'Nada de eso es exclusivo del deporte: es lo que la escuela trabaja todo el día. La diferencia es que en la cancha la consecuencia es inmediata y todos la ven, y por eso la lección prende.',
         },
         {
           type: 'paragraph',
@@ -632,7 +632,7 @@ export const realNews: NewsArticle[] = [
         { type: 'heading', text: 'O que o Summit é' },
         {
           type: 'paragraph',
-          text: 'Não é um evento de palestra. O encontro combina programação de auditório com atividade em quadra e em campo, e reserva boa parte do tempo ao que acontece entre uma coisa e outra — a conversa entre quem trabalha nos mesmos problemas em cidades diferentes.',
+          text: 'Não é um evento de palestra. O encontro combina programação de auditório com atividade em quadra e em campo, e reserva boa parte do tempo ao que acontece entre uma coisa e outra: a conversa entre quem trabalha nos mesmos problemas em cidades diferentes.',
         },
         {
           type: 'list',
@@ -650,12 +650,12 @@ export const realNews: NewsArticle[] = [
       en: [
         {
           type: 'paragraph',
-          text: 'The FutEdu Summit is AIDEP’s international congress on the development of football, futsal and beach soccer. The Curitiba edition gathered 7,000 people — sport professionals, clubs, schools, researchers, managers, coaches, companies and institutions.',
+          text: 'The FutEdu Summit is AIDEP’s international congress on the development of football, futsal and beach soccer. The Curitiba edition gathered 7,000 people: sport professionals, clubs, schools, researchers, managers, coaches, companies and institutions.',
         },
         { type: 'heading', text: 'What the Summit is' },
         {
           type: 'paragraph',
-          text: 'It is not a lecture event. The gathering combines auditorium sessions with activity on the court and on the pitch, and reserves a good share of the time for what happens in between — the conversation between people working on the same problems in different cities.',
+          text: 'It is not a lecture event. The gathering combines auditorium sessions with activity on the court and on the pitch, and reserves a good share of the time for what happens in between: the conversation between people working on the same problems in different cities.',
         },
         {
           type: 'list',
@@ -678,7 +678,7 @@ export const realNews: NewsArticle[] = [
         { type: 'heading', text: 'Qué es el Summit' },
         {
           type: 'paragraph',
-          text: 'No es un evento de conferencias. El encuentro combina programación de auditorio con actividad en cancha y en campo, y reserva buena parte del tiempo a lo que ocurre entre una cosa y otra — la conversación entre quienes trabajan en los mismos problemas en ciudades distintas.',
+          text: 'No es un evento de conferencias. El encuentro combina programación de auditorio con actividad en cancha y en campo, y reserva buena parte del tiempo a lo que ocurre entre una cosa y otra: la conversación entre quienes trabajan en los mismos problemas en ciudades distintas.',
         },
         {
           type: 'list',
@@ -726,7 +726,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Nas fotografias do encontro aparecem as duas coisas ao mesmo tempo — a arquibancada com o público do congresso e o gramado com as equipes que vieram de outras cidades.',
+          text: 'Nas fotografias do encontro aparecem as duas coisas ao mesmo tempo: a arquibancada com o público do congresso e o gramado com as equipes que vieram de outras cidades.',
         },
         {
           type: 'paragraph',
@@ -745,7 +745,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'The photographs of the gathering show both at once — the stands with the congress audience and the grass with teams that travelled in from other cities.',
+          text: 'The photographs of the gathering show both at once: the stands with the congress audience and the grass with teams that travelled in from other cities.',
         },
         {
           type: 'paragraph',
@@ -764,7 +764,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'En las fotografías del encuentro aparecen las dos cosas a la vez — la grada con el público del congreso y el césped con los equipos que vinieron de otras ciudades.',
+          text: 'En las fotografías del encuentro aparecen las dos cosas a la vez: la grada con el público del congreso y el césped con los equipos que vinieron de otras ciudades.',
         },
         {
           type: 'paragraph',
@@ -787,9 +787,9 @@ export const realNews: NewsArticle[] = [
       es: 'Formación y certificación cierran el FutEdu Summit',
     },
     excerpt: {
-      pt: 'A entrega dos certificados encerra o encontro — e é o registro de que quem passou por ali leva a formação para o próprio trabalho.',
-      en: 'Handing out the certificates closes the gathering — and records that those who attended take the training back into their own work.',
-      es: 'La entrega de los certificados cierra el encuentro — y es el registro de que quien pasó por allí lleva la formación a su propio trabajo.',
+      pt: 'A entrega dos certificados encerra o encontro, e é o registro de que quem passou por ali leva a formação para o próprio trabalho.',
+      en: 'Handing out the certificates closes the gathering, and records that those who attended take the training back into their own work.',
+      es: 'La entrega de los certificados cierra el encuentro, y es el registro de que quien pasó por allí lleva la formación a su propio trabajo.',
     },
     body: {
       pt: [

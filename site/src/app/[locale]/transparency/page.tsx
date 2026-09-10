@@ -4,6 +4,7 @@ import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { CtaBand } from '@/components/sections/cta-band'
 import { DocumentsExplorer } from '@/components/sections/documents-explorer'
 import { PageHero } from '@/components/sections/page-hero'
+import { TransparencyPanel } from '@/components/sections/transparency-panel'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
 import {
@@ -12,6 +13,7 @@ import {
   getDocuments,
   getLastUpdatedAt,
 } from '@/content/documents'
+import { getPainelTransparencia } from '@/content/painel-transferegov'
 import type { Locale } from '@/i18n/routing'
 import { buildPageMetadata } from '@/lib/seo'
 import { formatMonthYear } from '@/lib/utils'
@@ -47,6 +49,7 @@ export default async function TransparencyPage({ params }: Props) {
   const documents = await getDocuments()
   const categories = await getDocumentCategories()
   const lastUpdatedAt = getLastUpdatedAt(documents)
+  const panel = await getPainelTransparencia()
 
   return (
     <>
@@ -78,6 +81,8 @@ export default async function TransparencyPage({ params }: Props) {
           </dl>
         }
       />
+
+      <TransparencyPanel panel={panel} locale={locale} />
 
       <DocumentsExplorer
         documents={documents}

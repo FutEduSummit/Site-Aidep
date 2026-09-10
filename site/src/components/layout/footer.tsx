@@ -1,7 +1,8 @@
 import Image from 'next/image'
-import { AtSign, Mail, MapPin } from 'lucide-react'
+import { Mail, MapPin } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { GrowLine } from '@/components/motion/grow-line'
+import { InstagramIcon } from '@/components/ui/instagram-icon'
 import { Container, Section } from '@/components/ui/section'
 import { site } from '@/content/site'
 import { Link } from '@/i18n/navigation'
@@ -123,7 +124,7 @@ export function Footer() {
               <li className="inline-flex items-center gap-3">
                 <MapPin aria-hidden="true" className="size-4 shrink-0" />
                 <span>
-                  {site.contact.city} — {site.contact.region},{' '}
+                  {site.contact.city}, {site.contact.region},{' '}
                   {site.contact.country[locale]}
                 </span>
               </li>
@@ -134,7 +135,7 @@ export function Footer() {
                   rel="noreferrer noopener"
                   className="link-underline inline-flex items-center gap-3 transition-colors duration-200 ease-brand hover:text-(--fg)"
                 >
-                  <AtSign aria-hidden="true" className="size-4 shrink-0" />
+                  <InstagramIcon className="size-4 shrink-0" />
                   <span>{site.social.instagram.handle}</span>
                 </a>
               </li>

@@ -1,13 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import { AtSign } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { MaskedWords } from '@/components/motion/animated-text'
 import { GrowLine } from '@/components/motion/grow-line'
 import { Reveal } from '@/components/motion/reveal'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { ButtonExternal } from '@/components/ui/button'
+import { InstagramIcon } from '@/components/ui/instagram-icon'
 import { Container, Section } from '@/components/ui/section'
 import { instagramPosts } from '@/content/media'
 import { site } from '@/content/site'
@@ -48,7 +48,7 @@ export function InstagramSection({ locale }: { locale: Locale }) {
           <div className="flex flex-col items-start gap-6 lg:col-span-4 lg:col-start-9 lg:items-end">
             <Reveal distance={24}>
               <p className="flex items-center gap-3 text-h4 font-semibold tracking-[-0.02em]">
-                <AtSign aria-hidden="true" className="size-5 text-(--accent)" />
+                <InstagramIcon className="size-5 text-(--accent)" />
                 {t('handle')}
               </p>
             </Reveal>
@@ -56,7 +56,7 @@ export function InstagramSection({ locale }: { locale: Locale }) {
               <ButtonExternal
                 href={site.social.instagram.url}
                 variant="accent"
-                aria-label={`${tActions('openInstagram')} — ${site.social.instagram.handle}`}
+                aria-label={`${tActions('openInstagram')}: ${site.social.instagram.handle}`}
               >
                 {tActions('openInstagram')}
               </ButtonExternal>

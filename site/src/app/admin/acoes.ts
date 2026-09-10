@@ -11,6 +11,7 @@ import {
   categoriaSchema,
   documentoSchema,
   noticiaSchema,
+  painelSchema,
   projetoSchema,
   type BlocoPayload,
   type Resultado,
@@ -511,6 +512,61 @@ export async function publicarDocumento(
   publicado: boolean,
 ): Promise<Resultado> {
   return definirPublicacao('documentos', id, publicado, 'publicarDocumento')
+}
+
+/* ------------------------------------------------------------------ */
+/* Painel Discricionárias e Legais                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Troca a captura do painel do Governo Federal que abre a página de
+ * Transparência.
+ *
+ * Grava sempre com `id: 1`: a tabela aceita uma linha só (ver a migração
+ * 0003), e é isso que faz "enviar de novo" ser trocar a tela no lugar de
+ * empilhar capturas antigas que ninguém veria.
+ *
+ * A imagem anterior não é apagada do Storage de propósito. São arquivos de
+ * poucos MB, e o risco de apagar errado — o cliente sobe a nova, se
+ * arrepende e quer a de antes — é maior que o de guardar. Quem quiser
+ * limpar faz pelo Supabase.
+ */
+export async function salvarPainel(dados: unknown): Promise<Resultado> {
+  const supabase = await comSessao()
+  if (!supabase) return naoAutorizado
+
+  const analise = painelSchema.safeParse(dados)
+  if (!analise.success) {
+    return {
+      ok: false,
+      erro: 'Confira os campos destacados.',
+      campos: camposComErro(analise.error),
+    }
+  }
+
+  const payload = analise.data
+
+  try {
+    const { error } = await supabase.from('painel_transparencia').upsert(
+      {
+        id: 1,
+        imagem_url: payload.imagem.url,
+        imagem_path: payload.imagem.path || null,
+        imagem_largura: payload.imagem.largura,
+        imagem_altura: payload.imagem.altura,
+        capturado_em: payload.capturadoEm,
+        alt: texto(payload.alt),
+      },
+      { onConflict: 'id' },
+    )
+
+    if (error) throw new Error(error.message)
+
+    atualizarSite()
+    return { ok: true, id: 'painel' }
+  } catch (erro) {
+    return falha(erro, 'salvarPainel')
+  }
 }
 
 /* ------------------------------------------------------------------ */

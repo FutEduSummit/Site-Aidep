@@ -233,7 +233,7 @@ async function main() {
         const photo = photos[index]
         buffer = await download(photo)
         await writeFile(file, buffer)
-        credits[key] = `Foto: ${photo.photographer} / Pexels — ${photo.url}`
+        credits[key] = `Foto: ${photo.photographer} / Pexels. ${photo.url}`
         console.log(
           `✓ ${key} — ${photo.photographer} (${index}/${photos.length}) ${(buffer.length / 1024).toFixed(0)} kB`,
         )

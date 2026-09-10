@@ -2,43 +2,49 @@
 
 import { MapPin, Move3d, Navigation, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Reveal } from '@/components/motion/reveal'
 import { ArrowLink } from '@/components/ui/arrow-link'
-import { Globe, type CidadeNoGlobo } from '@/components/ui/globe'
+import {
+  InteractiveBrazilMap,
+  type ControleDoMapa,
+} from '@/components/ui/interactive-brazil-map'
+import type { CidadeNaAtuacao } from '@/lib/mapa'
 import { cn } from '@/lib/utils'
 
 type ProjetoNoFiltro = { slug: string; nome: string }
 
 type ReachMapProps = {
-  cidades: CidadeNoGlobo[]
+  cidades: CidadeNaAtuacao[]
   projetos: ProjetoNoFiltro[]
-  /** Mapa plano servido pelo servidor: reserva para quem não tem WebGL. */
-  fallback: ReactNode
+  /** Régua, olho e título da seção — montados no servidor, postos aqui. */
+  cabecalho: ReactNode
 }
 
 /**
- * O PAINEL AO LADO DO GLOBO
- * =========================
- * O globo é a leitura de longe; este painel é a leitura de perto — e é
- * ele, não o globo, que carrega o conteúdo.
+ * O PAINEL AO LADO DO MAPA
+ * ========================
+ * O mapa é a leitura de longe; este painel é a leitura de perto — e é
+ * ele, não o mapa, que carrega o conteúdo.
  *
  * A lista de cidades é HTML de verdade, com um botão por cidade. Quem usa
  * teclado percorre a atuação inteira com Tab; quem usa leitor de tela
- * ouve cidade, estado e projetos sem nunca precisar do WebGL; e quem tem
- * o globo na frente clica na lista e vê o planeta girar até a cidade. As
- * três formas leem o mesmo dado, porque é o mesmo dado.
+ * ouve cidade, estado e projetos sem nunca precisar do desenho; e quem
+ * tem o mapa na frente clica na lista e vê o país aproximar até a cidade.
+ * As três formas leem o mesmo dado, porque é o mesmo dado.
  *
- * O filtro por projeto apaga marcadores no globo e encurta a lista ao
- * mesmo tempo. Quando a cidade escolhida sai do filtro, a escolha cai
- * junto — deixar uma ficha aberta de uma cidade que não está mais no mapa
- * seria mostrar duas verdades ao mesmo tempo.
+ * O filtro por projeto apaga alfinetes no mapa e encurta a lista ao mesmo
+ * tempo. Quando a cidade escolhida sai do filtro, a escolha cai junto —
+ * deixar uma ficha aberta de uma cidade que não está mais no mapa seria
+ * mostrar duas verdades ao mesmo tempo.
  */
-export function ReachMap({ cidades, projetos, fallback }: ReachMapProps) {
+export function ReachMap({ cidades, projetos, cabecalho }: ReachMapProps) {
   const t = useTranslations('home.reach')
 
   const [filtro, setFiltro] = useState<string | null>(null)
   const [escolhida, setEscolhida] = useState<string | null>(null)
+
+  const mapa = useRef<ControleDoMapa>(null)
 
   const visiveis = useMemo(() => {
     if (!filtro) return null
@@ -74,88 +80,128 @@ export function ReachMap({ cidades, projetos, fallback }: ReachMapProps) {
 
   function trocarFiltro(slug: string | null) {
     setFiltro(slug)
-    /* A escolha só sobrevive se a cidade continuar no mapa. */
-    if (
-      escolhida &&
-      slug &&
-      !cidades.some(
-        (cidade) =>
-          cidade.id === escolhida && cidade.projetos.some((p) => p.slug === slug),
+
+    /* A escolha só sobrevive se a cidade continuar no recorte. */
+    const sobrevive =
+      escolhida !== null &&
+      (slug === null ||
+        cidades.some(
+          (cidade) =>
+            cidade.id === escolhida &&
+            cidade.projetos.some((p) => p.slug === slug),
+        ))
+
+    if (!sobrevive) setEscolhida(null)
+
+    /* E o mapa vai atrás do recorte novo — a não ser que a cidade aberta
+       tenha sobrevivido a ele, e aí o enquadramento continua sendo dela:
+       trocar de filtro sem perder a cidade não pode tirá-la da vista.
+
+       Quem reenquadra é este clique, e não o mapa reagindo à prop do
+       filtro: o mapa não tem como distinguir "o recorte mudou agora" de
+       "esta renderização passou de novo por aqui", e adivinhar isso com um
+       efeito é o caminho curto para a vista pular sozinha. */
+    if (!sobrevive) {
+      mapa.current?.enquadrar(
+        slug
+          ? cidades.filter((cidade) =>
+              cidade.projetos.some((p) => p.slug === slug),
+            )
+          : null,
       )
-    ) {
-      setEscolhida(null)
     }
   }
 
   return (
-    /* DUAS COLUNAS, UMA LINHA
-       -----------------------
-       O globo à direita, o painel à esquerda, e nada mais: uma linha só de
-       grade. O título vem de fora, da seção (`reach-section.tsx`), em cima
-       das duas colunas.
+    /* DUAS COLUNAS DA MESMA ALTURA
+       ----------------------------
+       Texto à esquerda, mapa à direita, e as duas colunas começando e
+       terminando na mesma linha — o título entra aqui dentro, no alto da
+       esquerda, e não numa faixa acima das duas.
 
-       A altura vem de cima também: a seção mede uma tela, o título fica com
-       o que precisa e esta grade recebe o resto (`flex-1`). Os
-       `min-h-0` são o que permite as duas colunas encolherem abaixo do
-       próprio conteúdo; sem eles a lista das vinte e nove cidades estica a
-       grade, a grade estica o globo, e a seção inteira sai pela tela
-       (era exatamente esse o desarranjo). Oito colunas para o planeta e
-       quatro para a lista, que precisa de largura para "Canindé de São
-       Francisco · SE".
+       É a diferença entre um desenho inteiro e um desenho espremido. Com o
+       título por cima, o mapa só podia começar abaixo dele: ficava um
+       vazio preto do tamanho de um parágrafo à direita do texto e o país
+       era achatado no resto da altura. Dentro da coluna, o título ocupa o
+       vazio que era dele e a altura da seção inteira volta para o mapa.
 
-       No celular a grade é uma coluna e vale a ordem do código: o globo vem
-       primeiro, antes dos filtros — ninguém rola vinte e nove cidades para
-       descobrir que havia um planeta embaixo. */
-    <div className="grid grid-cols-1 items-start gap-x-8 gap-y-10 lg:min-h-0 lg:flex-1 lg:grid-cols-12 lg:items-stretch">
-      {/* ---- Globo ------------------------------------------------- */}
-      <div className="flex flex-col gap-3 lg:col-span-8 lg:col-start-5 lg:row-start-1 lg:min-h-0">
-        {/* A MOLDURA DO GLOBO
-            No celular ela é 5/4 da largura, como sempre. No desktop a conta
-            se inverte: a moldura toma a coluna inteira, e é a altura da
-            janela que decide o tamanho do planeta — a câmera enquadra pela
-            vertical (ver `medir()`, em `lib/globo.ts`), então o globo fica
-            do tamanho da altura disponível, com folga nas laterais. */}
-        <div className="relative lg:min-h-0 lg:flex-1">
-          <Globe
-            cidades={cidades}
-            escolhida={escolhida}
-            onEscolher={setEscolhida}
-            visiveis={visiveis}
-            label={t('globeLabel')}
-            semWebgl={fallback}
-            className="lg:aspect-auto lg:h-full"
+       A conta é a grade: duas linhas, a de cima do tamanho do título
+       (`auto`) e a de baixo com o que sobrar (`minmax(0,1fr)`). O mapa
+       atravessa as duas, então mede exatamente título + filtros + lista.
+       O `minmax(0,...)` no lugar de um `1fr` seco é o que deixa a linha
+       encolher abaixo do conteúdo dela — sem isso a lista das vinte e nove
+       cidades estica a grade, a grade estica o mapa, e a seção sai pela
+       tela (era exatamente esse o desarranjo). Cinco colunas para o texto,
+       que precisa de largura para o título e para "Canindé de São
+       Francisco · SE"; sete para o país.
+
+       No celular a grade vira uma pilha e a ordem é a do olho: título,
+       mapa, filtros e lista — ninguém rola vinte e nove cidades para
+       descobrir que havia um mapa embaixo. */
+    <div className="flex flex-col gap-y-10 lg:grid lg:h-full lg:min-h-0 lg:grid-cols-12 lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-8 lg:gap-y-6">
+      {/* ---- Título ------------------------------------------------ */}
+      <div className="order-1 lg:col-span-5 lg:col-start-1 lg:row-start-1">
+        {cabecalho}
+      </div>
+
+      {/* ---- Mapa --------------------------------------------------
+          A MOLDURA
+          No celular ela é 5/4 da largura, como sempre. No desktop a conta
+          se inverte: a moldura toma a coluna inteira, das duas linhas, e é
+          a altura dela que decide o tamanho do desenho — o SVG entra com
+          `xMidYMid meet`, então o país fica do tamanho da altura
+          disponível, com folga nas laterais.
+
+          O `pb-8` embaixo é onde a dica de manuseio se prende, fora do
+          desenho; o `pt-2` em cima é só o que separa os botões de zoom da
+          borda da coluna. O mapa não pede mais que isso: diferente do globo
+          que estava aqui, ele não tem halo para raspar a moldura — o país
+          desenhado cabe no viewBox e sobra margem por construção. */}
+      <div className="relative order-2 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:min-h-0 lg:pb-8 lg:pt-2">
+        <InteractiveBrazilMap
+          ref={mapa}
+          cidades={cidades}
+          escolhida={escolhida}
+          onEscolher={setEscolhida}
+          visiveis={visiveis}
+          rotulos={{
+            mapa: t('mapLabel'),
+            aproximar: t('zoomIn'),
+            afastar: t('zoomOut'),
+            reenquadrar: t('zoomReset'),
+          }}
+          className="aspect-5/4 w-full lg:aspect-auto lg:h-full"
+        />
+
+        {/* A ficha da cidade, no canto de baixo à direita do mapa.
+            Ela ficava na coluna da esquerda, e de lá empurrava a lista
+            inteira para baixo a cada clique — a página dava um solavanco
+            e a cidade escolhida saía de vista. Aqui ela abre por cima do
+            desenho, onde o olho já está, e nada se move.
+
+            No celular não há canto para ocupar: a ficha volta a ser um
+            bloco comum, abaixo do mapa. */}
+        {aberta ? (
+          <FichaDaCidade
+            cidade={aberta}
+            onFechar={() => setEscolhida(null)}
+            className="mt-4 lg:absolute lg:bottom-4 lg:right-4 lg:mt-0 lg:w-[19rem]"
           />
+        ) : null}
 
-          {/* A ficha da cidade, no canto de baixo à direita do globo.
-              Ela ficava na coluna da esquerda, e de lá empurrava a lista
-              inteira para baixo a cada clique — a página dava um solavanco
-              e a cidade escolhida saía de vista. Aqui ela abre por cima do
-              planeta, onde o olho já está, e nada se move.
-
-              No celular não há canto para ocupar: a ficha volta a ser um
-              bloco comum, abaixo do globo. */}
-          {aberta ? (
-            <FichaDaCidade
-              cidade={aberta}
-              onFechar={() => setEscolhida(null)}
-              className="mt-4 lg:absolute lg:bottom-4 lg:right-4 lg:mt-0 lg:w-[19rem]"
-            />
-          ) : null}
-
-          {/* A dica de manuseio. No desktop ela flutua no pé da moldura, por
-              cima da borda escura do planeta, em vez de ocupar uma linha
-              embaixo dele: numa seção de altura fixa aquela linha sairia da
-              altura do globo. `pointer-events-none` para o arrasto do
-              planeta atravessar o texto. */}
-          <p className="mt-3 flex items-center justify-center gap-3 text-micro uppercase tracking-[0.14em] text-(--fg-subtle) lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0">
-            <Move3d aria-hidden="true" className="size-4" />
-            {t('hint')}
-          </p>
-        </div>
+        {/* A dica de manuseio. No desktop ela se prende no pé da moldura,
+            dentro da folga do `pb-8`, em vez de ocupar uma linha própria
+            embaixo do mapa: numa seção de altura fixa aquela linha sairia
+            da altura do desenho. `pointer-events-none` para o arrasto do
+            mapa atravessar o texto. */}
+        <p className="mt-3 flex items-center justify-center gap-3 text-micro uppercase tracking-[0.14em] text-(--fg-subtle) lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0">
+          <Move3d aria-hidden="true" className="size-4" />
+          {t('hint')}
+        </p>
       </div>
 
       {/* ---- Painel ------------------------------------------------ */}
-      <div className="flex flex-col gap-6 lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:min-h-0">
+      <div className="order-3 flex flex-col gap-6 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:min-h-0">
         <Reveal distance={24}>
           <div
             role="group"
@@ -183,7 +229,7 @@ export function ReachMap({ cidades, projetos, fallback }: ReachMapProps) {
           </p>
         </Reveal>
 
-        {/* A lista rola por dentro para não empurrar o globo para fora da
+        {/* A lista rola por dentro para não empurrar o mapa para fora da
             tela quando os filtros abrem as dezenas de cidades. No celular o
             teto é fixo; no desktop ele é a altura que sobrou na coluna, seja
             ela qual for. */}
@@ -238,7 +284,7 @@ export function ReachMap({ cidades, projetos, fallback }: ReachMapProps) {
  *
  * O link do Maps usa a coordenada, e não o nome da cidade: o nome dá
  * margem a homônimo — Itabaiana existe em Sergipe e na Paraíba — e a
- * coordenada é exatamente a mesma que pôs o pino no globo. O formato
+ * coordenada é exatamente a mesma que pôs o alfinete no mapa. O formato
  * `?api=1&query=lat,lng` é o endereço documentado do Google para isso, e
  * funciona igual no aplicativo do celular e no navegador.
  */
@@ -247,7 +293,7 @@ function FichaDaCidade({
   onFechar,
   className,
 }: {
-  cidade: CidadeNoGlobo
+  cidade: CidadeNaAtuacao
   onFechar: () => void
   className?: string
 }) {

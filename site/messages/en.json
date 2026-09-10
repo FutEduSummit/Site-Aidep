@@ -56,7 +56,7 @@
   },
   "a11y": {
     "skipToContent": "Skip to main content",
-    "logoHome": "AIDEP — go to the homepage",
+    "logoHome": "AIDEP: go to the homepage",
     "scrollProgress": "Page reading progress",
     "imagePending": "Institutional image not available yet",
     "partnersMarquee": "AIDEP partners and supporters",
@@ -74,7 +74,7 @@
         "through sport",
         "and parasport."
       ],
-      "lead": "Sports hubs in communities, futsal inside the school and training for the people who teach. AIDEP builds what makes sport arrive — and stay.",
+      "lead": "Sports hubs in communities, futsal inside the school and training for the people who teach. AIDEP builds what makes sport arrive and stay.",
       "scroll": "Scroll to explore"
     },
     "about": {
@@ -82,7 +82,7 @@
       "title": "Structure, so sport reaches where it has not yet.",
       "paragraphs": [
         "AIDEP is a non-profit association that runs sports projects: it sets up hubs in communities, brings futsal into schools and trains the people who work with sport.",
-        "Nothing here is a one-off. Every project arrives with staff, equipment, a calendar and published accounts — that is what keeps the activity going after opening day.",
+        "Nothing here is a one-off. Every project arrives with staff, equipment, a calendar and published accounts. That is what keeps the activity going after opening day.",
         "The association currently works across Brazil, and its statute provides for international reach."
       ],
       "highlights": [
@@ -110,7 +110,7 @@
       "eyebrow": "Sport and parasport",
       "title": "Tools, not ends.",
       "paragraphs": [
-        "Sport is not the destination. It is how training, belonging and opportunity happen — in the community, in the school and in the places where knowledge is shared.",
+        "Sport is not the destination. It is how training, belonging and opportunity happen in the community, in the school and in the places where knowledge is shared.",
         "Sport and para-sport sit together in the association’s name because they sit together in practice: the same structure, the same equipment and the same technical standard for everyone."
       ]
     },
@@ -148,13 +148,15 @@
     "reach": {
       "eyebrow": "Where we are",
       "title": "Every point is a court with people on it.",
-      "description": "Spin the planet, or pick a city from the list, to see which projects run there.",
       "summary": "{cities, plural, one {# city} other {# cities}} · {hubs, plural, one {# hub} other {# hubs}}",
       "hubs": "{count, plural, one {# hub} other {# hubs}}",
-      "hint": "Drag to spin · scroll to zoom",
+      "hint": "Drag to pan · scroll to zoom",
       "close": "Close the city panel",
       "seeProject": "See the project",
-      "globeLabel": "Globe showing the cities served by AIDEP’s projects, with Brazil highlighted.",
+      "mapLabel": "Map of Brazil with the cities served by AIDEP’s projects, one pin on each.",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "zoomReset": "Back to the whole country",
       "filters": {
         "label": "Filter the map by project",
         "all": "All projects"
@@ -208,7 +210,7 @@
     "audience": {
       "eyebrow": "People served",
       "title": "Who AIDEP serves.",
-      "description": "Every age needs its own way of welcoming, teaching and following up — which is why the projects do not serve “the community” in general, but people at different points in their lives.",
+      "description": "Every age needs its own way of welcoming, teaching and following up. That is why the projects do not serve “the community” in general, but people at different points in their lives.",
       "groups": [
         {
           "title": "Children",
@@ -220,7 +222,7 @@
         },
         {
           "title": "Young people",
-          "text": "A path that goes beyond being an athlete — refereeing, organisation, mentoring and the learning spaces of the association."
+          "text": "A path that goes beyond being an athlete: refereeing, organisation, mentoring and the learning spaces of the association."
         },
         {
           "title": "Adults",
@@ -327,6 +329,13 @@
       "eyebrow": "Transparency",
       "title": "Open books.",
       "lead": "Reports, institutional documents and accountability of AIDEP, updated every month."
+    },
+    "panel": {
+      "eyebrow": "Federal transfers",
+      "title": "Federal transfers dashboard.",
+      "description": "The Brazilian government’s public “Discricionárias e Legais” dashboard showing AIDEP’s funding agreements, exactly as it stands. The PDF extract and the row-by-row spreadsheet are in the list below.",
+      "source": "Transferegov · Brazilian federal government",
+      "capturedAt": "Updated on {date}"
     },
     "filters": {
       "search": "Search document",
@@ -613,7 +622,7 @@
   },
   "seo": {
     "home": {
-      "title": "AIDEP — Human development through sport and parasport",
+      "title": "AIDEP: Human development through sport and parasport",
       "description": "AIDEP is an international platform for human development through sport and parasport, running education, inclusion and social transformation projects across Brazil."
     },
     "projects": {

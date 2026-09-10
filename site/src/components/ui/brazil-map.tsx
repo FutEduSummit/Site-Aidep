@@ -28,14 +28,19 @@ type BrazilMapProps = {
 /* O alfinete                                                          */
 /* ------------------------------------------------------------------ */
 
+/* O alfinete e a moldura são exportados: o mapa interativo da Página
+   inicial (`interactive-brazil-map.tsx`) desenha o mesmo ponto sobre o
+   mesmo país, e dois desenhos que deveriam ser iguais não podem ter duas
+   fontes de verdade. */
+
 /** Raio da cabeça do alfinete, em unidades do viewBox. */
-const PINO_RAIO = 17
+export const PINO_RAIO = 17
 
 /** Altura total do alfinete: da ponta que toca a cidade ao topo da cabeça. */
-const PINO_ALTURA = 46
+export const PINO_ALTURA = 46
 
 /** Centro da cabeça, medido a partir da ponta. */
-const CABECA_Y = PINO_RAIO - PINO_ALTURA
+export const CABECA_Y = PINO_RAIO - PINO_ALTURA
 
 /**
  * A gota clássica de marcador de mapa, com **a ponta na origem**: quem
@@ -77,7 +82,7 @@ export function PinoIcone({ className }: { className?: string }) {
  */
 const FOLGA = { topo: PINO_ALTURA + 4, lado: PINO_RAIO + 4, base: 6 }
 
-const VB = {
+export const VB = {
   x: -FOLGA.lado,
   y: -FOLGA.topo,
   largura: mapaBrasil.largura + FOLGA.lado * 2,

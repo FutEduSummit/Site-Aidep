@@ -88,7 +88,7 @@ export default async function PainelInicio() {
       {numeros.projetos.total === 0 ? (
         <Cartao
           titulo="Trazer os projetos que já estão no site"
-          descricao="Os três projetos do briefing — Coração Valente, Futsal na Escola e FutEdu Summit — ainda vivem no código do site. Traga-os para cá para poder editá-los por aqui."
+          descricao="Os três projetos do briefing (Coração Valente, Futsal na Escola e FutEdu Summit) ainda vivem no código do site. Traga-os para cá para poder editá-los por aqui."
         >
           <BotaoDeImportacao />
         </Cartao>

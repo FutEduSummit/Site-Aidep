@@ -245,3 +245,20 @@ export type InstitutionalDocument = {
   /** Nome original do arquivo enviado — usado no atributo `download`. */
   fileName?: string
 }
+
+/**
+ * A CAPTURA DO PAINEL DISCRICIONÁRIAS E LEGAIS
+ * ============================================
+ * A tela do painel público do Governo Federal que abre a página de
+ * Transparência (ver `TransparencyPanel`).
+ *
+ * `capturedAt` é a data impressa no cabeçalho do painel do governo
+ * ("Atualizado em 09/09/2026"), e não a data do envio: a captura pode
+ * chegar ao site dias depois de ter sido tirada, e é a data do painel que
+ * diz de quando são os números.
+ */
+export type TransparencyPanelCapture = {
+  image: MediaAsset
+  /** ISO 8601 — a data impressa no painel. */
+  capturedAt: string
+}

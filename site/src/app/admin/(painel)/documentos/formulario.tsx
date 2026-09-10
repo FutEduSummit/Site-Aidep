@@ -186,7 +186,7 @@ export function FormularioDeDocumento({ categorias, projetos, inicial }: Props) 
           multilinha
           linhas={3}
           opcional
-          dica="A frase que aparece na coluna Conteúdo da tabela. Ex.: “Termo de Fomento — Ministério da Cultura”."
+          dica="A frase que aparece na coluna Conteúdo da tabela. Ex.: “Termo de Fomento: Ministério da Cultura”."
           onChange={(valor) => definir('conteudo', valor)}
         />
       </Cartao>

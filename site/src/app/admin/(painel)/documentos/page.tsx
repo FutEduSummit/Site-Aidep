@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { MonitorPlay, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { DocumentPreview } from '@/components/ui/document-preview'
 import { listarCategorias, listarDocumentos } from '@/lib/admin/leitura'
@@ -29,12 +29,25 @@ export default async function DocumentosPage() {
         titulo="Transparência"
         descricao="Os documentos que aparecem na tabela da página de Transparência do site. A chave de cada linha publica ou volta para rascunho na hora."
         acao={
-          <Link href="/admin/documentos/novo">
-            <Botao type="button">
-              <Plus aria-hidden="true" className="size-4" />
-              Enviar documento
-            </Botao>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            {/* A tela do painel do governo abre a página de Transparência,
+                acima desta lista — e é a primeira coisa que envelhece
+                quando sai um repasse novo. O atalho mora aqui porque é
+                aqui que o cliente entra para atualizar a transparência. */}
+            <Link href="/admin/documentos/painel">
+              <Botao type="button" variante="contorno">
+                <MonitorPlay aria-hidden="true" className="size-4" />
+                Painel do governo
+              </Botao>
+            </Link>
+
+            <Link href="/admin/documentos/novo">
+              <Botao type="button">
+                <Plus aria-hidden="true" className="size-4" />
+                Enviar documento
+              </Botao>
+            </Link>
+          </div>
         }
       />
 

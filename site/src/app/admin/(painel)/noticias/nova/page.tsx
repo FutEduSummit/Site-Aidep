@@ -9,7 +9,7 @@ export default async function NovaNoticiaPage() {
     <>
       <TituloDaPagina
         titulo="Escrever notícia"
-        descricao="Escreva em português. Inglês e espanhol são opcionais — sem eles, o site exibe o texto em português nos três idiomas."
+        descricao="Escreva em português. Inglês e espanhol são opcionais. Sem eles, o site exibe o texto em português nos três idiomas."
       />
 
       <FormularioDeNoticia

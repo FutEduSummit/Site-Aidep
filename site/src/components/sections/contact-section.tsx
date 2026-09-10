@@ -1,9 +1,10 @@
 'use client'
 
-import { AtSign, Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, Phone } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ContactForm } from '@/components/forms/contact-form'
 import { SectionHeader } from '@/components/ui/section-header'
+import { InstagramIcon } from '@/components/ui/instagram-icon'
 import { Container, Section } from '@/components/ui/section'
 import { site } from '@/content/site'
 import type { Locale } from '@/i18n/routing'
@@ -83,14 +84,14 @@ export function ContactSection({ locale }: { locale: Locale }) {
                   {t('info.address')}
                 </dt>
                 <dd className="text-h4 font-semibold tracking-[-0.02em]">
-                  {site.contact.city} — {site.contact.region},{' '}
+                  {site.contact.city}, {site.contact.region},{' '}
                   {site.contact.country[locale]}
                 </dd>
               </div>
 
               <div className="flex flex-col gap-2 border-t border-(--border) py-6 last:border-b">
                 <dt className="flex items-center gap-3 text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)">
-                  <AtSign aria-hidden="true" className="size-4" />
+                  <InstagramIcon className="size-4" />
                   {t('info.social')}
                 </dt>
                 <dd>

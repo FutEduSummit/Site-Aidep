@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  MonitorPlay,
   Newspaper,
   PanelLeftClose,
   PanelLeftOpen,
@@ -26,6 +27,12 @@ const itens = [
   { href: '/admin/noticias', rotulo: 'Notícias', Icone: Newspaper },
   { href: '/admin/projetos', rotulo: 'Projetos', Icone: FolderKanban },
   { href: '/admin/documentos', rotulo: 'Transparência', Icone: FileText },
+  {
+    href: '/admin/documentos/painel',
+    rotulo: 'Painel do governo',
+    Icone: MonitorPlay,
+    recuado: true,
+  },
   {
     href: '/admin/documentos/categorias',
     rotulo: 'Categorias',
@@ -91,12 +98,13 @@ export function Navegacao({
 
   function ativo(href: string, exato?: boolean) {
     if (exato) return caminho === href
-    /* "Categorias" mora dentro de "Transparência": sem o desempate, os dois
-       acenderiam ao mesmo tempo. */
+    /* "Painel do governo" e "Categorias" moram dentro de "Transparência":
+       sem o desempate, dois itens acenderiam ao mesmo tempo. */
     if (href === '/admin/documentos') {
       return (
         caminho.startsWith('/admin/documentos') &&
-        !caminho.startsWith('/admin/documentos/categorias')
+        !caminho.startsWith('/admin/documentos/categorias') &&
+        !caminho.startsWith('/admin/documentos/painel')
       )
     }
     return caminho.startsWith(href)

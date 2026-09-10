@@ -68,7 +68,7 @@ export function ListaDeTextos({
               value={item}
               placeholder={placeholder}
               rows={multilinha ? 3 : undefined}
-              aria-label={`${rotulo} — item ${indice + 1}`}
+              aria-label={`${rotulo}, item ${indice + 1}`}
               onChange={(evento) => trocar(indice, evento.target.value)}
             />
 

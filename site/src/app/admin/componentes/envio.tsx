@@ -15,6 +15,7 @@ import {
   miniaturaDoPdf,
 } from '@/lib/admin/storage'
 import { ehPlanilha } from '@/lib/documentos'
+import { cn } from '@/lib/utils'
 import { Aviso, Botao, Campo } from './ui'
 
 function rotuloDeTamanho(bytes: number | null | undefined) {
@@ -141,7 +142,7 @@ export function EnvioDeDocumento({
       htmlFor={`${uid}-arquivo`}
       rotulo="Arquivo do documento"
       erro={erro}
-      dica="PDF, planilha ou documento de texto. A prévia que aparece na tabela do site é gerada pelo painel — não há imagem para enviar."
+      dica="PDF, planilha ou documento de texto. A prévia que aparece na tabela do site é gerada pelo painel. Não há imagem para enviar."
     >
       <div className="flex flex-col gap-4 border border-(--border-strong) p-4">
         <div className="flex flex-wrap items-start gap-4">
@@ -248,6 +249,14 @@ export function EnvioDeImagem({
   dica,
   proporcao = '16 / 9',
   doAcervo = null,
+  /**
+   * O selo sobre a imagem que já está publicada. O padrão fala do acervo
+   * porque é o caso de capa de notícia e de projeto; a captura do painel
+   * do Transferegov não vem do acervo, e diz outra coisa.
+   */
+  rotuloDoAtual = 'Foto do acervo: no ar',
+  /** Largura da moldura. Tela cheia de números precisa de mais que uma capa. */
+  larguraMaxima = 'max-w-md',
 }: {
   rotulo: string
   valor: ImagemEnviada | null
@@ -256,6 +265,8 @@ export function EnvioDeImagem({
   dica?: string
   proporcao?: string
   doAcervo?: CapaDoAcervo | null
+  rotuloDoAtual?: string
+  larguraMaxima?: string
 }) {
   const uid = useId()
   const entrada = useRef<HTMLInputElement>(null)
@@ -295,15 +306,18 @@ export function EnvioDeImagem({
       rotulo={rotulo}
       opcional
       dica={
-        soAcervo
+        dica ??
+        (soAcervo
           ? 'Esta é a fotografia do acervo da AIDEP que o site publica aqui hoje. Envie uma imagem só se quiser colocar outra no lugar.'
-          : (dica ??
-            'Sem imagem, o site exibe o painel institucional da marca no lugar — nunca uma foto genérica.')
+          : 'Sem imagem, o site exibe o painel institucional da marca no lugar, nunca uma foto genérica.')
       }
     >
       <div className="flex flex-col gap-3">
         <div
-          className="relative w-full max-w-md overflow-hidden border border-(--border-strong) bg-paper-3"
+          className={cn(
+            'relative w-full overflow-hidden border border-(--border-strong) bg-paper-3',
+            larguraMaxima,
+          )}
           style={{ aspectRatio: proporcao }}
         >
           {mostrando ? (
@@ -326,7 +340,7 @@ export function EnvioDeImagem({
 
           {soAcervo ? (
             <span className="absolute bottom-0 left-0 bg-(--bg)/90 px-2 py-1 text-micro font-semibold uppercase tracking-[0.12em] text-(--fg-muted)">
-              Foto do acervo — no ar
+              {rotuloDoAtual}
             </span>
           ) : null}
         </div>

@@ -4,10 +4,12 @@ import {
   colunasCategoria,
   colunasDocumento,
   colunasNoticia,
+  colunasPainel,
   colunasProjeto,
   type LinhaCategoria,
   type LinhaDocumento,
   type LinhaNoticia,
+  type LinhaPainel,
   type LinhaProjeto,
 } from '@/lib/cms/tipos'
 import { clienteServidor } from '@/lib/supabase/servidor'
@@ -136,4 +138,20 @@ export async function resumo() {
     projetos: { total: projetos, publicados: projetosPublicados },
     documentos: { total: documentos, publicados: documentosPublicados },
   }
+}
+
+/**
+ * A captura do painel Discricionárias e Legais que está gravada, ou `null`
+ * se o cliente ainda não enviou nenhuma — e nesse caso o site publica a
+ * versionada com o código (ver `content/painel-transferegov.ts`).
+ */
+export async function obterPainel(): Promise<LinhaPainel | null> {
+  const supabase = await clienteServidor()
+  const { data } = await supabase
+    .from('painel_transparencia')
+    .select(colunasPainel)
+    .eq('id', 1)
+    .maybeSingle()
+
+  return (data as LinhaPainel | null) ?? null
 }

@@ -173,7 +173,7 @@ function ListaDeCidades({
           <span>
             {location.city[locale]}
             {location.region ? (
-              <span className="text-(--fg-subtle)">{` — ${location.region}`}</span>
+              <span className="text-(--fg-subtle)">{`, ${location.region}`}</span>
             ) : null}
             {location.venue ? (
               <span className="block text-small text-(--fg-muted)">

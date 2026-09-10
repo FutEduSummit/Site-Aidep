@@ -10,6 +10,7 @@ import type {
   NewsBlock,
   Project,
   ProjectLocation,
+  TransparencyPanelCapture,
 } from '@/content/types'
 import {
   estrutura,
@@ -24,6 +25,7 @@ import type {
   LinhaCategoria,
   LinhaDocumento,
   LinhaNoticia,
+  LinhaPainel,
   LinhaProjeto,
 } from './tipos'
 
@@ -301,5 +303,51 @@ export function paraProjeto(linha: LinhaProjeto): Project {
       linha.capa_alt,
       nome,
     ),
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Painel Discricionárias e Legais                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A descrição que vale quando o envio veio sem ela. Genérica de propósito:
+ * o painel não sabe quais números estão na tela que acabou de subir, e
+ * inventar valores no texto alternativo seria pior que descrever a tela.
+ */
+const ALT_PADRAO_DO_PAINEL: Localized = {
+  pt: 'Tela do painel Discricionárias e Legais do Transferegov com os repasses federais firmados pela AIDEP.',
+  en: 'Screen of the Brazilian government’s Discricionárias e Legais dashboard showing the federal transfers held by AIDEP.',
+  es: 'Pantalla del panel Discricionárias e Legais de Transferegov con las transferencias federales de AIDEP.',
+}
+
+/**
+ * A medida padrão é a da captura entregue com o site — só entra em cena se
+ * a linha do banco vier sem largura e altura, o que o envio pelo painel
+ * não permite.
+ */
+const PAINEL_LARGURA_PADRAO = 3183
+const PAINEL_ALTURA_PADRAO = 2900
+
+export function paraPainel(linha: LinhaPainel): TransparencyPanelCapture | null {
+  const tela = imagem(
+    linha.imagem_url,
+    linha.imagem_largura,
+    linha.imagem_altura,
+    linha.alt,
+    ALT_PADRAO_DO_PAINEL,
+  )
+
+  /* Linha sem endereço de imagem é linha sem captura: quem chamou volta
+     para a versionada em vez de desenhar uma moldura vazia. */
+  if (!tela) return null
+
+  return {
+    image: {
+      ...tela,
+      width: tela.width > 0 ? tela.width : PAINEL_LARGURA_PADRAO,
+      height: tela.height > 0 ? tela.height : PAINEL_ALTURA_PADRAO,
+    },
+    capturedAt: dataIso(linha.capturado_em),
   }
 }

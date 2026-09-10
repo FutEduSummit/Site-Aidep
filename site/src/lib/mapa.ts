@@ -233,7 +233,7 @@ export function atuacaoNoMapa(
 }
 
 /* ------------------------------------------------------------------ */
-/* Os mesmos locais, agora sobre a esfera                             */
+/* Os mesmos locais, agora reunidos por cidade                        */
 /* ------------------------------------------------------------------ */
 
 export type ProjetoNoPonto = {
@@ -244,8 +244,11 @@ export type ProjetoNoPonto = {
   polos: number
 }
 
-export type PontoNoGlobo = {
+export type CidadeNaAtuacao = {
   id: string
+  /** Coordenadas no viewBox de `mapaBrasil` — onde o alfinete pousa. */
+  x: number
+  y: number
   lat: number
   lng: number
   cidade: string
@@ -261,24 +264,30 @@ export type PontoNoGlobo = {
 /**
  * TODA A ATUAÇÃO DA AIDEP EM UM MAPA SÓ
  * =====================================
- * O globo da Página inicial não é o mapa de um projeto: é o mapa da
- * associação. Aqui os locais dos três projetos são resolvidos com a mesma
- * regra do mapa plano (coordenada à mão → cadastro do IBGE → centro do
+ * O mapa da Página inicial não é o de um projeto: é o da associação. Aqui
+ * os locais dos três projetos são resolvidos com a mesma regra do mapa das
+ * páginas de projeto (coordenada à mão → cadastro do IBGE → centro do
  * estado) e depois **reunidos por cidade**.
  *
  * Reunir é o ponto. Aracaju aparece nos dois projetos que atuam em
  * Sergipe, e Curitiba aparece no Summit e no Futsal na Escola: sem essa
- * junção seriam dois marcadores no mesmo pixel, disputando o clique. Com
- * ela, é um marcador que abre uma ficha dizendo os dois projetos.
+ * junção seriam dois alfinetes no mesmo pixel, disputando o clique. Com
+ * ela, é um alfinete que abre uma ficha dizendo os dois projetos.
  *
- * Roda no servidor — a tabela de municípios não vai para o navegador. O
- * cliente recebe as poucas dezenas de pontos já com latitude e longitude.
+ * A diferença para `atuacaoNoMapa()` é essa junção, e mais uma: lá cada
+ * ponto carrega a posição do rótulo que o mapa do projeto escreve ao lado
+ * dele; aqui não há rótulo fixo — com vinte e nove cidades os nomes se
+ * atropelariam —, e o nome aparece na etiqueta de quem passa o ponteiro e
+ * na lista ao lado.
+ *
+ * Roda no servidor: a tabela de municípios não vai para o navegador. O
+ * cliente recebe as poucas dezenas de cidades já projetadas.
  */
-export function atuacaoNoGlobo(
+export function atuacaoReunida(
   projetos: { slug: string; name: string; locations: ProjectLocation[] }[],
   locale: Locale,
-): PontoNoGlobo[] {
-  const porCidade = new Map<string, PontoNoGlobo>()
+): CidadeNaAtuacao[] {
+  const porCidade = new Map<string, CidadeNaAtuacao>()
 
   for (const projeto of projetos) {
     for (const local of projeto.locations) {
@@ -315,6 +324,8 @@ export function atuacaoNoGlobo(
 
       porCidade.set(chave, {
         id: chave,
+        x: resolvido.x,
+        y: resolvido.y,
         lat: resolvido.lat,
         lng: resolvido.lng,
         cidade: resolvido.rotulo,
@@ -326,7 +337,7 @@ export function atuacaoNoGlobo(
     }
   }
 
-  /* De norte a sul: é a ordem em que a lista ao lado do globo se lê, e a
-     mesma do mapa plano. */
+  /* De norte a sul: é a ordem em que a lista ao lado do mapa se lê, e a
+     mesma do mapa das páginas de projeto. */
   return [...porCidade.values()].sort((a, b) => b.lat - a.lat)
 }

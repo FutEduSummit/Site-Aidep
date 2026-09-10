@@ -117,9 +117,9 @@ export const exampleDocuments: InstitutionalDocument[] = [
   {
     id: "prestacao-contas-1s-2026",
     title: {
-      pt: "Prestação de contas — 1º semestre de 2026",
-      en: "Accountability report — first half of 2026",
-      es: "Rendición de cuentas — primer semestre de 2026",
+      pt: "Prestação de contas: 1º semestre de 2026",
+      en: "Accountability report: first half of 2026",
+      es: "Rendición de cuentas: primer semestre de 2026",
     },
     description: {
       pt: "Origem e aplicação dos recursos no período.",
@@ -136,9 +136,9 @@ export const exampleDocuments: InstitutionalDocument[] = [
   {
     id: "prestacao-contas-2s-2025",
     title: {
-      pt: "Prestação de contas — 2º semestre de 2025",
-      en: "Accountability report — second half of 2025",
-      es: "Rendición de cuentas — segundo semestre de 2025",
+      pt: "Prestação de contas: 2º semestre de 2025",
+      en: "Accountability report: second half of 2025",
+      es: "Rendición de cuentas: segundo semestre de 2025",
     },
     description: {
       pt: "Origem e aplicação dos recursos no período.",
@@ -174,9 +174,9 @@ export const exampleDocuments: InstitutionalDocument[] = [
   {
     id: "planilha-repasses-2026",
     title: {
-      pt: "Repasses por projeto — 2026 (planilha)",
-      en: "Transfers by project — 2026 (spreadsheet)",
-      es: "Transferencias por proyecto — 2026 (planilla)",
+      pt: "Repasses por projeto: 2026 (planilha)",
+      en: "Transfers by project: 2026 (spreadsheet)",
+      es: "Transferencias por proyecto: 2026 (planilla)",
     },
     description: {
       pt: "Planilha aberta com os repasses por projeto e por mês.",
@@ -194,7 +194,7 @@ export const exampleDocuments: InstitutionalDocument[] = [
     id: "relatorio-coracao-valente-2025",
     title: {
       pt: "Relatório do projeto Coração Valente 2025",
-      en: "2025 report — Coração Valente project",
+      en: "2025 report: Coração Valente project",
       es: "Informe del proyecto Coração Valente 2025",
     },
     description: {
@@ -214,7 +214,7 @@ export const exampleDocuments: InstitutionalDocument[] = [
     id: "relatorio-futsal-na-escola-2025",
     title: {
       pt: "Relatório do projeto Futsal na Escola 2025",
-      en: "2025 report — Futsal na Escola project",
+      en: "2025 report: Futsal na Escola project",
       es: "Informe del proyecto Futsal na Escola 2025",
     },
     description: {

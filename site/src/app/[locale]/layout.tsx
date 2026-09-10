@@ -70,7 +70,7 @@ export async function generateMetadata({
     metadataBase: new URL(site.url),
     title: {
       default: t("title"),
-      template: `%s — ${site.shortName}`,
+      template: `%s | ${site.shortName}`,
     },
     description: t("description"),
     applicationName: site.shortName,

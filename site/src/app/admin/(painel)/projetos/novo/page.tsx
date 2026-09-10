@@ -6,7 +6,7 @@ export default function NovoProjetoPage() {
     <>
       <TituloDaPagina
         titulo="Cadastrar projeto"
-        descricao="Preencha em português. Inglês e espanhol são opcionais — sem eles, o site exibe o texto em português nos três idiomas."
+        descricao="Preencha em português. Inglês e espanhol são opcionais. Sem eles, o site exibe o texto em português nos três idiomas."
       />
 
       <FormularioDeProjeto />

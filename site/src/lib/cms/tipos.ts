@@ -95,3 +95,19 @@ export const colunasNoticia =
 
 export const colunasProjeto =
   'id, slug, nome, categoria, resumo, descricao, objetivo, publico, locais, metricas, metodologia, resultados, galeria, parceiros, capa_url, capa_path, capa_largura, capa_altura, capa_alt, ordem, publicado, criado_em, atualizado_em'
+
+/** A linha única de `painel_transparencia` (ver migração 0003). */
+export type LinhaPainel = {
+  id: number
+  imagem_url: string
+  imagem_path: string | null
+  imagem_largura: number | null
+  imagem_altura: number | null
+  capturado_em: string
+  alt: unknown
+  criado_em: string
+  atualizado_em: string
+}
+
+export const colunasPainel =
+  'id, imagem_url, imagem_path, imagem_largura, imagem_altura, capturado_em, alt, criado_em, atualizado_em'

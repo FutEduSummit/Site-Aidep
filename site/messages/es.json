@@ -56,7 +56,7 @@
   },
   "a11y": {
     "skipToContent": "Ir al contenido principal",
-    "logoHome": "AIDEP — ir a la página de inicio",
+    "logoHome": "AIDEP: ir a la página de inicio",
     "scrollProgress": "Progreso de lectura de la página",
     "imagePending": "Imagen institucional aún no disponible",
     "partnersMarquee": "Socios y apoyadores de la AIDEP",
@@ -74,7 +74,7 @@
         "a través del deporte",
         "y el paradeporte."
       ],
-      "lead": "Polos deportivos en comunidades, futsal dentro de la escuela y formación para quien enseña. AIDEP organiza lo que hace que el deporte llegue — y siga.",
+      "lead": "Polos deportivos en comunidades, futsal dentro de la escuela y formación para quien enseña. AIDEP organiza lo que hace que el deporte llegue y siga.",
       "scroll": "Desplázate para conocer"
     },
     "about": {
@@ -82,7 +82,7 @@
       "title": "Estructura para que el deporte llegue donde todavía no llega.",
       "paragraphs": [
         "AIDEP es una asociación sin fines de lucro que organiza proyectos deportivos: instala polos en comunidades, lleva el futsal dentro de la escuela y forma a quienes trabajan con deporte.",
-        "Nada aquí es una acción aislada. Cada proyecto llega con equipo, material, calendario y rendición de cuentas — es lo que hace que la actividad continúe después del día de la inauguración.",
+        "Nada aquí es una acción aislada. Cada proyecto llega con equipo, material, calendario y rendición de cuentas. Es lo que hace que la actividad continúe después del día de la inauguración.",
         "La actuación cubre hoy todo el territorio brasileño, y el estatuto de la asociación prevé alcance internacional."
       ],
       "highlights": [
@@ -110,7 +110,7 @@
       "eyebrow": "Deporte y paradeporte",
       "title": "Herramientas, no fines.",
       "paragraphs": [
-        "El deporte no es el punto de llegada. Es el medio por el cual ocurren la formación, la convivencia y la oportunidad — en la comunidad, en la escuela y en los espacios de conocimiento.",
+        "El deporte no es el punto de llegada. Es el medio por el cual ocurren la formación, la convivencia y la oportunidad en la comunidad, en la escuela y en los espacios de conocimiento.",
         "Deporte y paradeporte están juntos en el nombre de la asociación porque están juntos en la práctica: la misma estructura, el mismo material y la misma exigencia técnica para todas las personas."
       ]
     },
@@ -148,13 +148,15 @@
     "reach": {
       "eyebrow": "Dónde estamos",
       "title": "Cada punto es una cancha con gente dentro.",
-      "description": "Gira el planeta o elige una ciudad en la lista para ver qué proyectos actúan allí.",
       "summary": "{cities, plural, one {# ciudad} other {# ciudades}} · {hubs, plural, one {# polo} other {# polos}}",
       "hubs": "{count, plural, one {# polo} other {# polos}}",
-      "hint": "Arrastra para girar · desplaza para acercar",
+      "hint": "Arrastra para mover · desplaza para acercar",
       "close": "Cerrar la ficha de la ciudad",
       "seeProject": "Conocer el proyecto",
-      "globeLabel": "Globo terráqueo con las ciudades atendidas por los proyectos de AIDEP, con Brasil destacado.",
+      "mapLabel": "Mapa de Brasil con las ciudades atendidas por los proyectos de AIDEP, con un alfiler en cada una.",
+      "zoomIn": "Acercar el mapa",
+      "zoomOut": "Alejar el mapa",
+      "zoomReset": "Volver a todo Brasil",
       "filters": {
         "label": "Filtrar el mapa por proyecto",
         "all": "Todos los proyectos"
@@ -208,7 +210,7 @@
     "audience": {
       "eyebrow": "Público atendido",
       "title": "A quién atiende la AIDEP.",
-      "description": "Cada edad pide una forma propia de acoger, enseñar y acompañar — por eso los proyectos no atienden «a la comunidad» en general, sino a personas en momentos distintos de su vida.",
+      "description": "Cada edad pide una forma propia de acoger, enseñar y acompañar. Por eso los proyectos no atienden «a la comunidad» en general, sino a personas en momentos distintos de su vida.",
       "groups": [
         {
           "title": "Niños",
@@ -220,7 +222,7 @@
         },
         {
           "title": "Jóvenes",
-          "text": "Un camino de formación más allá de ser atleta — arbitraje, organización, monitoría y los espacios de conocimiento de la asociación."
+          "text": "Un camino de formación más allá de ser atleta: arbitraje, organización, monitoría y los espacios de conocimiento de la asociación."
         },
         {
           "title": "Adultos",
@@ -327,6 +329,13 @@
       "eyebrow": "Transparencia",
       "title": "Cuentas abiertas.",
       "lead": "Informes, documentos institucionales y rendición de cuentas de la AIDEP, actualizados mensualmente."
+    },
+    "panel": {
+      "eyebrow": "Transferencias federales",
+      "title": "Panel de transferencias federales.",
+      "description": "La pantalla del panel público del Gobierno Federal «Discricionárias e Legais» con los convenios de fomento de AIDEP, tal como está publicada. El extracto en PDF y la planilla línea por línea están en la lista de abajo.",
+      "source": "Transferegov · Gobierno Federal de Brasil",
+      "capturedAt": "Actualizado el {date}"
     },
     "filters": {
       "search": "Buscar documento",
@@ -613,7 +622,7 @@
   },
   "seo": {
     "home": {
-      "title": "AIDEP — Desarrollo humano a través del deporte y el paradeporte",
+      "title": "AIDEP: Desarrollo humano a través del deporte y el paradeporte",
       "description": "La AIDEP es una plataforma internacional de desarrollo humano a través del deporte y el paradeporte, con proyectos de formación, inclusión y transformación social en todo Brasil."
     },
     "projects": {

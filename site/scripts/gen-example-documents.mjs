@@ -157,7 +157,7 @@ function composePages(doc) {
       GRAY,
     )
     content += textOp(
-      'Conteúdo fictício — não é documento oficial da AIDEP.',
+      'Conteúdo fictício. Não é documento oficial da AIDEP.',
       PAGE.margin,
       54,
       7.6,
@@ -252,8 +252,8 @@ function buildPdf(doc) {
   const infoId = next++
   objects[infoId - 1] =
     `<</Title${hexText(doc.title.pt)}` +
-    `/Subject${hexText('Documento de exemplo — conteúdo fictício, não é documento oficial da AIDEP')}` +
-    `/Author${hexText('AIDEP — arquivo de exemplo')}` +
+    `/Subject${hexText('Documento de exemplo: conteúdo fictício, não é documento oficial da AIDEP')}` +
+    `/Author${hexText('AIDEP: arquivo de exemplo')}` +
     `/Creator(scripts/gen-example-documents.mjs)>>`
 
   let out = '%PDF-1.4\n'

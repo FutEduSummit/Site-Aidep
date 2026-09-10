@@ -554,6 +554,30 @@
 }
 
 /* =========================================================================
+   A ROTA DO MAPA (Página inicial)
+   A luz que corre pela linha que liga as cidades atendidas. O tracejado
+   soma 300 unidades — traço mais intervalo — e o deslocamento anda
+   exatamente isso, então o ciclo fecha sem emenda.
+
+   O movimento reduzido é atendido pelo bloco geral no fim deste arquivo:
+   a linha continua desenhada, só para de correr.
+   ========================================================================= */
+@keyframes aidep-rota {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -300;
+  }
+}
+
+@layer components {
+  .rota-viva {
+    animation: aidep-rota 5s linear infinite;
+  }
+}
+
+/* =========================================================================
    MARQUEE (parceiros)
    ========================================================================= */
 @keyframes aidep-marquee {

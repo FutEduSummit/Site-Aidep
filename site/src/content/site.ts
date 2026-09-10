@@ -66,5 +66,14 @@ export const site = {
 
 export type SiteConfig = typeof site
 
-/** O envio dos formulários só é habilitado com endpoint configurado. */
-export const contactEndpointConfigured = Boolean(process.env.CONTACT_WEBHOOK_URL)
+/**
+ * O envio dos formulários só é habilitado com um canal configurado: e-mail
+ * (Resend) ou webhook. Só tem valor no servidor — em código de cliente as
+ * variáveis privadas não são expostas e a constante é sempre `false`.
+ */
+export const contactEndpointConfigured = Boolean(
+  (process.env.RESEND_API_KEY &&
+    process.env.CONTACT_TO_EMAIL &&
+    process.env.CONTACT_FROM_EMAIL) ||
+    process.env.CONTACT_WEBHOOK_URL,
+)

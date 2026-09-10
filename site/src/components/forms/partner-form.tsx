@@ -90,7 +90,7 @@ export function PartnerForm() {
           lastPayload
             ? {
                 subject: `[${tTypes(lastPayload.partnerType)}] ${lastPayload.organization}`,
-                body: `${lastPayload.name}${lastPayload.role ? ` — ${lastPayload.role}` : ''}\n${
+                body: `${lastPayload.name}${lastPayload.role ? `, ${lastPayload.role}` : ''}\n${
                   lastPayload.organization
                 }\n${lastPayload.email}${lastPayload.phone ? `\n${lastPayload.phone}` : ''}\n\n${
                   lastPayload.message

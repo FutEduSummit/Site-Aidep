@@ -178,7 +178,7 @@ export function LanguageSwitcher({
       >
         <Globe aria-hidden="true" strokeWidth={2} className="size-[1.0625rem]" />
         <span className="sr-only">
-          {t('switchLabel')} — {fullLabels[current]}
+          {t('switchLabel')}: {fullLabels[current]}
         </span>
         <span aria-hidden="true">{shortLabels[current]}</span>
         <ChevronDown

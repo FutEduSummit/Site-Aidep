@@ -303,7 +303,7 @@ export function FormularioDeProjeto({
           htmlFor="nome"
           rotulo="Nome do projeto"
           erro={erros.nome}
-          dica="Nome próprio — não é traduzido em nenhum idioma."
+          dica="Nome próprio. Não é traduzido em nenhum idioma."
         >
           <Entrada
             id="nome"

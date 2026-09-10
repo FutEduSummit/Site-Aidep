@@ -32,7 +32,7 @@ const sora = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Painel — AIDEP',
+  title: 'Painel | AIDEP',
   description: 'Área de publicação de conteúdo do site da AIDEP.',
   robots: { index: false, follow: false },
 }

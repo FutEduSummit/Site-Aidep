@@ -49,9 +49,9 @@ export const realDocuments: InstitutionalDocument[] = [
   {
     id: 'transferegov-painel-2026-09',
     title: {
-      pt: 'Transferências federais — painel do Transferegov',
-      en: 'Federal transfers — Transferegov dashboard',
-      es: 'Transferencias federales — panel de Transferegov',
+      pt: 'Transferências federais: painel do Transferegov',
+      en: 'Federal transfers: Transferegov dashboard',
+      es: 'Transferencias federales: panel de Transferegov',
     },
     description: {
       pt: 'Extrato do painel público do Governo Federal com os quatro termos de fomento firmados pela AIDEP com o Ministério do Esporte: R$ 6,27 milhões em valor global, o mesmo valor já liberado e R$ 1,12 milhão em conta. Nada devolvido.',
@@ -69,9 +69,9 @@ export const realDocuments: InstitutionalDocument[] = [
   {
     id: 'transferegov-instrumentos-2026-09',
     title: {
-      pt: 'Instrumentos assinados — planilha detalhada',
-      en: 'Signed agreements — detailed spreadsheet',
-      es: 'Instrumentos firmados — planilla detallada',
+      pt: 'Instrumentos assinados: planilha detalhada',
+      en: 'Signed agreements: detailed spreadsheet',
+      es: 'Instrumentos firmados: planilla detallada',
     },
     description: {
       pt: 'Os mesmos quatro termos de fomento, linha a linha: número do instrumento, objeto, órgão concedente, vigência, valor global, valor empenhado, valor liberado, movimentações e saldo em conta.',

@@ -8,4 +8,6 @@
 # site/public/documentos/reais (ver site/src/content/documents-real.ts).
 /Documentos-Reais/
 
+/Conteudo-HERO/
+
 node_modules

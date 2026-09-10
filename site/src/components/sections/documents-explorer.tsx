@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useId, useMemo, useState } from 'react'
-import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { SelectControl, inputClasses } from '@/components/forms/fields'
 import { DocumentFormatBadge } from '@/components/ui/document-format'
 import { DocumentPreview } from '@/components/ui/document-preview'
@@ -25,7 +24,7 @@ import type {
 } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
 import { categoriaDe, coresDeCategoria, urlDeDownload } from '@/lib/documentos'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatDate, formatDateShort } from '@/lib/utils'
 
 const localeTag: Record<Locale, string> = {
   pt: 'pt-BR',
@@ -56,12 +55,73 @@ const opcoesPorPagina = [10, 25, 50] as const
  *
  * A primeira coluna não tem recuo à esquerda, e a última não tem fio: a
  * tabela precisa começar e terminar rente à margem da seção, como o resto
- * da página. Os cartões do celular não entram nisso — lá cada documento é
- * um bloco, e não uma linha de colunas.
+ * da página.
+ *
+ * O recuo tem três degraus — 4 px no celular, 16 px no tablet, 24 px no
+ * computador. Seis colunas com 24 px de cada lado gastam 288 px só de
+ * respiro: numa tela de 360 px isso é a tabela inteira virando espaço em
+ * branco.
  */
-const primeiraColuna = 'border-r border-(--border) pr-6'
-const colunaDoMeio = 'border-r border-(--border) px-6'
-const ultimaColuna = 'pl-6'
+const primeiraColuna = 'border-r border-(--border) pr-1 lg:pr-4 xl:pr-6'
+const colunaDoMeio = 'border-r border-(--border) px-1 lg:px-4 xl:px-6'
+const ultimaColuna = 'pl-1 lg:pl-4 xl:pl-6'
+
+/**
+ * LARGURA DA TABELA E DE CADA COLUNA
+ * ==================================
+ * A tabela é a mesma no computador e no celular: as seis colunas, a linha
+ * inteira, nada resumido — e no celular ela CABE na tela, sem rolagem
+ * lateral. É por isso que as colunas medem por porcentagem abaixo de
+ * 1024 px: a soma fecha em 100%, e a tabela acompanha a largura da seção
+ * qualquer que seja o aparelho.
+ *
+ * Caber custa tamanho de letra, e o preço foi pago onde dói menos: o
+ * título cai para 10 px, o conteúdo para 9 px e ganha limite de seis
+ * linhas, a data vira numérica (01/09/26 em vez de "01 de setembro de
+ * 2026") e os dois botões ficam só com o ícone. O que não encolhe é a
+ * informação — as seis colunas continuam ali, o texto cortado está a um
+ * toque, e no computador tudo volta ao tamanho de leitura.
+ *
+ * A partir de 1024 px vale a medida fixa, com o piso de 58rem. A largura
+ * por coluna não é decoração nem lá: sem ela o navegador reparte o espaço
+ * pelo tamanho do conteúdo, e quem escreve mais leva mais — o título
+ * ficava com 128 px ao lado de 217 px para uma palavra de categoria, e a
+ * linha crescia de 236 px para 366 px de altura.
+ */
+const larguraMinima = 'lg:min-w-[58rem]'
+
+/**
+ * O RÓTULO DO CABEÇALHO
+ * =====================
+ * Mesma medida do rótulo que ordena (ver `Ordenador`), para "Prévia" e
+ * "Download" não saírem maiores que "Título" na mesma linha.
+ */
+const rotuloDeColuna =
+  'text-[0.4375rem] font-semibold uppercase leading-tight tracking-[0.04em] text-(--fg-subtle) lg:text-micro lg:tracking-[0.14em]'
+
+/**
+ * OS DOIS BOTÕES DA LINHA
+ * =======================
+ * No computador são ícone + palavra, com os 44 px de altura de alvo de
+ * toque. No celular a palavra sai (fica no leitor de tela) e sobra o
+ * quadrado do ícone: escrever "VISUALIZAR" e "BAIXAR" ali custaria 150 px
+ * dos 360 px da tela, e as outras cinco colunas não caberiam.
+ */
+function acaoDaLinha(cor: string) {
+  return cn(
+    'inline-flex size-7 shrink-0 items-center justify-center transition-colors duration-200 ease-brand lg:size-auto lg:min-h-11 lg:gap-2 lg:px-4 lg:text-[0.75rem] lg:font-semibold lg:uppercase lg:tracking-[0.1em]',
+    cor,
+  )
+}
+
+const larguraDaColuna = {
+  title: 'w-[28%] lg:w-[14rem]',
+  category: 'w-[17%] lg:w-[8rem]',
+  content: 'w-[16%] lg:w-[15rem]',
+  date: 'w-[15%] lg:w-[7rem]',
+  preview: 'w-[11%] lg:w-[5rem]',
+  download: 'w-[13%] lg:w-[9rem]',
+} as const
 
 /* ------------------------------------------------------------------ */
 /* Peças da tabela                                                     */
@@ -95,7 +155,7 @@ function Ordenador({
       onClick={() => aoOrdenar(campo)}
       aria-label={descricao}
       className={cn(
-        'group/sort inline-flex items-center gap-1.5 text-micro font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ease-brand',
+        'group/sort inline-flex items-center gap-1 text-[0.4375rem] font-semibold uppercase leading-tight tracking-[0.04em] transition-colors duration-200 ease-brand lg:gap-1.5 lg:text-micro lg:tracking-[0.14em]',
         ativo ? 'text-(--fg)' : 'text-(--fg-subtle) hover:text-(--fg)',
       )}
     >
@@ -103,8 +163,10 @@ function Ordenador({
       <Seta
         aria-hidden="true"
         className={cn(
-          'size-3.5 shrink-0 transition-opacity duration-200',
-          ativo ? 'opacity-100' : 'opacity-0 group-hover/sort:opacity-40',
+          'size-2.5 shrink-0 transition-opacity duration-200 lg:size-3.5',
+          ativo
+            ? 'opacity-100'
+            : 'hidden opacity-0 group-hover/sort:opacity-40 lg:block',
         )}
       />
     </button>
@@ -126,7 +188,7 @@ function Selo({
   return (
     <span
       className={cn(
-        'inline-flex items-center whitespace-nowrap px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.1em]',
+        'inline-flex items-center px-1 py-0.5 text-[0.4375rem] font-semibold uppercase leading-tight tracking-[0.02em] wrap-anywhere lg:px-3 lg:py-1 lg:text-[0.6875rem] lg:tracking-[0.1em] lg:wrap-normal xl:whitespace-nowrap',
         coresDeCategoria[categoria.color],
       )}
     >
@@ -148,10 +210,12 @@ function BotaoVisualizar({
     <button
       type="button"
       onClick={() => aoAbrir(doc)}
-      className="inline-flex min-h-11 items-center gap-2 border border-(--border-strong) px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-brand hover:border-(--fg)"
+      className={acaoDaLinha(
+        'border border-(--border-strong) hover:border-(--fg)',
+      )}
     >
-      <Eye aria-hidden="true" className="size-4" />
-      {rotulo}
+      <Eye aria-hidden="true" className="size-3.5 lg:size-4" />
+      <span className="sr-only lg:not-sr-only">{rotulo}</span>
     </button>
   )
 }
@@ -167,10 +231,10 @@ function BotaoBaixar({
     <a
       href={urlDeDownload(doc)}
       download={doc.fileName ?? undefined}
-      className="inline-flex min-h-11 items-center gap-2 bg-brand-500 px-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-ink-950 transition-colors duration-200 ease-brand hover:bg-brand-400"
+      className={acaoDaLinha('bg-brand-500 text-ink-950 hover:bg-brand-400')}
     >
-      <Download aria-hidden="true" className="size-4" />
-      {rotulo}
+      <Download aria-hidden="true" className="size-3.5 lg:size-4" />
+      <span className="sr-only lg:not-sr-only">{rotulo}</span>
     </a>
   )
 }
@@ -409,13 +473,23 @@ export function DocumentsExplorer({
 
             {ordenados.length > 0 ? (
               <>
-                {/* Tabela — telas grandes -------------------------- */}
-                <div className="hidden overflow-x-auto lg:block">
-                  <table className="w-full border-collapse text-left">
+                {/* Tabela ------------------------------------------ */}
+                {/* A rolagem lateral é rede de segurança, e não o plano:
+                    as colunas medem por porcentagem e a tabela cabe em
+                    100vw. Fica para o caso extremo — texto ampliado no
+                    sistema, palavra sem espaço num título traduzido —,
+                    onde rolar de lado é melhor que estourar a tela. */}
+                <div className="overflow-x-auto">
+                  <table
+                    className={`w-full ${larguraMinima} border-collapse text-left`}
+                  >
                     <caption className="sr-only">{t('table.caption')}</caption>
                     <thead>
                       <tr className="border-y border-(--border-strong)">
-                        <th scope="col" className={`py-4 ${primeiraColuna}`}>
+                        <th
+                          scope="col"
+                          className={`py-4 ${primeiraColuna} ${larguraDaColuna.title}`}
+                        >
                           <Ordenador
                             campo="title"
                             rotulo={rotulosDeColuna.title}
@@ -427,7 +501,10 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
+                        <th
+                          scope="col"
+                          className={`py-4 ${colunaDoMeio} ${larguraDaColuna.category}`}
+                        >
                           <Ordenador
                             campo="category"
                             rotulo={rotulosDeColuna.category}
@@ -439,7 +516,10 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
+                        <th
+                          scope="col"
+                          className={`py-4 ${colunaDoMeio} ${larguraDaColuna.content}`}
+                        >
                           <Ordenador
                             campo="content"
                             rotulo={rotulosDeColuna.content}
@@ -451,7 +531,10 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
+                        <th
+                          scope="col"
+                          className={`py-4 ${colunaDoMeio} ${larguraDaColuna.date}`}
+                        >
                           <Ordenador
                             campo="date"
                             rotulo={rotulosDeColuna.date}
@@ -465,13 +548,13 @@ export function DocumentsExplorer({
                         </th>
                         <th
                           scope="col"
-                          className={`py-4 ${colunaDoMeio} text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)`}
+                          className={`py-4 ${colunaDoMeio} ${larguraDaColuna.preview} ${rotuloDeColuna}`}
                         >
                           {t('table.preview')}
                         </th>
                         <th
                           scope="col"
-                          className={`py-4 ${ultimaColuna} text-right text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)`}
+                          className={`py-4 ${ultimaColuna} ${larguraDaColuna.download} text-right ${rotuloDeColuna}`}
                         >
                           {t('table.download')}
                         </th>
@@ -486,39 +569,58 @@ export function DocumentsExplorer({
                         >
                           <th
                             scope="row"
-                            className={`max-w-[22rem] py-5 ${primeiraColuna}`}
+                            className={`max-w-[22rem] py-3 ${primeiraColuna} lg:py-5`}
                           >
                             <div className="flex flex-col items-start gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => setAberto(doc)}
-                                className="link-underline text-left text-body font-semibold tracking-[-0.01em]"
+                                className="link-underline text-left text-[0.625rem] font-semibold leading-snug tracking-normal hyphens-auto wrap-anywhere lg:text-body lg:tracking-[-0.01em] lg:wrap-normal"
                               >
                                 {doc.title[locale]}
                               </button>
-                              <DocumentFormatBadge doc={doc} />
+                              <DocumentFormatBadge doc={doc} className="h-4 lg:h-7" />
                             </div>
                           </th>
 
-                          <td className={`py-5 ${colunaDoMeio}`}>
+                          <td className={`py-3 ${colunaDoMeio} lg:py-5`}>
                             <Selo doc={doc} categories={categories} locale={locale} />
                           </td>
 
                           <td
-                            className={`max-w-[26rem] py-5 ${colunaDoMeio} text-small text-(--fg-muted)`}
+                            className={`max-w-[26rem] py-3 ${colunaDoMeio} text-[0.5625rem] leading-snug text-(--fg-muted) hyphens-auto wrap-anywhere lg:py-5 lg:text-small lg:leading-normal lg:wrap-normal`}
                           >
-                            {doc.description?.[locale] || '—'}
+                            {/* No celular a coluna tem 55 px: a descrição
+                                inteira ali são vinte e cinco linhas de
+                                nove pixels, e a linha da tabela passava de
+                                300 px de altura por causa dela. Seis
+                                linhas com reticências dizem do que o
+                                documento trata, e o texto completo está a
+                                um toque — no título ou na prévia, que
+                                abrem o arquivo. No computador nada é
+                                cortado. */}
+                            <span className="line-clamp-6 lg:line-clamp-none">
+                              {doc.description?.[locale] || '-'}
+                            </span>
                           </td>
 
                           <td
-                            className={`whitespace-nowrap py-5 ${colunaDoMeio} text-small text-(--fg-muted)`}
+                            className={`py-3 ${colunaDoMeio} text-[0.5625rem] tabular-nums leading-snug text-(--fg-muted) lg:py-5 lg:text-small lg:normal-nums xl:whitespace-nowrap`}
                           >
                             <time dateTime={doc.publishedAt}>
-                              {formatDate(doc.publishedAt, localeTag[locale])}
+                              <span className="lg:hidden">
+                                {formatDateShort(
+                                  doc.publishedAt,
+                                  localeTag[locale],
+                                )}
+                              </span>
+                              <span className="hidden lg:inline">
+                                {formatDate(doc.publishedAt, localeTag[locale])}
+                              </span>
                             </time>
                           </td>
 
-                          <td className={`py-5 ${colunaDoMeio}`}>
+                          <td className={`py-3 ${colunaDoMeio} lg:py-5`}>
                             <button
                               type="button"
                               onClick={() => setAberto(doc)}
@@ -529,14 +631,14 @@ export function DocumentsExplorer({
                             >
                               <DocumentPreview
                                 doc={doc}
-                                className="h-28 w-20"
-                                sizes="80px"
+                                className="h-9 w-7 lg:h-28 lg:w-20"
+                                sizes="(min-width: 1024px) 80px, 28px"
                               />
                             </button>
                           </td>
 
-                          <td className={`py-5 ${ultimaColuna}`}>
-                            <div className="flex items-center justify-end gap-2">
+                          <td className={`py-3 ${ultimaColuna} lg:py-5`}>
+                            <div className="flex flex-col items-end gap-1 lg:flex-row lg:flex-wrap lg:items-center lg:justify-end lg:gap-2">
                               <BotaoVisualizar doc={doc} rotulo={tActions('view')} aoAbrir={setAberto} />
                               <BotaoBaixar doc={doc} rotulo={tActions('download')} />
                             </div>
@@ -546,60 +648,6 @@ export function DocumentsExplorer({
                     </tbody>
                   </table>
                 </div>
-
-                {/* Cartões — telas pequenas ------------------------ */}
-                <StaggerContainer as="ul" className="flex flex-col lg:hidden">
-                  {visiveis.map((doc) => (
-                    <StaggerItem
-                      key={doc.id}
-                      as="li"
-                      className="flex flex-col gap-4 border-t border-(--border) py-6 last:border-b"
-                    >
-                      <div className="flex items-start gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setAberto(doc)}
-                          aria-label={t('table.openDocument', {
-                            title: doc.title[locale],
-                          })}
-                        >
-                          <DocumentPreview doc={doc} />
-                        </button>
-
-                        <div className="flex min-w-0 flex-col gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setAberto(doc)}
-                            className="link-underline text-left text-h4 font-semibold tracking-[-0.02em]"
-                          >
-                            {doc.title[locale]}
-                          </button>
-
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <Selo doc={doc} categories={categories} locale={locale} />
-                            <DocumentFormatBadge doc={doc} />
-                            <span className="text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
-                              <time dateTime={doc.publishedAt}>
-                                {formatDate(doc.publishedAt, localeTag[locale])}
-                              </time>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {doc.description?.[locale] ? (
-                        <p className="text-small text-(--fg-muted)">
-                          {doc.description[locale]}
-                        </p>
-                      ) : null}
-
-                      <div className="flex flex-wrap items-center gap-2">
-                        <BotaoVisualizar doc={doc} rotulo={tActions('view')} aoAbrir={setAberto} />
-                        <BotaoBaixar doc={doc} rotulo={tActions('download')} />
-                      </div>
-                    </StaggerItem>
-                  ))}
-                </StaggerContainer>
 
                 {/* Paginação -------------------------------------- */}
                 {totalPaginas > 1 ? (

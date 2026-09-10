@@ -37,7 +37,7 @@ export default async function NovaSenhaPage() {
       descricao="Escolha a senha que passará a valer para entrar no painel. A anterior deixa de funcionar."
       rodape={
         <p>
-          Guarde a senha em lugar seguro. Ninguém — nem quem cuida do site —
+          Guarde a senha em lugar seguro. Ninguém, nem quem cuida do site,
           consegue consultá-la depois: só gerar outra.
         </p>
       }

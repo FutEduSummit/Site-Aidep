@@ -139,6 +139,30 @@ export const documentoSchema = z.object({
 export type DocumentoPayload = z.infer<typeof documentoSchema>
 
 /* ------------------------------------------------------------------ */
+/* Captura do painel Discricionárias e Legais                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A tela do painel do Governo Federal que abre a página de Transparência.
+ *
+ * `capturadoEm` é a data impressa no cabeçalho do painel do governo, e
+ * não a data do envio — é ela que a faixa verde do site anuncia, e por
+ * isso é obrigatória: publicar um número de repasse sem dizer de quando
+ * ele é seria apresentar como atual algo que pode ter mudado.
+ *
+ * `alt` é opcional. Vazio, o site usa a descrição genérica da tela (ver
+ * `paraPainel` em `lib/cms/mapear.ts`) — o painel não sabe quais números
+ * estão na imagem que acabou de subir, e não vai inventá-los.
+ */
+export const painelSchema = z.object({
+  imagem: imagemEnviada,
+  capturadoEm: dataIso,
+  alt: traduzido.default({ pt: '', en: '', es: '' }),
+})
+
+export type PainelPayload = z.infer<typeof painelSchema>
+
+/* ------------------------------------------------------------------ */
 /* Notícia                                                            */
 /* ------------------------------------------------------------------ */
 

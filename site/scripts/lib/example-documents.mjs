@@ -54,7 +54,7 @@ export const EXAMPLE_DOCUMENTS = [
       'Panorama das atividades desenvolvidas pela associação ao longo do ano.',
     body: [
       'Este arquivo é um modelo de demonstração. Os números, nomes e datas abaixo são fictícios e servem apenas para mostrar como o relatório aparece na página de Transparência do site.',
-      'Apresentação — o relatório anual reúne as atividades esportivas e formativas realizadas no período, a distribuição por território e as parcerias firmadas.',
+      'Apresentação: o relatório anual reúne as atividades esportivas e formativas realizadas no período, a distribuição por território e as parcerias firmadas.',
       'Estrutura prevista para o documento oficial:',
       '1. Apresentação da associação e do período coberto',
       '2. Programas e projetos executados, com público atendido',
@@ -81,7 +81,7 @@ export const EXAMPLE_DOCUMENTS = [
       'Panorama das atividades desenvolvidas pela associação ao longo do ano.',
     body: [
       'Este arquivo é um modelo de demonstração. Os números, nomes e datas abaixo são fictícios e servem apenas para mostrar como o relatório aparece na página de Transparência do site.',
-      'O relatório do exercício anterior permanece publicado para permitir a comparação entre períodos — a página mantém o histórico completo, com filtro por ano.',
+      'O relatório do exercício anterior permanece publicado para permitir a comparação entre períodos. A página mantém o histórico completo, com filtro por ano.',
       'Estrutura prevista para o documento oficial:',
       '1. Apresentação da associação e do período coberto',
       '2. Programas e projetos executados, com público atendido',
@@ -106,12 +106,12 @@ export const EXAMPLE_DOCUMENTS = [
       'Documento constitutivo da associação: finalidade, governança e regras de funcionamento.',
     body: [
       'Este arquivo é um modelo de demonstração. O texto abaixo não tem valor legal e não corresponde ao estatuto da AIDEP.',
-      'Capítulo I — Da denominação, sede e finalidade. A associação é pessoa jurídica de direito privado, sem fins lucrativos, com atuação no desenvolvimento humano por meio do esporte e do paradesporto.',
-      'Capítulo II — Dos associados. Categorias, direitos, deveres e processo de admissão.',
-      'Capítulo III — Da administração. Assembleia geral, diretoria executiva e conselho fiscal, com mandatos e atribuições.',
-      'Capítulo IV — Do patrimônio e dos recursos. Origem dos recursos, aplicação exclusiva nas finalidades estatutárias e vedação à distribuição de resultados.',
-      'Capítulo V — Da prestação de contas. Publicação periódica dos demonstrativos e franqueamento dos documentos a qualquer interessado.',
-      'Capítulo VI — Da dissolução e das disposições finais.',
+      'Capítulo I: Da denominação, sede e finalidade. A associação é pessoa jurídica de direito privado, sem fins lucrativos, com atuação no desenvolvimento humano por meio do esporte e do paradesporto.',
+      'Capítulo II: Dos associados. Categorias, direitos, deveres e processo de admissão.',
+      'Capítulo III: Da administração. Assembleia geral, diretoria executiva e conselho fiscal, com mandatos e atribuições.',
+      'Capítulo IV: Do patrimônio e dos recursos. Origem dos recursos, aplicação exclusiva nas finalidades estatutárias e vedação à distribuição de resultados.',
+      'Capítulo V: Da prestação de contas. Publicação periódica dos demonstrativos e franqueamento dos documentos a qualquer interessado.',
+      'Capítulo VI: Da dissolução e das disposições finais.',
     ],
   },
   {
@@ -162,9 +162,9 @@ export const EXAMPLE_DOCUMENTS = [
     year: 2026,
     publishedAt: '2026-08-10',
     title: {
-      pt: 'Prestação de contas — 1º semestre de 2026',
-      en: 'Accountability report — first half of 2026',
-      es: 'Rendición de cuentas — primer semestre de 2026',
+      pt: 'Prestação de contas: 1º semestre de 2026',
+      en: 'Accountability report: first half of 2026',
+      es: 'Rendición de cuentas: primer semestre de 2026',
     },
     summary: 'Origem e aplicação dos recursos no período.',
     body: [
@@ -187,9 +187,9 @@ export const EXAMPLE_DOCUMENTS = [
     year: 2025,
     publishedAt: '2026-02-12',
     title: {
-      pt: 'Prestação de contas — 2º semestre de 2025',
-      en: 'Accountability report — second half of 2025',
-      es: 'Rendición de cuentas — segundo semestre de 2025',
+      pt: 'Prestação de contas: 2º semestre de 2025',
+      en: 'Accountability report: second half of 2025',
+      es: 'Rendición de cuentas: segundo semestre de 2025',
     },
     summary: 'Origem e aplicação dos recursos no período.',
     body: [
@@ -230,9 +230,9 @@ export const EXAMPLE_DOCUMENTS = [
     year: 2026,
     publishedAt: '2026-08-10',
     title: {
-      pt: 'Repasses por projeto — 2026 (planilha)',
-      en: 'Transfers by project — 2026 (spreadsheet)',
-      es: 'Transferencias por proyecto — 2026 (planilla)',
+      pt: 'Repasses por projeto: 2026 (planilha)',
+      en: 'Transfers by project: 2026 (spreadsheet)',
+      es: 'Transferencias por proyecto: 2026 (planilla)',
     },
     summary: 'Planilha aberta com os repasses por projeto e por mês.',
     body: [],
@@ -261,13 +261,13 @@ export const EXAMPLE_DOCUMENTS = [
     projectSlug: 'coracao-valente',
     title: {
       pt: 'Relatório do projeto Coração Valente 2025',
-      en: '2025 report — Coração Valente project',
+      en: '2025 report: Coração Valente project',
       es: 'Informe del proyecto Coração Valente 2025',
     },
     summary: 'Execução, público atendido e resultados do projeto no ano.',
     body: [
       'Este arquivo é um modelo de demonstração. Os dados abaixo são fictícios.',
-      'O relatório de projeto descreve o que foi executado no ano, onde, com quem e com quais resultados — é o documento que acompanha convênios e patrocínios.',
+      'O relatório de projeto descreve o que foi executado no ano, onde, com quem e com quais resultados. É o documento que acompanha convênios e patrocínios.',
       'Conteúdo previsto: objetivo do projeto, metodologia aplicada, calendário de atividades, público atendido por faixa de idade, territórios, equipe técnica, parcerias e prestação de contas específica.',
       'Cada projeto publicado no site pode ter seus próprios documentos: na página de Transparência eles aparecem na categoria "Documentos de projetos".',
     ],
@@ -282,7 +282,7 @@ export const EXAMPLE_DOCUMENTS = [
     projectSlug: 'futsal-na-escola',
     title: {
       pt: 'Relatório do projeto Futsal na Escola 2025',
-      en: '2025 report — Futsal na Escola project',
+      en: '2025 report: Futsal na Escola project',
       es: 'Informe del proyecto Futsal na Escola 2025',
     },
     summary: 'Execução, público atendido e resultados do projeto no ano.',

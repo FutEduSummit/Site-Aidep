@@ -18,7 +18,7 @@ export default async function NovoDocumentoPage() {
 
       {categorias.length === 0 ? (
         <Aviso tom="erro">
-          Cadastre pelo menos uma categoria antes de enviar documentos —{' '}
+          Cadastre pelo menos uma categoria antes de enviar documentos:{' '}
           <Link href="/admin/documentos/categorias" className="underline">
             criar categoria
           </Link>

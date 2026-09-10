@@ -5,17 +5,26 @@ import type {
   InstitutionalDocument,
   NewsArticle,
   Project,
+  TransparencyPanelCapture,
 } from '@/content/types'
 import { clientePublico } from '@/lib/supabase/publico'
-import { paraCategoria, paraDocumento, paraNoticia, paraProjeto } from './mapear'
+import {
+  paraCategoria,
+  paraDocumento,
+  paraNoticia,
+  paraPainel,
+  paraProjeto,
+} from './mapear'
 import {
   colunasCategoria,
   colunasDocumento,
   colunasNoticia,
+  colunasPainel,
   colunasProjeto,
   type LinhaCategoria,
   type LinhaDocumento,
   type LinhaNoticia,
+  type LinhaPainel,
   type LinhaProjeto,
 } from './tipos'
 
@@ -52,7 +61,7 @@ async function consultar<T>(
 
       console.error(
         tabelaAusente
-          ? `[aidep] a tabela "${tabela}" ainda não existe no Supabase. Rode supabase/migrations/0001_plataforma.sql no SQL Editor. Até lá o site usa o conteúdo de src/content.`
+          ? `[aidep] a tabela "${tabela}" ainda não existe no Supabase. Rode os arquivos de supabase/migrations/ no SQL Editor, em ordem. Até lá o site usa o conteúdo de src/content.`
           : `[aidep] falha ao ler "${tabela}" no Supabase: ${error.message}`,
       )
       return null
@@ -124,4 +133,23 @@ export async function lerProjetos(): Promise<Project[] | null> {
   )
 
   return linhas?.map(paraProjeto) ?? null
+}
+
+/**
+ * A captura do painel Discricionárias e Legais que abre a Transparência.
+ *
+ * A tabela tem no máximo uma linha (ver migração 0003), então `limit(1)` é
+ * a consulta inteira. `null` enquanto ninguém enviou nada pelo painel — e
+ * nesse caso vale a captura versionada com o site (ver
+ * `content/painel-transferegov.ts`).
+ */
+export async function lerPainel(): Promise<TransparencyPanelCapture | null> {
+  const supabase = clientePublico()
+  if (!supabase) return null
+
+  const linhas = await consultar<LinhaPainel>('painel_transparencia', () =>
+    supabase.from('painel_transparencia').select(colunasPainel).limit(1),
+  )
+
+  return linhas?.[0] ? paraPainel(linhas[0]) : null
 }

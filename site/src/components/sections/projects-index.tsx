@@ -101,7 +101,7 @@ export function ProjectsIndex({
                           .map((location) =>
                             [location.city[locale], location.region]
                               .filter(Boolean)
-                              .join(' — '),
+                              .join(', '),
                           )
                           .join(' · ')}
                       </p>

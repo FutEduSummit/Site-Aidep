@@ -429,7 +429,7 @@ export const exampleNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'A continuidade do trabalho depende de parcerias locais — com escolas, com o poder público e com as instituições que já atendem as famílias no território.',
+          text: 'A continuidade do trabalho depende de parcerias locais: com escolas, com o poder público e com as instituições que já atendem as famílias no território.',
         },
       ],
       en: [
@@ -448,7 +448,7 @@ export const exampleNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'Continuing this work depends on local partnerships — with schools, with public authorities and with the institutions already supporting families in the area.',
+          text: 'Continuing this work depends on local partnerships: with schools, with public authorities and with the institutions already supporting families in the area.',
         },
       ],
       es: [
@@ -467,7 +467,7 @@ export const exampleNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'La continuidad del trabajo depende de alianzas locales — con escuelas, con el poder público y con las instituciones que ya atienden a las familias en el territorio.',
+          text: 'La continuidad del trabajo depende de alianzas locales: con escuelas, con el poder público y con las instituciones que ya atienden a las familias en el territorio.',
         },
       ],
     },

@@ -161,7 +161,7 @@ export function SpreadsheetView({ doc, locale }: Props) {
                     numericas[coluna] && 'text-right',
                   )}
                 >
-                  {titulo || '—'}
+                  {titulo || '-'}
                 </th>
               ))}
             </tr>
@@ -194,7 +194,7 @@ export function SpreadsheetView({ doc, locale }: Props) {
                   >
                     {celula || (
                       <span className="text-(--fg-subtle)" aria-hidden="true">
-                        —
+                        -
                       </span>
                     )}
                   </td>

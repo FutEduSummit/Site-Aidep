@@ -35,7 +35,7 @@ export default async function ProjetosPage() {
       {projetos.length === 0 ? (
         <Cartao
           titulo="Ainda não há projetos no painel"
-          descricao="Os três projetos do briefing — Coração Valente, Futsal na Escola e FutEdu Summit — estão no site, mas ainda vivem no código. Traga-os para cá e passe a editá-los por aqui."
+          descricao="Os três projetos do briefing (Coração Valente, Futsal na Escola e FutEdu Summit) estão no site, mas ainda vivem no código. Traga-os para cá e passe a editá-los por aqui."
         >
           <BotaoDeImportacao />
         </Cartao>

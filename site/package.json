@@ -21,7 +21,6 @@
     "qa:interactions": "node scripts/qa-interactions.mjs",
     "qa:shots": "node scripts/shots.mjs",
     "acervo": "node scripts/preparar-acervo.mjs",
-    "mundo:dados": "node scripts/gerar-mundo.mjs",
     "projetos:publicar": "node --env-file-if-exists=.env scripts/publicar-projetos.mjs",
     "conteudo:publicar": "node --env-file-if-exists=.env scripts/publicar-conteudo.mjs"
   },
@@ -40,7 +39,6 @@
     "react-hook-form": "^7.86.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.6.0",
-    "three": "^0.182.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -50,7 +48,6 @@
     "@types/pg": "^8.15.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "@types/three": "0.182.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.2",
     "pg": "^8.23.0",

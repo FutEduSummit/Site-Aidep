@@ -59,7 +59,7 @@ export default async function ConstrucaoPage({
 
           <p className="mt-6 max-w-[46ch] text-lead text-(--fg-muted)">
             Estamos finalizando o novo site da AIDEP. Enquanto isso, o acesso à
-            pré-visualização é restrito — informe a senha para continuar.
+            pré-visualização é restrito. Informe a senha para continuar.
           </p>
 
           <p className="mt-4 text-small text-(--fg-subtle)">
@@ -122,7 +122,7 @@ export default async function ConstrucaoPage({
       <footer className="container-site pb-8 sm:pb-14">
         <div className="flex flex-col gap-2 border-t border-(--rule) pt-6 text-small text-(--fg-subtle) sm:flex-row sm:items-center sm:justify-between">
           <p>
-            {site.shortName} — {site.contact.city}, {site.contact.region},{' '}
+            {site.shortName}, {site.contact.city}, {site.contact.region},{' '}
             {site.contact.country.pt}
           </p>
 

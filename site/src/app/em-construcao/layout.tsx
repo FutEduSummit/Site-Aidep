@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Site em construção — AIDEP',
+  title: 'Site em construção | AIDEP',
   description: 'O novo site da AIDEP está sendo finalizado.',
   /* Nada desta fase deve ser indexado. */
   robots: { index: false, follow: false, nocache: true },
