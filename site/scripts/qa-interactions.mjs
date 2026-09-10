@@ -20,6 +20,15 @@ const browser = await puppeteer.launch({
   args: ['--no-sandbox'],
 })
 
+/* Portão de pré-lançamento (src/lib/gate.ts): sem o cookie, toda rota
+   responde com a página "Site em construção". */
+await browser.setCookie({
+  name: "aidep-preview",
+  value: "liberado",
+  domain: new URL(BASE).hostname,
+  path: "/",
+})
+
 /* ---------- 1. Menu mobile ---------- */
 {
   const page = await browser.newPage()
@@ -69,8 +78,14 @@ const browser = await puppeteer.launch({
 
   /* A lista do seletor só existe aberta: sem isto, nenhum `a[hreflang]`
      está no documento e o teste falha por engano. Abre no hover — clicar
-     aqui abriria pelo ponteiro e fecharia pelo onClick, no mesmo gesto. */
-  await page.hover('nav button[aria-expanded]')
+     aqui abriria pelo ponteiro e fecharia pelo onClick, no mesmo gesto.
+
+     O seletor precisa ser o do **idioma**, e não o primeiro botão com
+     `aria-expanded` da navegação: dentro de uma página de projeto o
+     primeiro é o submenu "Mostrar projetos", e passar o mouse nele nunca
+     abriria a lista de idiomas. O `-list` no fim do `aria-controls` é o
+     que identifica a lista do seletor (ver `language-switcher.tsx`). */
+  await page.hover('nav button[aria-expanded][aria-controls$="-list"]')
   await new Promise((r) => setTimeout(r, 500))
 
   const hrefs = await page.evaluate(() =>

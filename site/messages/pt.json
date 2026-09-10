@@ -62,7 +62,9 @@
     "partnersMarquee": "Parceiros e apoiadores da AIDEP",
     "externalLink": "abre em nova aba",
     "carouselLabel": "Fotografias da abertura",
-    "carouselGoTo": "Ver a fotografia {number} da abertura"
+    "carouselPrev": "Fotografia anterior da abertura",
+    "carouselNext": "Próxima fotografia da abertura",
+    "carouselPosition": "Fotografia {current} de {total}"
   },
   "home": {
     "hero": {
@@ -72,19 +74,16 @@
         "por meio do esporte",
         "e do paradesporto."
       ],
-      "lead": "A AIDEP é uma plataforma internacional de desenvolvimento humano que reúne projetos, escolas, metodologias e iniciativas voltadas à formação, à inclusão e à transformação social.",
-      "statValue": "+40 mil",
-      "statLabel": "pessoas atendidas",
-      "reach": "Atuação em todo o território brasileiro",
+      "lead": "Polos esportivos em comunidades, futsal dentro da escola e formação para quem ensina. A AIDEP organiza o que faz o esporte chegar — e continuar.",
       "scroll": "Role para conhecer"
     },
     "about": {
       "eyebrow": "A AIDEP",
-      "title": "Uma plataforma de desenvolvimento humano construída no território.",
+      "title": "Estrutura para o esporte chegar onde ele ainda não chega.",
       "paragraphs": [
-        "Reunimos projetos, escolas, metodologias e iniciativas sob uma mesma estrutura institucional. O esporte e o paradesporto são o meio; a formação de pessoas é o objetivo.",
-        "Não trabalhamos com ações isoladas: cada projeto entra nessa estrutura com acompanhamento, registro e prestação de contas.",
-        "Atuamos em todo o território brasileiro e nosso estatuto prevê atuação internacional."
+        "A AIDEP é uma associação sem fins lucrativos que organiza projetos esportivos: instala polos em comunidades, leva o futsal para dentro da escola e forma quem trabalha com esporte.",
+        "Nada aqui é ação isolada. Cada projeto entra com equipe, material, calendário e prestação de contas — é o que faz a atividade continuar depois do dia da inauguração.",
+        "A atuação cobre hoje todo o território brasileiro, e o estatuto da associação prevê alcance internacional."
       ],
       "highlights": [
         {
@@ -97,15 +96,10 @@
         }
       ]
     },
-    "metrics": {
-      "eyebrow": "Impacto",
-      "title": "Números que começam em uma quadra.",
-      "description": "Cada número abaixo representa pessoas alcançadas pelos projetos da associação."
-    },
     "projects": {
       "eyebrow": "Projetos",
-      "title": "Três frentes, um mesmo propósito.",
-      "description": "Cada projeto atua em um ponto diferente do percurso de quem atendemos: o território, a escola e o conhecimento."
+      "title": "O mesmo trabalho, por caminhos diferentes.",
+      "description": "A comunidade, a escola e a formação de quem ensina: cada projeto encontra a mesma pessoa num momento diferente da vida dela."
     },
     "approach": {
       "eyebrow": "Como atuamos",
@@ -116,19 +110,14 @@
       "eyebrow": "Esporte e paradesporto",
       "title": "Ferramentas, não fins.",
       "paragraphs": [
-        "Para a AIDEP, o esporte e o paradesporto não são o ponto de chegada. São o meio pelo qual formação, inclusão e transformação social acontecem — em comunidades, em escolas e em espaços de conhecimento.",
-        "É por isso que o desporto e o paradesporto estão juntos no nome da associação: a mesma estrutura, o mesmo cuidado e a mesma exigência técnica para todas as pessoas."
+        "O esporte não é o ponto de chegada. É por meio dele que formação, convivência e oportunidade acontecem — na comunidade, na escola e nos espaços de conhecimento.",
+        "Desporto e paradesporto estão juntos no nome da associação porque estão juntos na prática: mesma estrutura, mesmo material e mesma exigência técnica para todas as pessoas."
       ]
     },
     "videos": {
       "eyebrow": "Nos polos",
-      "title": "O acervo de quem estava lá.",
-      "description": "Vídeos gravados nas inaugurações, nos treinos e nas competições dos polos do Coração Valente, em Sergipe."
-    },
-    "results": {
-      "eyebrow": "Resultados",
-      "title": "O impacto, projeto a projeto.",
-      "description": "Números informados pela associação para cada frente de atuação."
+      "title": "Como é a quadra por dentro.",
+      "description": "Inaugurações, treinos e competições nos polos de Sergipe, filmados no dia."
     },
     "partners": {
       "eyebrow": "Parceiros",
@@ -155,6 +144,22 @@
       "eyebrow": "Doações",
       "title": "Apoie quem já está em campo.",
       "description": "Sua contribuição sustenta polos esportivos, materiais, formação e a continuidade dos projetos que atendem crianças e adolescentes."
+    },
+    "reach": {
+      "eyebrow": "Onde estamos",
+      "title": "Cada ponto é uma quadra com gente dentro.",
+      "description": "Gire o planeta ou escolha uma cidade na lista para ver quais projetos atuam ali.",
+      "summary": "{cities, plural, one {# cidade} other {# cidades}} · {hubs, plural, one {# polo} other {# polos}}",
+      "hubs": "{count, plural, one {# polo} other {# polos}}",
+      "hint": "Arraste para girar · role para aproximar",
+      "close": "Fechar a ficha da cidade",
+      "seeProject": "Conhecer o projeto",
+      "globeLabel": "Globo terrestre com as cidades atendidas pelos projetos da AIDEP, com o Brasil em destaque.",
+      "filters": {
+        "label": "Filtrar o mapa por projeto",
+        "all": "Todos os projetos"
+      },
+      "openMaps": "Ver no Google Maps"
     }
   },
   "approach": {
@@ -184,7 +189,7 @@
   "about": {
     "purpose": {
       "eyebrow": "Propósito",
-      "title": "Três compromissos.",
+      "title": "O que sustenta o trabalho.",
       "items": [
         {
           "title": "Formação",
@@ -203,7 +208,7 @@
     "audience": {
       "eyebrow": "Público atendido",
       "title": "Quem a AIDEP atende.",
-      "description": "Mais de 40 mil pessoas já foram alcançadas pelos projetos da associação. Cada faixa exige uma forma própria de acolher, ensinar e acompanhar.",
+      "description": "Cada idade pede uma forma própria de acolher, ensinar e acompanhar — por isso os projetos não atendem “a comunidade” em geral, e sim pessoas em momentos diferentes da vida.",
       "groups": [
         {
           "title": "Crianças",
@@ -226,32 +231,20 @@
           "text": "O território inteiro entra na conta: famílias, escolas e equipamentos públicos ao redor de cada polo esportivo."
         }
       ]
-    },
-    "presence": {
-      "eyebrow": "Atuação",
-      "title": "Onde a AIDEP está.",
-      "paragraphs": [
-        "A atuação atual da associação cobre todo o território brasileiro, com projetos em comunidades, escolas e espaços de formação.",
-        "O estatuto da AIDEP prevê atuação internacional, e a identidade da associação já foi construída com esse alcance em mente."
-      ]
     }
   },
   "impact": {
     "headline": {
-      "eyebrow": "Visão geral",
-      "title": "O retrato da atuação.",
-      "description": "Números consolidados de todos os projetos e iniciativas."
-    },
-    "byProject": {
-      "eyebrow": "Por projeto",
-      "title": "O impacto de cada frente."
+      "eyebrow": "Impacto",
+      "title": "Números que começam em uma quadra.",
+      "description": "O total de todos os projetos da associação."
     }
   },
   "projects": {
     "hero": {
       "eyebrow": "Projetos",
       "title": "Onde a transformação acontece.",
-      "lead": "Três frentes complementares: o território, a escola e o conhecimento."
+      "lead": "A comunidade, a escola e a formação de quem ensina."
     },
     "labels": {
       "objective": "Objetivo",
@@ -625,7 +618,7 @@
     },
     "projects": {
       "title": "Projetos",
-      "description": "Projeto Social Coração Valente, Futsal na Escola e FutEdu Summit: as três frentes de atuação da AIDEP."
+      "description": "Projeto Social Coração Valente, Futsal na Escola e FutEdu Summit: os projetos da AIDEP na comunidade, na escola e na formação."
     },
     "news": {
       "title": "Notícias",

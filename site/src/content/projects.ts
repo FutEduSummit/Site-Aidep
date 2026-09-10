@@ -47,14 +47,124 @@ export const projetosDoBriefing: Project[] = [
       en: ['Children', 'Teenagers', 'Communities in situations of vulnerability'],
       es: ['Niños', 'Adolescentes', 'Comunidades en situación de vulnerabilidad'],
     },
+    /**
+     * OS POLOS DO CORAÇÃO VALENTE
+     * ===========================
+     * Os dois territórios do projeto, cidade por cidade, como informado
+     * pela associação.
+     *
+     * **Sergipe** — doze municípios. Aracaju tem cinco polos e Nossa
+     * Senhora do Socorro tem três; nos outros dez é um cada. A coordenada
+     * de todos sai sozinha do cadastro do IBGE (ver `lib/mapa.ts`), e por
+     * isso "Canindé" vai aqui com o nome inteiro — Canindé de São
+     * Francisco, em Sergipe, para não ser confundida com a Canindé do
+     * Ceará.
+     *
+     * **Distrito Federal** — sete regiões administrativas. Nenhuma delas
+     * é município e o cadastro do IBGE não as tem: o DF é um município
+     * só. Por isso vão com `coords` à mão, que é o caminho previsto para
+     * distrito, comunidade e região administrativa.
+     */
     locations: [
-      { city: { pt: 'Aracaju', en: 'Aracaju', es: 'Aracaju' }, region: 'SE' },
+      /* Sergipe */
+      { city: { pt: 'Aracaju', en: 'Aracaju', es: 'Aracaju' }, region: 'SE', polos: 5 },
       {
         city: {
-          pt: 'Distrito Federal',
-          en: 'Federal District',
-          es: 'Distrito Federal',
+          pt: 'Nossa Senhora do Socorro',
+          en: 'Nossa Senhora do Socorro',
+          es: 'Nossa Senhora do Socorro',
         },
+        region: 'SE',
+        polos: 3,
+      },
+      {
+        city: {
+          pt: 'Barra dos Coqueiros',
+          en: 'Barra dos Coqueiros',
+          es: 'Barra dos Coqueiros',
+        },
+        region: 'SE',
+      },
+      { city: { pt: 'Propriá', en: 'Propriá', es: 'Propriá' }, region: 'SE' },
+      {
+        city: {
+          pt: 'Canindé de São Francisco',
+          en: 'Canindé de São Francisco',
+          es: 'Canindé de São Francisco',
+        },
+        region: 'SE',
+      },
+      {
+        city: {
+          pt: 'Nossa Senhora da Glória',
+          en: 'Nossa Senhora da Glória',
+          es: 'Nossa Senhora da Glória',
+        },
+        region: 'SE',
+      },
+      {
+        city: {
+          pt: 'Nossa Senhora de Lourdes',
+          en: 'Nossa Senhora de Lourdes',
+          es: 'Nossa Senhora de Lourdes',
+        },
+        region: 'SE',
+      },
+      { city: { pt: 'Itabaiana', en: 'Itabaiana', es: 'Itabaiana' }, region: 'SE' },
+      { city: { pt: 'Poço Verde', en: 'Poço Verde', es: 'Poço Verde' }, region: 'SE' },
+      {
+        city: { pt: 'Tobias Barreto', en: 'Tobias Barreto', es: 'Tobias Barreto' },
+        region: 'SE',
+      },
+      { city: { pt: 'Boquim', en: 'Boquim', es: 'Boquim' }, region: 'SE' },
+      { city: { pt: 'Estância', en: 'Estância', es: 'Estância' }, region: 'SE' },
+
+      /* Distrito Federal — regiões administrativas */
+      {
+        city: { pt: 'Estrutural', en: 'Estrutural', es: 'Estrutural' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.7842, lng: -48.014 },
+      },
+      {
+        city: { pt: 'Ceilândia', en: 'Ceilândia', es: 'Ceilândia' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.8157, lng: -48.1097 },
+      },
+      {
+        city: { pt: 'Samambaia', en: 'Samambaia', es: 'Samambaia' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.8753, lng: -48.0819 },
+      },
+      {
+        city: { pt: 'Gama', en: 'Gama', es: 'Gama' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -16.0208, lng: -48.0658 },
+      },
+      {
+        city: {
+          pt: 'Recanto das Emas',
+          en: 'Recanto das Emas',
+          es: 'Recanto das Emas',
+        },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.9038, lng: -48.0614 },
+      },
+      {
+        city: { pt: 'Planaltina', en: 'Planaltina', es: 'Planaltina' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.6194, lng: -47.6519 },
+      },
+      {
+        city: { pt: 'São Sebastião', en: 'São Sebastião', es: 'São Sebastião' },
+        region: 'DF',
+        uf: 'DF',
+        coords: { lat: -15.8992, lng: -47.7781 },
       },
     ],
     metrics: [
@@ -78,11 +188,16 @@ export const projetosDoBriefing: Project[] = [
       },
       {
         id: 'hubs',
-        value: 2,
+        value: 19,
         label: {
-          pt: 'territórios de atuação',
-          en: 'territories of operation',
-          es: 'territorios de actuación',
+          pt: 'cidades e regiões com polo',
+          en: 'cities and districts with a hub',
+          es: 'ciudades y regiones con polo',
+        },
+        note: {
+          pt: 'Doze municípios de Sergipe e sete regiões do Distrito Federal',
+          en: 'Twelve municipalities in Sergipe and seven districts of the Federal District',
+          es: 'Doce municipios de Sergipe y siete regiones del Distrito Federal',
         },
       },
     ],

@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
 import { PartnerForm } from '@/components/forms/partner-form'
 import { PageHero } from '@/components/sections/page-hero'
-import { PartnersStrip } from '@/components/sections/partners-strip'
 import { PartnerLogo } from '@/components/ui/partner-logo'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Container, Section } from '@/components/ui/section'
@@ -85,9 +84,7 @@ export default async function PartnersPage({ params }: Props) {
         </Container>
       </Section>
 
-      <PartnersStrip partners={partners} locale={locale} surface="muted" />
-
-      <Section surface="light" ariaLabelledby="partners-support-title">
+      <Section surface="muted" ariaLabelledby="partners-support-title">
         <Container className="flex flex-col gap-stack">
           <SectionHeader
             id="partners-support-title"

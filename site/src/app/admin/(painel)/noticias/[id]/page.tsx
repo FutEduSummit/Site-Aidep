@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { capaDaNoticia } from '@/lib/admin/capas'
 import { listarProjetos, obterNoticia } from '@/lib/admin/leitura'
 import { apagarNoticia } from '../../../acoes'
 import { BotaoDeRemocao } from '../../../componentes/botao-de-remocao'
@@ -24,6 +25,11 @@ export default async function EditarNoticiaPage({ params }: Props) {
 
   const titulo = textoPt(noticia.titulo) || 'Notícia sem título'
 
+  /* A capa que o site publica hoje. Se ela vem do acervo — e não do
+     Storage —, o formulário a mostra na moldura em vez de sugerir que a
+     notícia está sem fotografia (ver `lib/admin/capas.ts`). */
+  const capa = capaDaNoticia(noticia)
+
   return (
     <>
       <TituloDaPagina
@@ -46,6 +52,7 @@ export default async function EditarNoticiaPage({ params }: Props) {
       <FormularioDeNoticia
         projetos={projetos.map(({ slug, nome }) => ({ slug, nome }))}
         inicial={noticia}
+        capaDoAcervo={capa?.doAcervo ? capa : null}
       />
     </>
   )

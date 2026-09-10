@@ -220,11 +220,12 @@ sozinhos. Se o PDF não permitir (protegido, corrompido), ele pode enviar uma
 imagem à mão.
 
 Sob o título de cada linha aparece **o ícone do formato**: a arte
-colorida do PDF e a do CSV, de `public/images/formatos/`, no lugar da sigla
-escrita — o `alt` da imagem continua sendo "PDF" ou "CSV", então quem
-navega por leitor de tela ouve o formato como antes. Formato sem arte
-própria (XLSX, DOC, imagem) fica no ícone de traço com a sigla ao lado; o
-registro das artes está em `src/components/ui/document-format.tsx`.
+colorida do PDF, do CSV e do XLSX, de `public/images/formatos/`, no lugar
+da sigla escrita — o `alt` da imagem continua sendo "PDF", "CSV" ou
+"XLSX", então quem navega por leitor de tela ouve o formato como antes.
+Formato sem arte própria (DOC, imagem) fica no ícone de traço com a sigla
+ao lado; o registro das artes está em
+`src/components/ui/document-format.tsx`.
 
 **A coluna "Prévia" não fica vazia mesmo sem essa miniatura.** Se o
 documento não tem miniatura guardada — semeado direto no banco, servido de
@@ -232,11 +233,19 @@ documento não tem miniatura guardada — semeado direto no banco, servido de
 própria página desenha a primeira página do PDF no navegador de quem
 visita, sob demanda, à medida que a linha se aproxima da tela (ver
 `src/lib/previa-pdf.ts` e `src/components/ui/document-preview.tsx`).
-Planilha e documento de texto não têm página para desenhar: nesses casos
-fica o ícone do formato.
+Planilha não tem página, e por isso é desenhada como folha de grade a
+partir do próprio arquivo — `.csv` lido como texto e `.xlsx`
+descompactado no navegador (ver `src/lib/previa-planilha.ts` e
+`src/lib/leitor-xlsx.ts`). Documento de texto (`.doc`, `.docx`) não tem
+nem página nem grade: fica o ícone do formato.
 
 Na página pública, clicar no título ou na prévia **abre o documento dentro
-da própria página**, sem tirar o visitante do site.
+da própria página**, sem tirar o visitante do site: PDF e imagem num
+quadro, planilha como tabela de verdade — cabeçalho preso no topo, coluna
+de valor alinhada à direita, com as datas e os reais escritos como a
+planilha manda escrever (ver `src/components/ui/spreadsheet-view.tsx`).
+O que só abre em programa instalado (`.doc`, `.docx`, `.xls` antigo) diz
+isso na janela e oferece o download.
 
 ### Segurança
 
@@ -267,7 +276,10 @@ Scripts disponíveis:
 | `npm run db:conferir` | mostra o estado do banco: tabelas, políticas, buckets, categorias, conteúdo e administradores |
 | `npm run admin:criar <email> [senha] [nome]` | cria (ou troca a senha de) um administrador do painel |
 | `npm run conteudo:semear -- <email> <senha>` | leva o conteúdo de demonstração para o painel, com as miniaturas dos PDFs |
-| `npm run acervo` | prepara o acervo oficial (fotos e vídeos) para a web — precisa de ffmpeg |
+| `npm run acervo` | prepara o acervo oficial (fotos, vídeos e as aberturas de drone) para a web — precisa de ffmpeg |
+| `npm run mundo:dados` | refaz a máscara de terra firme do globo (`src/content/mundo.ts`) a partir do Natural Earth |
+| `npm run projetos:publicar` | leva os projetos de `src/content/projects.ts` para a tabela `projetos` — é o que faz o mapa da Home mostrar as cidades certas |
+| `npm run conteudo:publicar` | leva as notícias e os documentos reais de `src/content` para o banco e despublica o conteúdo de demonstração |
 | `npm run images:stock` | baixa do Pexels as fotos de banco que preenchem as molduras |
 | `npm run docs:example` | gera os documentos de exemplo da Transparência (PDF/CSV) |
 | `npm run qa:pages <url>` | percorre todas as rotas nos 3 idiomas em 6 larguras e reporta overflow, erros de console, imagens deformadas ou invisíveis, links quebrados e problemas de estrutura |
@@ -343,8 +355,9 @@ public/brand/             logotipos oficiais, por idioma e por versão
 public/images/acervo/     fotografias oficiais da AIDEP, preparadas por npm run acervo
 public/videos/            vídeos oficiais (MP4) e suas capas
 public/images/stock/      fotografias de banco (Pexels) — nenhuma gerada por IA
-public/images/formatos/   ícones de formato de arquivo (PDF, CSV) da tabela de Transparência
+public/images/formatos/   ícones de formato de arquivo (PDF, CSV, XLSX) da tabela de Transparência
 public/documentos/        documentos da Transparência
+public/documentos/reais/  documentos oficiais versionados (Transferegov)
 public/og/                imagens Open Graph compostas a partir da marca
 src/
   app/[locale]/           uma pasta por rota do App Router
@@ -354,6 +367,7 @@ src/
   components/motion/      biblioteca de movimento (Reveal, Parallax, Counter…)
   components/forms/       campos, status de envio, formulários
   content/                dados institucionais (fonte da verdade)
+  content/mundo.ts        máscara de terra firme do globo (gerada)
   hooks/                  media queries reativas e seguras para SSR
   i18n/                   routing, navegação e configuração do next-intl
   lib/                    design tokens de movimento, marca, SEO, formulários
@@ -383,7 +397,10 @@ Nada de texto ou dado institucional mora dentro de componentes.
 | Documentos de transparência (reserva; o normal é o painel) | `src/content/documents.ts` |
 | Fotografias, galerias e posts do Instagram | `src/content/media.ts` |
 | Vídeos (título, legenda e lugar) | `src/content/videos.ts` |
-| Curadoria do acervo bruto | `scripts/lib/acervo.mjs` |
+| Curadoria do acervo bruto (fotos, vídeos e aberturas) | `scripts/lib/acervo.mjs` |
+| Notícias dos projetos (as nove reais) | `src/content/news-real.ts` |
+| Documentos oficiais de transparência | `src/content/documents-real.ts` |
+| Cena do globo da Home (geometria e movimento) | `src/lib/globo.ts` |
 | Rotas e URLs por idioma | `src/i18n/routing.ts` |
 | Itens do menu, seções da Home e página ativa | `src/lib/nav.ts` |
 | Tokens do design system | `src/app/globals.css` |
@@ -438,11 +455,14 @@ duas peças que exibem faixa: a de fotografia única e o carrossel abaixo.
 
 ### O carrossel da abertura
 
-A Página inicial não tem uma foto de abertura, tem um álbum: as fotografias
-passam em travessia cruzada atrás do título, cada uma no ar por 6,5 s. Quem
-desenha é `src/components/ui/banner-carousel.tsx`; o álbum é
-`carrosselDaHome`, em `src/content/media.ts` — para trocar as fotos, mexa
-só nessa lista, na ordem em que elas devem passar.
+A Página inicial não tem uma foto de abertura, tem um álbum — e, desde a
+última entrega, o álbum tem **vídeo dentro**. As fotografias passam em
+travessia cruzada atrás do título, cada uma no ar por 6,5 s, e as três
+tomadas de drone do FutEdu Summit entram no meio delas, mudas e em laço,
+pelo tempo da própria tomada. Quem desenha é
+`src/components/ui/banner-carousel.tsx`; o álbum é `carrosselDaHome`, em
+`src/content/media.ts` — para trocar as peças, mexa só nessa lista, na
+ordem em que elas devem passar.
 
 Valem as mesmas duas regras das faixas de fundo (larga, com espaço livre à
 esquerda), e mais três cuidados:
@@ -455,6 +475,29 @@ esquerda), e mais três cuidados:
   parada, e os indicadores continuam passando à mão;
 - **foto em pé não entra** — sangrada na largura toda, sobraria dela só uma
   tira do meio.
+
+#### O vídeo da abertura
+
+De todo o acervo entregue, **só as filmagens de drone do FutEdu Summit são
+horizontais**: o resto chega em 1920×1080 mas com `rotation: -90` no
+metadado, ou seja, retrato. Vídeo em pé não serve para uma faixa sangrada
+na largura da tela.
+
+As três entram pela lista `aberturas`, em `scripts/lib/acervo.mjs`, e são
+publicadas em 1920×1080, **sem faixa de áudio** e cortadas no trecho que se
+sustenta em laço. Cada uma vira um `MediaAsset` comum com um campo `video`
+pendurado (`daAbertura()`, em `content/media.ts`):
+
+- a **fotografia continua sendo o dado principal** — é a capa em 2560 px,
+  tirada do arquivo original e não do mp4 comprimido, e é ela o LCP da
+  página;
+- o **vídeo entra por cima** quando o primeiro quadro chega, e só enquanto
+  o quadro dele está no ar: um `<video>` por vez, nenhum byte antes da hora;
+- **com movimento reduzido, o vídeo não é montado** — fica a capa, parada;
+- se o vídeo falhar, o elemento se apaga e a capa segue no lugar dele.
+
+Para trocar: mexa em `aberturas`, rode `npm run acervo` e aponte a chave
+nova em `carrosselDaHome`.
 
 Os indicadores ficam no rodapé da abertura, ao lado da chamada de rolagem,
 no traço inclinado do símbolo. O quadro no ar é marcado pela cor e pela
@@ -505,11 +548,14 @@ caminho, use `ACERVO_ORIGEM`.
 ### As fotografias que estão no ar hoje
 
 **Nenhuma imagem deste projeto é gerada por IA.** As chaves principais estão
-com fotografia oficial da AIDEP (acima). O que ainda não tem foto própria —
-o paradesporto e as notícias de exemplo — segue preenchido por
-**fotografias de banco do [Pexels](https://www.pexels.com/api/)** (licença
-de uso comercial livre), baixadas para `public/images/stock/` e versionadas
-junto com o código, cada uma com o crédito do fotógrafo.
+com fotografia oficial da AIDEP (acima), e **as nove notícias dos projetos
+também** — cada uma abre com a fotografia do assunto no lugar onde ele
+aconteceu (ver `capaDeNoticia()` em `content/media.ts`). O que ainda não
+tem foto própria — o paradesporto, e as chaves de notícia criadas pelo
+painel — segue preenchido por **fotografias de banco do
+[Pexels](https://www.pexels.com/api/)** (licença de uso comercial livre),
+baixadas para `public/images/stock/` e versionadas junto com o código, cada
+uma com o crédito do fotógrafo.
 
 **Os três projetos têm hoje o álbum do próprio projeto**, fotografado onde
 ele acontece: o Coração Valente nos polos de Sergipe, o FutEdu Summit em
@@ -649,6 +695,17 @@ página própria com dados estruturados de artigo.
 **Só pelo painel.** Notícia não se escreve mais no código: `content/news.ts`
 apenas lê a tabela `noticias`, e o que não está lá não aparece no site.
 
+As **nove notícias que estão no ar hoje** — três por projeto — foram
+escritas em `src/content/news-real.ts` e levadas ao banco por
+`npm run conteudo:publicar`. Elas ficam no código para poder ser revisadas
+como texto (e para o dia em que o banco precisar ser refeito do zero); a
+partir do momento em que estão na tabela, quem manda é o painel.
+
+Números, cidades e datas saem do briefing e do próprio acervo — as datas
+são as dos arquivos de vídeo de cada evento. Não há fala atribuída a
+ninguém nem nome próprio de pessoa. **Antes do lançamento, a associação
+deve revisar cada nota**: quem estava lá sabe coisas que o acervo não conta.
+
 ### Publicar um documento de transparência
 
 Pelo painel: **`/admin/documentos` → Enviar documento**. Escolha o PDF e
@@ -659,11 +716,84 @@ Pelo código, se for preciso: coloque o arquivo em `public/documentos/` e
 acrescente um item na lista `publicados` de `src/content/documents.ts`.
 Vale apenas enquanto a tabela `documentos` estiver vazia.
 
+#### Os documentos que estão no ar hoje
+
+Dois, e os dois são reais: o **painel do Transferegov** (o registro público
+das transferências federais) e a **planilha dos instrumentos assinados**.
+Juntos mostram os quatro termos de fomento da AIDEP com o Ministério do
+Esporte — R$ 6.271.999,96 em valor global, o mesmo já liberado e
+R$ 1,12 milhão em conta. Estão em `src/content/documents-real.ts`, com os
+arquivos versionados em `public/documentos/reais/`.
+
+Os **doze documentos de demonstração** que ocupavam a página foram
+**despublicados**, não apagados: continuam na tabela com `publicado = false`
+e voltam pelo painel com um clique. A razão de não deixá-los convivendo é
+específica desta página — prestação de contas real ao lado de prestação de
+contas inventada é a única combinação que não se pode publicar, mesmo com a
+segunda carimbada com a palavra EXEMPLO.
+
+Para levar tudo ao banco de novo: `npm run conteudo:publicar`
+(`-- --manter-exemplos` pula a despublicação).
+
 ### Publicar uma logo de parceiro
 
 Somente logos oficiais fornecidas pela instituição parceira. Em
 `src/content/partners.ts`, preencha o campo `logo`. Sem arquivo, o parceiro é
 apresentado por uma placa tipográfica com o nome — nunca uma logo recriada.
+
+---
+
+## O mapa da Página inicial
+
+A Home abre um **globo terrestre em WebGL** com todas as cidades atendidas
+pelos três projetos, reunidas por cidade. Ele fica na seção `#atuacao`
+(`components/sections/reach-section.tsx`).
+
+### As peças
+
+| Arquivo | Papel |
+| --- | --- |
+| `sections/reach-section.tsx` | roda no servidor: resolve as cidades em latitude e longitude e monta o mapa plano de reserva |
+| `sections/reach-map.tsx` | o painel: filtros por projeto, lista de cidades e a ficha da cidade escolhida |
+| `ui/globe.tsx` | o `<canvas>`, a etiqueta que segue o marcador e a decisão de quando carregar a cena |
+| `lib/globo.ts` | a cena three.js — esfera, malha de pontos, contorno do Brasil, marcadores e o laço de animação |
+| `content/mundo.ts` | um bit por meio grau dizendo onde é terra firme (gerado por `npm run mundo:dados`) |
+
+### O que vale saber
+
+- **O `three` não entra no pacote da Home.** São 550 kB, importados sob
+  demanda dentro do efeito e só quando a seção chega a 400 px da tela.
+  Quem nunca rola até lá nunca baixa nada disso.
+- **Sem WebGL, aparece o mapa plano do Brasil** — o mesmo das páginas de
+  projeto, montado no servidor. É também o que sai no HTML para quem está
+  com script bloqueado, e o que preenche a moldura enquanto a cena carrega.
+- **A lista ao lado é a versão acessível do mapa**, e não um resumo dele:
+  as duas leem o mesmo dado. Dá para percorrer a atuação inteira com Tab.
+- **O contorno do Brasil não é um arquivo novo.** É o mesmo desenho do mapa
+  plano (`content/mapa-brasil.ts`), desprojetado de volta para latitude e
+  longitude por `lib/projecao.ts`.
+
+### Uma cidade com mais de um polo
+
+Aracaju tem cinco polos do Coração Valente e Nossa Senhora do Socorro tem
+três. Isso é o campo `polos` de cada local — em `content/projects.ts` e no
+campo "Polos na cidade" do painel. O mapa desenha **um marcador por
+cidade** e diz o número na ficha; repetir a cidade cinco vezes empilharia
+cinco marcadores no mesmo pixel.
+
+### Depois de mexer nas cidades
+
+O site lê os projetos do banco assim que a tabela `projetos` tem linha.
+Editar `src/content/projects.ts` e recarregar a página **não muda nada** —
+é preciso levar a alteração para lá:
+
+```bash
+npm run projetos:publicar
+```
+
+(ou o botão "Importar conteúdo do site" em `/admin/projetos`, que faz o
+mesmo. Os dois **sobrescrevem** o que estiver no painel para os mesmos
+slugs.)
 
 ---
 

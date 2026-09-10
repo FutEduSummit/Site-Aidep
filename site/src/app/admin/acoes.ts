@@ -82,6 +82,47 @@ function falha(erro: unknown, acao: string): Resultado {
   }
 }
 
+/**
+ * Liga ou desliga a publicação de uma linha, sem passar pelo formulário.
+ *
+ * É o que a chave das listas do painel usa (ver `InterruptorDePublicacao`).
+ * Escreve uma coluna só de propósito: publicar não pode revalidar o
+ * documento inteiro nem exigir que os outros campos passem no esquema —
+ * conteúdo semeado direto no banco tem endereço de arquivo em /public, e
+ * travar o botão de publicar por causa disso seria o pior dos mundos.
+ */
+async function definirPublicacao(
+  tabela: 'documentos' | 'noticias' | 'projetos',
+  id: string,
+  publicado: boolean,
+  acao: string,
+): Promise<Resultado> {
+  const supabase = await comSessao()
+  if (!supabase) return naoAutorizado
+
+  if (typeof id !== 'string' || !id) {
+    return { ok: false, erro: 'Item não encontrado.' }
+  }
+
+  try {
+    const { error } = await supabase
+      .from(tabela)
+      .update({ publicado: Boolean(publicado) })
+      .eq('id', id)
+
+    if (error) throw new Error(error.message)
+
+    atualizarSite()
+    return { ok: true, id }
+  } catch (erro) {
+    console.error(`[aidep] ${acao} falhou:`, erro)
+    return {
+      ok: false,
+      erro: 'Não foi possível mudar a publicação. Tente de novo.',
+    }
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Campos por idioma                                                  */
 /* ------------------------------------------------------------------ */
@@ -464,6 +505,14 @@ export async function apagarDocumento(id: string): Promise<Resultado> {
   }
 }
 
+/** A chave "No site / Rascunho" da lista de Transparência. */
+export async function publicarDocumento(
+  id: string,
+  publicado: boolean,
+): Promise<Resultado> {
+  return definirPublicacao('documentos', id, publicado, 'publicarDocumento')
+}
+
 /* ------------------------------------------------------------------ */
 /* Notícias                                                           */
 /* ------------------------------------------------------------------ */
@@ -574,6 +623,14 @@ export async function apagarNoticia(id: string): Promise<Resultado> {
   }
 }
 
+/** A chave "No site / Rascunho" da lista de Notícias. */
+export async function publicarNoticia(
+  id: string,
+  publicado: boolean,
+): Promise<Resultado> {
+  return definirPublicacao('noticias', id, publicado, 'publicarNoticia')
+}
+
 /* ------------------------------------------------------------------ */
 /* Projetos                                                           */
 /* ------------------------------------------------------------------ */
@@ -600,6 +657,12 @@ export async function salvarProjeto(dados: unknown): Promise<Resultado> {
       city: texto(local.cidade),
       region: local.regiao || undefined,
       venue: local.local || undefined,
+      /* Um polo é o caso normal e não precisa ser dito. */
+      polos: local.polos > 1 ? local.polos : undefined,
+      /* Estes dois o formulário não edita — só devolve como recebeu. Ver
+         `localSchema` em `lib/admin/esquemas.ts`. */
+      uf: local.uf || undefined,
+      coords: local.coords ?? undefined,
     }))
 
   const metricas = payload.metricas
@@ -711,6 +774,14 @@ export async function apagarProjeto(id: string): Promise<Resultado> {
   } catch (erro) {
     return falha(erro, 'apagarProjeto')
   }
+}
+
+/** A chave "No site / Rascunho" da lista de Projetos. */
+export async function publicarProjeto(
+  id: string,
+  publicado: boolean,
+): Promise<Resultado> {
+  return definirPublicacao('projetos', id, publicado, 'publicarProjeto')
 }
 
 /* ------------------------------------------------------------------ */

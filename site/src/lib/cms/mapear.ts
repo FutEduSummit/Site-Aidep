@@ -207,11 +207,17 @@ function paraLocais(bruto: unknown): ProjectLocation[] {
     const temCoordenada =
       coords && Number.isFinite(Number(coords.lat)) && Number.isFinite(Number(coords.lng))
 
+    /* Aracaju tem cinco polos e Nossa Senhora do Socorro tem três; o
+       resto tem um. Valor ausente, zero ou inválido vale por um — é o
+       caso da maioria, e o mapa nunca deve mostrar "0 polos". */
+    const polos = Math.round(Number(local.polos))
+
     locais.push({
       city: cidade,
       region: typeof local.region === 'string' ? local.region : undefined,
       venue: typeof local.venue === 'string' ? local.venue : undefined,
       uf: typeof local.uf === 'string' ? local.uf : undefined,
+      polos: Number.isFinite(polos) && polos > 1 ? polos : undefined,
       coords: temCoordenada
         ? { lat: Number(coords.lat), lng: Number(coords.lng) }
         : undefined,

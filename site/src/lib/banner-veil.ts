@@ -59,14 +59,16 @@ export type BannerStrength = 'base' | 'strong'
  */
 const layers = {
   dark: {
-    /* A coluna de texto vai até cerca de metade da largura: o degradê
-       segura ali e abre de vez no último terço, que é onde a fotografia
-       aparece cheia. A camada de baixo é pela chamada de rolagem e pelos
-       indicadores do carrossel, que ficam na beirada inferior. */
+    /* A coluna de texto vai até cerca de 44% da largura: o degradê segura
+       ali e abre de vez a partir dos 78%, que é onde a fotografia aparece
+       praticamente limpa — o véu de base ficou baixo (12%) justamente para
+       o último quinto não ser uma versão acinzentada da foto. A camada de
+       baixo é pela chamada de rolagem e pelos controles do carrossel, que
+       ficam na beirada inferior. */
     base: [
-      'bg-ink-950/26',
-      'bg-linear-to-r from-ink-950/88 from-0% via-ink-950/70 via-50% to-transparent to-90%',
-      'bg-linear-to-t from-ink-950/42 from-0% to-transparent to-38%',
+      'bg-ink-950/12',
+      'bg-linear-to-r from-ink-950/80 from-0% via-ink-950/42 via-44% to-transparent to-78%',
+      'bg-linear-to-t from-ink-950/28 from-0% to-transparent to-30%',
     ],
     strong: [
       'bg-ink-950/34',

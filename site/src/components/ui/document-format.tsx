@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
  *
  * Duas famílias de desenho convivem aqui de propósito:
  *
- *   • `artesDeFormato` — o ícone colorido de PDF e de CSV, que o
+ *   • `artesDeFormato` — o ícone colorido de PDF, CSV e XLSX, que o
  *     visitante reconhece de longe. É o que a lista mostra.
  *   • `iconesDeFormato` — o ícone de traço, monocromático. Vale para os
  *     formatos sem arte e, sobretudo, dentro da moldura da prévia (ver
@@ -42,19 +42,24 @@ export const iconesDeFormato: Record<DocumentFormat, typeof FileText> = {
 /**
  * A ARTE OFICIAL DE CADA FORMATO
  * ==============================
- * PDF e CSV têm ícone próprio, colorido, em `public/images/formatos`. Onde
- * existe arte, ela substitui o par ícone-de-traço + sigla: o vermelho do
- * PDF e a grade verde do CSV se reconhecem antes da leitura, e a sigla
- * escrita virava informação repetida ao lado deles.
+ * PDF, CSV e XLSX têm ícone próprio, colorido, em
+ * `public/images/formatos`. Onde existe arte, ela substitui o par
+ * ícone-de-traço + sigla: o vermelho do PDF e a grade verde das duas
+ * planilhas se reconhecem antes da leitura, e a sigla escrita virava
+ * informação repetida ao lado deles.
  *
  * Formato sem arte continua no par ícone + sigla — é o caminho de
- * `DocumentFormatBadge` para XLSX, DOC, DOCX, imagem e "outro".
+ * `DocumentFormatBadge` para DOC, DOCX, imagem e "outro".
  *
- * As duas artes chegaram como quadrados com margem transparente em volta,
- * cada uma com sobra diferente — no mesmo tamanho de tela, o PDF saía um
- * quinto menor que o CSV. Os arquivos aqui estão recortados na margem e
- * reduzidos a 256 px de altura, então `h-*` mede o desenho em si e as
- * duas artes têm o mesmo peso na lista.
+ * As artes de PDF e CSV chegaram como quadrados com margem transparente
+ * em volta, cada uma com sobra diferente — no mesmo tamanho de tela, o
+ * PDF saía um quinto menor que o CSV. Os arquivos aqui estão recortados
+ * na margem e reduzidos a 256 px de altura, então `h-*` mede o desenho em
+ * si e as artes têm o mesmo peso na lista.
+ *
+ * A de XLSX é a mesma folha da de CSV com a etiqueta trocada: as duas
+ * abrem como grade no site e precisam se parecer na lista, mudando só a
+ * sigla — que é a única diferença que importa a quem vai baixar o arquivo.
  *
  * A medida real do arquivo entra aqui porque o `next/image` precisa da
  * proporção para reservar o espaço antes de a imagem chegar.
@@ -64,6 +69,7 @@ const artesDeFormato: Partial<
 > = {
   pdf: { src: '/images/formatos/pdf.png', width: 195, height: 256 },
   csv: { src: '/images/formatos/csv.png', width: 240, height: 256 },
+  xlsx: { src: '/images/formatos/xlsx.png', width: 240, height: 256 },
 }
 
 /**

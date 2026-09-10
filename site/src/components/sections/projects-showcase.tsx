@@ -70,22 +70,30 @@ export function ProjectsShowcase({ projects, locale }: ShowcaseProps) {
             />
           ))}
         </div>
-
-        {/* Desktop — pilha sticky */}
-        <div ref={containerRef} className="hidden lg:block">
-          {projects.map((project, index) => (
-            <StickyProject
-              key={project.slug}
-              project={project}
-              locale={locale}
-              index={index}
-              total={projects.length}
-              progress={scrollYProgress}
-              cta={tActions('seeProject')}
-            />
-          ))}
-        </div>
       </Container>
+
+      {/* Desktop — pilha sticky, em 95% da tela.
+          Os cartões saem da coluna de texto do site e passam a medir a
+          janela: a fotografia de cada projeto ocupa metade de um cartão, e
+          na largura da coluna ela virava uma tira. O `container-site` fica
+          só com o cabeçalho, que é texto e não deve alargar junto — linha
+          de leitura larga demais é mais difícil de ler, não menos. */}
+      <div
+        ref={containerRef}
+        className="mx-auto mt-stack hidden w-[95vw] max-w-[120rem] lg:block"
+      >
+        {projects.map((project, index) => (
+          <StickyProject
+            key={project.slug}
+            project={project}
+            locale={locale}
+            index={index}
+            total={projects.length}
+            progress={scrollYProgress}
+            cta={tActions('seeProject')}
+          />
+        ))}
+      </div>
     </Section>
   )
 }
@@ -180,13 +188,17 @@ function StickyProject({
               </div>
             </div>
 
+            {/* 16/10, e não 4/3: com o cartão em 95% da tela a fotografia
+                mede mais de mil pixels de largura, e em 4/3 ela sozinha
+                passaria de 800 px de altura — o cartão não caberia mais na
+                janela junto com o cabeçalho da seção. */}
             <div className="col-span-7 overflow-hidden">
               <MediaFrame
                 media={getMedia(project.coverKey)}
                 locale={locale}
-                ratio="4 / 3"
+                ratio="16 / 10"
                 tone="light"
-                sizes="55vw"
+                sizes="(max-width: 1024px) 100vw, 56vw"
                 className="h-full transition-transform duration-700 ease-brand fine:motion-safe:group-hover/row:scale-[1.03]"
               />
             </div>

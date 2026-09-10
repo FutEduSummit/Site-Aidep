@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ApproachSection } from '@/components/sections/approach-section'
 import { AudienceSection } from '@/components/sections/audience-section'
 import { ContactSection } from '@/components/sections/contact-section'
-import { ContentBlock } from '@/components/sections/content-block'
 import { CtaBand } from '@/components/sections/cta-band'
 import { HomeAbout } from '@/components/sections/home-about'
 import { HomeHero } from '@/components/sections/home-hero'
@@ -13,10 +12,10 @@ import { NewsPreview } from '@/components/sections/news-preview'
 import { PartnersStrip } from '@/components/sections/partners-strip'
 import { ProjectsShowcase } from '@/components/sections/projects-showcase'
 import { PurposeSection } from '@/components/sections/purpose-section'
-import { ResultsRows } from '@/components/sections/results-rows'
+import { ReachSection } from '@/components/sections/reach-section'
 import { SportSection } from '@/components/sections/sport-section'
 import { VideoRail } from '@/components/sections/video-rail'
-import { headlineMetrics, projectMetrics } from '@/content/impact'
+import { headlineMetrics } from '@/content/impact'
 import { getArticles } from '@/content/news'
 import { partners } from '@/content/partners'
 import { getProjects } from '@/content/projects'
@@ -46,9 +45,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * leitura contínua, na ordem em que as perguntas aparecem:
  *
  *   quem somos → o que nos move → quem atendemos → que impacto geramos →
- *   o que fazemos → como fazemos → como é na prática → onde estamos →
+ *   onde estamos → o que fazemos → como fazemos → como é na prática →
  *   quem caminha junto → o que está acontecendo → como apoiar →
  *   como falar com a gente
+ *
+ * CADA ASSUNTO APARECE UMA VEZ SÓ
+ * -------------------------------
+ * A página já teve duas faixas de números seguidas — o total da associação
+ * e a mesma conta aberta projeto a projeto — e um bloco “Onde a AIDEP
+ * está” em texto, logo depois. As duas repetições saíram:
+ *
+ * - **Números.** Ficou a faixa consolidada. O número de cada projeto
+ *   continua no cartão dele, ali embaixo, e completo na página do projeto.
+ * - **Onde estamos.** Ficou o mapa (`ReachSection`), que mostra a mesma
+ *   coisa em vez de descrevê-la, cidade por cidade.
  *
  * As páginas que continuam existindo (Projetos, Notícias, Transparência,
  * Parceiros e Doações) são aprofundamentos, não caminhos paralelos: cada
@@ -62,7 +72,6 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale)
 
   const t = await getTranslations({ locale, namespace: 'home' })
-  const tAbout = await getTranslations({ locale, namespace: 'about' })
   const tImpact = await getTranslations({ locale, namespace: 'impact' })
   const tActions = await getTranslations({ locale, namespace: 'actions' })
   const tVideos = await getTranslations({ locale, namespace: 'home.videos' })
@@ -96,15 +105,9 @@ export default async function HomePage({ params }: Props) {
         mediaKey="home.impact.banner"
       />
 
-      <ResultsRows
-        id="home-results"
-        metrics={projectMetrics}
-        locale={locale}
-        surface="light"
-        eyebrow={t('results.eyebrow')}
-        title={t('results.title')}
-        description={t('results.description')}
-      />
+      {/* ---- Onde estamos ----------------------------------------- */}
+
+      <ReachSection projects={projects} locale={locale} />
 
       {/* ---- O que fazemos, e como -------------------------------- */}
 
@@ -114,7 +117,7 @@ export default async function HomePage({ params }: Props) {
 
       <SportSection locale={locale} />
 
-      {/* ---- O acervo: como é o dia nos polos ---------------------- */}
+      {/* ---- Como é o dia nos polos ------------------------------- */}
 
       <VideoRail
         id="home-videos"
@@ -124,20 +127,6 @@ export default async function HomePage({ params }: Props) {
         eyebrow={tVideos('eyebrow')}
         title={tVideos('title')}
         description={tVideos('description')}
-      />
-
-      {/* ---- Onde estamos e quem somos institucionalmente --------- */}
-
-      <ContentBlock
-        id="a-aidep-atuacao"
-        locale={locale}
-        surface="muted"
-        eyebrow={tAbout('presence.eyebrow')}
-        title={tAbout('presence.title')}
-        paragraphs={tAbout.raw('presence.paragraphs') as string[]}
-        mediaKey="home.presence"
-        mediaRatio="1 / 1"
-        mediaSide="left"
       />
 
       {/* ---- Quem caminha junto, e o que está acontecendo --------- */}

@@ -1,6 +1,7 @@
 import type {
   CategoryColor,
   DocumentCategoryEntry,
+  DocumentFormat,
   InstitutionalDocument,
 } from '@/content/types'
 
@@ -11,6 +12,20 @@ import type {
  * Ficam aqui para que a coluna "Download" do site e o botão do painel
  * nunca discordem sobre qual endereço baixa o arquivo.
  */
+
+/**
+ * Formato que o site lê e desenha como grade: `.csv` como texto e
+ * `.xlsx` descompactado no navegador (ver `lib/previa-planilha.ts`).
+ *
+ * A resposta mora aqui porque três lugares dependem dela e não podem
+ * divergir: a janela decide se monta a grade ou se oferece o download
+ * (`DocumentViewer`), a coluna "Prévia" decide se desenha a miniatura
+ * (`DocumentPreview`) e a tabela mostra o resultado dos dois. Divergir
+ * daria a linha com miniatura de planilha e janela de download.
+ */
+export function ehPlanilha(formato: DocumentFormat): boolean {
+  return formato === 'csv' || formato === 'xlsx'
+}
 
 /** Cores do selo de categoria. Legibilidade conferida sobre fundo claro. */
 export const coresDeCategoria: Record<CategoryColor, string> = {

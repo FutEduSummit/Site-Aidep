@@ -2,9 +2,12 @@ import type { Localized, Metric } from './types'
 
 /**
  * NÚMEROS DE IMPACTO
- * Todos os valores vêm do briefing oficial. O total de 2.500 crianças do
- * Coração Valente é a soma direta dos dois territórios informados
- * (1.800 em Aracaju + 700 no Distrito Federal).
+ * Todos os valores vêm do briefing oficial.
+ *
+ * Só o consolidado mora aqui. O número de cada projeto fica no próprio
+ * projeto (`content/projects.ts`), que é de onde o cartão da Home e a
+ * página do projeto o leem — a Home teve por um tempo as duas contas em
+ * faixas seguidas, dizendo a mesma coisa duas vezes.
  */
 export const headlineMetrics: Metric[] = [
   {
@@ -49,66 +52,6 @@ export const headlineMetrics: Metric[] = [
       pt: 'participantes no FutEdu Summit',
       en: 'people at the FutEdu Summit',
       es: 'participantes en el FutEdu Summit',
-    },
-  },
-]
-
-export const projectMetrics: Metric[] = [
-  {
-    id: 'aracaju',
-    value: 1800,
-    label: {
-      pt: 'crianças atendidas em Aracaju',
-      en: 'children reached in Aracaju',
-      es: 'niños atendidos en Aracaju',
-    },
-    note: {
-      pt: 'Projeto Social Coração Valente',
-      en: 'Coração Valente Social Project',
-      es: 'Proyecto Social Coração Valente',
-    },
-  },
-  {
-    id: 'df',
-    value: 700,
-    label: {
-      pt: 'crianças atendidas no Distrito Federal',
-      en: 'children reached in the Federal District',
-      es: 'niños atendidos en el Distrito Federal',
-    },
-    note: {
-      pt: 'Projeto Social Coração Valente',
-      en: 'Coração Valente Social Project',
-      es: 'Proyecto Social Coração Valente',
-    },
-  },
-  {
-    id: 'school',
-    value: 600,
-    label: {
-      pt: 'pessoas atendidas nas escolas',
-      en: 'people reached in schools',
-      es: 'personas atendidas en las escuelas',
-    },
-    note: {
-      pt: 'Futsal na Escola',
-      en: 'Futsal na Escola',
-      es: 'Futsal na Escola',
-    },
-  },
-  {
-    id: 'summit-people',
-    value: 7,
-    suffix: { pt: 'mil', en: 'k', es: 'mil' },
-    label: {
-      pt: 'participantes reunidos em Curitiba',
-      en: 'people gathered in Curitiba',
-      es: 'participantes reunidos en Curitiba',
-    },
-    note: {
-      pt: 'FutEdu Summit — Arena da Baixada',
-      en: 'FutEdu Summit — Arena da Baixada',
-      es: 'FutEdu Summit — Arena da Baixada',
     },
   },
 ]

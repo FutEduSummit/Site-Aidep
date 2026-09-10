@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { iconesDeFormato } from '@/components/ui/document-format'
 import type { InstitutionalDocument } from '@/content/types'
+import { ehPlanilha } from '@/lib/documentos'
 import { previaDoPdf, previaEmCache } from '@/lib/previa-pdf'
 import {
   previaDaPlanilha,
@@ -13,7 +14,12 @@ import {
 import { cn } from '@/lib/utils'
 
 type Props = {
-  doc: InstitutionalDocument
+  /**
+   * Só o que a prévia precisa, e não o documento inteiro: o painel desenha
+   * a mesma moldura enquanto o cliente ainda está escolhendo o arquivo, e
+   * ali não existe documento completo — só o que acabou de subir.
+   */
+  doc: Pick<InstitutionalDocument, 'file' | 'format' | 'thumbnail'>
   /** Classes da moldura — a tabela e o cartão do celular usam tamanhos diferentes. */
   className?: string
   /** `sizes` do `next/image`: a largura da moldura, em pixels. */
@@ -34,9 +40,9 @@ type Props = {
  *      otimizada pelo `next/image`, sem baixar o arquivo.
  *   2. o próprio arquivo, quando o documento É uma imagem.
  *   3. o arquivo desenhado aqui no navegador: a primeira página, no PDF
- *      (ver `lib/previa-pdf.ts`); a grade desenhada como folha, no CSV
- *      (ver `previaDaPlanilha` em `lib/previa-planilha.ts`), que não tem
- *      página para o navegador desenhar.
+ *      (ver `lib/previa-pdf.ts`); a grade desenhada como folha, na
+ *      planilha (ver `previaDaPlanilha` em `lib/previa-planilha.ts`),
+ *      que não tem página para o navegador desenhar.
  *
  * O passo 3 é a rede de segurança, e cobre mais do que parece: documento
  * semeado direto no banco, arquivo servido de /public, envio em que a
@@ -48,9 +54,9 @@ type Props = {
  * Ele só começa quando a linha se aproxima da tela — numa tabela de
  * cinquenta documentos, ninguém baixa cinquenta arquivos para ver a lista.
  *
- * XLSX é zip binário e DOC/DOCX o navegador não abre: sem página nem
- * grade para desenhar, ficam com o ícone do formato, como qualquer falha.
- * A moldura nunca aparece vazia.
+ * DOC/DOCX o navegador não abre: sem página nem grade para desenhar,
+ * ficam com o ícone do formato, como qualquer falha. A moldura nunca
+ * aparece vazia.
  */
 export function DocumentPreview({ doc, className, sizes = '68px' }: Props) {
   const guardada =
@@ -60,21 +66,22 @@ export function DocumentPreview({ doc, className, sizes = '68px' }: Props) {
   const fonteGuardada = guardadaFalhou ? null : guardada
 
   /* Quem desenha este formato, quando não há miniatura guardada. PDF tem
-     página; CSV, grade. Os outros não têm nem uma nem outra, e ficam com o
-     ícone. As duas duplas são referências de módulo, estáveis entre
-     renderizações — é isso que deixa `desenhar` entrar nas dependências do
-     efeito sem reabrir o observador a cada tecla digitada na busca. */
+     página; planilha (CSV e XLSX), grade. Os outros não têm nem uma nem
+     outra, e ficam com o ícone. As duas duplas são referências de módulo,
+     estáveis entre renderizações — é isso que deixa `desenhar` entrar nas
+     dependências do efeito sem reabrir o observador a cada tecla digitada
+     na busca. */
   const desenhar =
     doc.format === 'pdf'
       ? previaDoPdf
-      : doc.format === 'csv'
+      : ehPlanilha(doc.format)
         ? previaDaPlanilha
         : null
 
   const emCache =
     doc.format === 'pdf'
       ? previaEmCache
-      : doc.format === 'csv'
+      : ehPlanilha(doc.format)
         ? previaDePlanilhaEmCache
         : null
 

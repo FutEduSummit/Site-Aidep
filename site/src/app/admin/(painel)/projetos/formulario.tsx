@@ -3,7 +3,7 @@
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, type FormEvent } from 'react'
-import type { Localized } from '@/content/types'
+import type { Localized, MediaAsset } from '@/content/types'
 import {
   projetoSchema,
   sugerirSlug,
@@ -13,7 +13,7 @@ import {
 import type { LinhaProjeto } from '@/lib/cms/tipos'
 import { salvarProjeto } from '../../acoes'
 import { CamposTraduzidos, textoVazio } from '../../componentes/campos-traduzidos'
-import { EnvioDeImagem } from '../../componentes/envio'
+import { EnvioDeImagem, type CapaDoAcervo } from '../../componentes/envio'
 import {
   ItemRepetivel,
   ListaDeTextos,
@@ -29,7 +29,24 @@ import {
 } from '../../componentes/ui'
 import { Galeria, type FotoDaGaleria } from './galeria'
 
-type Local = { cidade: string; regiao: string; local: string }
+/**
+ * Um local de atuação, como o formulário o guarda.
+ *
+ * `uf` e `coords` não têm campo na tela: eles entram como vieram do
+ * banco e saem iguais. É o que mantém no ar as sete regiões
+ * administrativas do Distrito Federal, que não são municípios do IBGE e
+ * por isso dependem da coordenada cadastrada à mão — sem esta passagem,
+ * salvar o projeto aqui apagaria sete pontos do mapa da Página inicial.
+ */
+type Local = {
+  cidade: string
+  regiao: string
+  local: string
+  /** Quantos polos há nesta cidade. 0 e 1 valem o mesmo. */
+  polos: number
+  uf: string
+  coords: { lat: number; lng: number } | null
+}
 type Metrica = { valor: number; prefixo: string; sufixo: string; rotulo: string }
 type Passo = { titulo: string; texto: string }
 
@@ -105,10 +122,21 @@ function estadoInicial(inicial: LinhaProjeto | undefined): Estado {
     publico: listaPt(inicial.publico),
     locais: locaisBrutos.map((item) => {
       const local = (item ?? {}) as Record<string, unknown>
+      const coords = (local.coords ?? null) as { lat?: unknown; lng?: unknown } | null
+      const temCoordenada =
+        coords &&
+        Number.isFinite(Number(coords.lat)) &&
+        Number.isFinite(Number(coords.lng))
+
       return {
         cidade: comoTexto(local.city).pt,
         regiao: typeof local.region === 'string' ? local.region : '',
         local: typeof local.venue === 'string' ? local.venue : '',
+        polos: Number(local.polos) > 1 ? Math.round(Number(local.polos)) : 1,
+        uf: typeof local.uf === 'string' ? local.uf : '',
+        coords: temCoordenada
+          ? { lat: Number(coords.lat), lng: Number(coords.lng) }
+          : null,
       }
     }),
     metricas: metricasBrutas.map((item) => {
@@ -159,7 +187,23 @@ function estadoInicial(inicial: LinhaProjeto | undefined): Estado {
  */
 const soPt = (valor: string): Localized => ({ pt: valor, en: '', es: '' })
 
-export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
+type Props = {
+  inicial?: LinhaProjeto
+  /**
+   * O que o site publica hoje neste projeto quando o painel não tem nada
+   * enviado: a capa oficial do acervo e o álbum registrado pelo slug (ver
+   * `lib/admin/capas.ts`). Só de leitura, para o formulário mostrar o que
+   * está no ar em vez de moldura vazia e "nenhuma foto".
+   */
+  capaDoAcervo?: CapaDoAcervo | null
+  galeriaDoAcervo?: MediaAsset[]
+}
+
+export function FormularioDeProjeto({
+  inicial,
+  capaDoAcervo = null,
+  galeriaDoAcervo = [],
+}: Props) {
   const router = useRouter()
   const [estado, setEstado] = useState<Estado>(() => estadoInicial(inicial))
   const [slugAutomatico, setSlugAutomatico] = useState(!inicial)
@@ -199,6 +243,9 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
           cidade: soPt(local.cidade),
           regiao: local.regiao,
           local: local.local,
+          polos: local.polos,
+          uf: local.uf,
+          coords: local.coords,
         })),
       metricas: estado.metricas
         .filter((metrica) => metrica.rotulo.trim())
@@ -351,7 +398,7 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
                 definir('locais', trocarPosicao(estado.locais, indice, direcao))
               }
             >
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
                 <Campo rotulo="Cidade">
                   <Entrada
                     value={local.cidade}
@@ -385,6 +432,26 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
                     }}
                   />
                 </Campo>
+                {/* Uma cidade pode ter mais de um polo — Aracaju tem
+                    cinco. O mapa da Página inicial mostra um ponto por
+                    cidade e diz o número na ficha; repetir a cidade cinco
+                    vezes só empilharia cinco marcadores no mesmo pixel. */}
+                <Campo rotulo="Polos na cidade" opcional>
+                  <Entrada
+                    type="number"
+                    min={1}
+                    max={999}
+                    value={local.polos}
+                    onChange={(evento) => {
+                      const locais = [...estado.locais]
+                      locais[indice] = {
+                        ...local,
+                        polos: Math.max(1, Number(evento.target.value) || 1),
+                      }
+                      definir('locais', locais)
+                    }}
+                  />
+                </Campo>
               </div>
             </ItemRepetivel>
           ))}
@@ -396,7 +463,7 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
             onClick={() =>
               definir('locais', [
                 ...estado.locais,
-                { cidade: '', regiao: '', local: '' },
+                { cidade: '', regiao: '', local: '', polos: 1, uf: '', coords: null },
               ])
             }
           >
@@ -592,6 +659,7 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
           valor={estado.capa}
           pasta="projetos"
           proporcao="4 / 3"
+          doAcervo={capaDoAcervo}
           onChange={(capa) => definir('capa', capa)}
         />
 
@@ -607,6 +675,7 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
 
         <Galeria
           fotos={estado.galeria}
+          doAcervo={galeriaDoAcervo}
           onChange={(galeria) => definir('galeria', galeria)}
         />
       </Cartao>
@@ -632,7 +701,13 @@ export function FormularioDeProjeto({ inicial }: { inicial?: LinhaProjeto }) {
 
         <Interruptor
           id="publicado"
-          rotulo="Visível no site"
+          aparencia="chave"
+          rotulo={estado.publicado ? 'No site' : 'Rascunho'}
+          descricao={
+            estado.publicado
+              ? 'Ligada, a chave publica o projeto no site.'
+              : 'Desligada, o projeto sai da página de Projetos e da página inicial.'
+          }
           checked={estado.publicado}
           onChange={(valor) => definir('publicado', valor)}
         />

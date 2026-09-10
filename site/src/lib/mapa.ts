@@ -2,6 +2,7 @@ import { mapaBrasil } from '@/content/mapa-brasil'
 import type { ProjectLocation } from '@/content/types'
 import type { Locale } from '@/i18n/routing'
 import { encontrarMunicipio, normalizarNome } from './municipios'
+import { desprojetar, projetar } from './projecao'
 
 /**
  * PONTOS SOBRE O MAPA
@@ -25,7 +26,7 @@ import { encontrarMunicipio, normalizarNome } from './municipios'
  * navegador): o que o cliente recebe são os poucos pontos já projetados.
  */
 
-const { largura, altura, projecao, estados } = mapaBrasil
+const { largura, altura, estados } = mapaBrasil
 
 /** Distância vertical mínima entre dois rótulos, em unidades do viewBox. */
 const ESPACO_DO_ROTULO = 26
@@ -44,6 +45,8 @@ export type PontoDeAtuacao = {
   rotulo: string
   /** UF, bairro ou equipamento — o que qualifica o ponto na leitura. */
   detalhe?: string
+  /** Sigla da unidade federativa — a segunda linha da etiqueta do mapa. */
+  uf?: string
   /** De que lado do ponto o texto fica. */
   lado: 'direita' | 'esquerda'
   /** y do texto: igual ao do ponto, ou empurrado para não colar no vizinho. */
@@ -56,21 +59,6 @@ export type AtuacaoNoMapa = {
   pontos: PontoDeAtuacao[]
   /** UFs com pelo menos um ponto — são os estados que o mapa acende. */
   ufs: string[]
-}
-
-/**
- * Latitude e longitude no sistema do desenho. É a mesma projeção Mercator
- * usada para gerar os contornos em `scripts/gerar-mapa-brasil.mjs` — é o
- * que garante que o ponto de Aracaju caia em Aracaju.
- */
-export function projetar(lat: number, lng: number): { x: number; y: number } {
-  const mercator =
-    (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360))
-
-  return {
-    x: (lng - projecao.lngMin) * projecao.escala,
-    y: (projecao.mercatorMax - mercator) * projecao.escala,
-  }
 }
 
 /** O ponto está dentro da moldura do mapa? Ilha oceânica, por exemplo, não. */
@@ -109,6 +97,9 @@ type PontoResolvido = {
   rotulo: string
   detalhe?: string
   uf?: string
+  /** Latitude e longitude reais, quando o local tem coordenada conhecida. */
+  lat?: number
+  lng?: number
 }
 
 function resolver(
@@ -123,7 +114,7 @@ function resolver(
   if (local.coords) {
     const ponto = projetar(local.coords.lat, local.coords.lng)
     if (!dentroDoMapa(ponto)) return null
-    return { ...ponto, rotulo: nome, detalhe, uf }
+    return { ...ponto, ...local.coords, rotulo: nome, detalhe, uf }
   }
 
   if (!nome) return null
@@ -137,6 +128,8 @@ function resolver(
   if (municipio) {
     return {
       ...projetar(municipio.lat, municipio.lng),
+      lat: municipio.lat,
+      lng: municipio.lng,
       rotulo: nome,
       detalhe: local.venue ?? local.region ?? municipio.uf,
       uf: municipio.uf,
@@ -149,6 +142,7 @@ function resolver(
     return {
       x: estado.cx,
       y: estado.cy,
+      ...desprojetar(estado.cx, estado.cy),
       rotulo: nome,
       detalhe: local.venue,
       uf: estado.uf,
@@ -236,4 +230,103 @@ export function atuacaoNoMapa(
   ]
 
   return { pontos, ufs }
+}
+
+/* ------------------------------------------------------------------ */
+/* Os mesmos locais, agora sobre a esfera                             */
+/* ------------------------------------------------------------------ */
+
+export type ProjetoNoPonto = {
+  slug: string
+  /** Nome próprio do projeto — não se traduz. */
+  nome: string
+  /** Quantos polos este projeto mantém nesta cidade. */
+  polos: number
+}
+
+export type PontoNoGlobo = {
+  id: string
+  lat: number
+  lng: number
+  cidade: string
+  uf?: string
+  /** Equipamento ou região — o que qualifica o ponto na ficha. */
+  detalhe?: string
+  /** Todos os projetos que atuam nesta cidade. */
+  projetos: ProjetoNoPonto[]
+  /** Soma dos polos de todos os projetos aqui. */
+  polos: number
+}
+
+/**
+ * TODA A ATUAÇÃO DA AIDEP EM UM MAPA SÓ
+ * =====================================
+ * O globo da Página inicial não é o mapa de um projeto: é o mapa da
+ * associação. Aqui os locais dos três projetos são resolvidos com a mesma
+ * regra do mapa plano (coordenada à mão → cadastro do IBGE → centro do
+ * estado) e depois **reunidos por cidade**.
+ *
+ * Reunir é o ponto. Aracaju aparece nos dois projetos que atuam em
+ * Sergipe, e Curitiba aparece no Summit e no Futsal na Escola: sem essa
+ * junção seriam dois marcadores no mesmo pixel, disputando o clique. Com
+ * ela, é um marcador que abre uma ficha dizendo os dois projetos.
+ *
+ * Roda no servidor — a tabela de municípios não vai para o navegador. O
+ * cliente recebe as poucas dezenas de pontos já com latitude e longitude.
+ */
+export function atuacaoNoGlobo(
+  projetos: { slug: string; name: string; locations: ProjectLocation[] }[],
+  locale: Locale,
+): PontoNoGlobo[] {
+  const porCidade = new Map<string, PontoNoGlobo>()
+
+  for (const projeto of projetos) {
+    for (const local of projeto.locations) {
+      const resolvido = resolver(local, locale)
+      if (!resolvido || resolvido.lat === undefined || resolvido.lng === undefined) {
+        continue
+      }
+
+      const polos = Math.max(1, local.polos ?? 1)
+      /* Três casas decimais ≈ 100 m: perto o bastante para dois cadastros
+         da mesma cidade caírem na mesma chave, longe o bastante para duas
+         cidades vizinhas não se fundirem. */
+      const chave = `${resolvido.lat.toFixed(3)}|${resolvido.lng.toFixed(3)}`
+      const existente = porCidade.get(chave)
+
+      if (existente) {
+        const mesmoProjeto = existente.projetos.find(
+          (item) => item.slug === projeto.slug,
+        )
+        if (mesmoProjeto) mesmoProjeto.polos += polos
+        else {
+          existente.projetos.push({
+            slug: projeto.slug,
+            nome: projeto.name,
+            polos,
+          })
+        }
+        existente.polos += polos
+        /* O equipamento nomeado ganha do genérico: "Arena da Baixada" diz
+           mais do que "PR", e só um dos cadastros costuma trazê-lo. */
+        if (local.venue) existente.detalhe = local.venue
+        continue
+      }
+
+      porCidade.set(chave, {
+        id: chave,
+        lat: resolvido.lat,
+        lng: resolvido.lng,
+        cidade: resolvido.rotulo,
+        uf: resolvido.uf,
+        detalhe: resolvido.detalhe,
+        projetos: [{ slug: projeto.slug, nome: projeto.name, polos }],
+        polos,
+      })
+    }
+  }
+
+  /* De norte a sul: é a ordem em que a lista ao lado do globo se lê, e a
+     mesma do mapa plano. */
+  return [...porCidade.values()].sort((a, b) => b.lat - a.lat)
 }

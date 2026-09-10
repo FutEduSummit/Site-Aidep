@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 import { getMedia } from '@/content/media'
-import { getLockup, symbolMark } from '@/lib/brand'
+import { getLockup } from '@/lib/brand'
 
 /** Sublinhado sempre visível: em texto corrido, cor sozinha não sinaliza link. */
 export const classesDeLigacao =
@@ -62,23 +62,9 @@ export function MolduraDeEntrada({
           className="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
         />
 
-        {/* Grafismo oficial: o símbolo ampliado, sangrando pela borda. Vive
-            na metade de cima, longe do texto — a 7% de opacidade ele é
-            textura, e sobre letra viraria ruído. */}
-        <Image
-          aria-hidden="true"
-          src={symbolMark.white.src}
-          alt=""
-          width={symbolMark.white.width}
-          height={symbolMark.white.height}
-          sizes="70vw"
-          className="pointer-events-none absolute -right-[20%] top-[6%] w-[72%] max-w-none opacity-[0.07]"
-        />
-
         {/* `justify-end`: o texto assenta no rodapé da coluna. */}
         <div className="relative flex h-full flex-col justify-end gap-8 p-10 xl:p-14">
           <div className="flex max-w-[34ch] flex-col gap-5">
-            <span className="modulo" aria-hidden="true" />
             <p className="text-h3 font-bold leading-tight tracking-[-0.03em] text-paper">
               O esporte como ferramenta de desenvolvimento humano.
             </p>

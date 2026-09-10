@@ -54,9 +54,10 @@ function colunasDeNumero(planilha: Planilha): boolean[] {
  * tabela: cabeçalho preso no topo, número da linha preso à esquerda,
  * coluna de valor alinhada à direita.
  *
- * Vale para `.csv`, que é texto. `.xlsx` é zip binário e continua no
- * caminho do download — quem quiser exibi-lo aqui precisa de uma
- * biblioteca de leitura de Excel no pacote do site.
+ * Vale para `.csv`, que é texto, e para `.xlsx`, que é zip de XML e se
+ * descompacta no próprio navegador (ver `lib/leitor-xlsx.ts`). Nos dois
+ * casos a grade chega aqui igual, e a tabela não sabe de qual formato
+ * veio. O `.xls` antigo, binário, continua no caminho do download.
  *
  * Enquanto o arquivo chega, e se ele não chegar, o botão de download
  * continua à mão: a janela nunca fica só com um aviso.
@@ -182,8 +183,12 @@ export function SpreadsheetView({ doc, locale }: Props) {
                     className={cn(
                       'px-4 py-2.5 align-top',
                       numericas[coluna] && 'text-right tabular-nums',
+                      /* Quebra dentro da palavra porque a coluna larga
+                         costuma ser a de link: URL é uma palavra só de
+                         150 caracteres, e sem quebra ela transborda a
+                         célula e passa por cima da coluna vizinha. */
                       longas[coluna]
-                        ? 'min-w-[20rem] max-w-[28rem]'
+                        ? 'min-w-[20rem] max-w-[28rem] wrap-break-word'
                         : 'whitespace-nowrap',
                     )}
                   >

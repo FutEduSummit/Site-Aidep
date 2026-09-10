@@ -1,16 +1,20 @@
 'use client'
 
+import { ehZip, lerXlsx } from '@/lib/leitor-xlsx'
+
 /**
  * LEITURA DA PLANILHA PARA A JANELA DE DOCUMENTO
  * ==============================================
- * O navegador não desenha planilha dentro de um quadro: `.xlsx` é um zip
- * binário, e `.csv` ele oferece para download ou joga como texto cru. Em
- * ambos os casos quem clicou em "Visualizar" na Transparência não vê a
- * planilha — vê um arquivo baixando.
+ * O navegador não desenha planilha dentro de um quadro: `.csv` ele
+ * oferece para download ou joga como texto cru, e `.xlsx` é um zip
+ * binário. Em ambos os casos quem clicou em "Visualizar" na
+ * Transparência não veria a planilha — veria um arquivo baixando.
  *
- * O CSV, porém, é texto. Este módulo o baixa, separa as colunas e devolve
- * a grade pronta para o `SpreadsheetView` desenhar como tabela de verdade
- * dentro da própria página, com cabeçalho e colunas alinhadas.
+ * Este módulo baixa o arquivo e devolve a grade pronta para o
+ * `SpreadsheetView` desenhar como tabela de verdade dentro da própria
+ * página, com cabeçalho e colunas alinhadas. O CSV é texto e se lê
+ * aqui mesmo; o `.xlsx` se descompacta e se lê em
+ * `lib/leitor-xlsx.ts`, e chega neste módulo já como a mesma grade.
  *
  * Os mesmos cuidados da prévia do PDF (ver `lib/previa-pdf.ts`): cada
  * arquivo é lido UMA vez por sessão, e pedidos simultâneos ao mesmo
@@ -214,11 +218,34 @@ export function analisarCsv(texto: string): Planilha | null {
   }
 }
 
+/**
+ * Byte zero não aparece em arquivo de texto, e enche arquivo binário — é
+ * o que separa um CSV de um `.xls` antigo ou de uma planilha protegida
+ * por senha. Sem esta pergunta, o leitor de CSV encontraria "colunas" no
+ * meio dos bytes e a janela mostraria uma grade de lixo no lugar do
+ * botão de download.
+ */
+function pareceBinario(bytes: ArrayBuffer): boolean {
+  const inicio = new Uint8Array(bytes, 0, Math.min(4096, bytes.byteLength))
+  return inicio.includes(0)
+}
+
+/**
+ * Qual leitor entra é decisão dos bytes, e não da extensão da URL: o
+ * arquivo do Storage chega com endereço assinado, e um `.csv` renomeado
+ * para `.xlsx` (acontece) não pode virar planilha ilegível. Todo `.xlsx`
+ * é um zip, e nenhum CSV começa com a assinatura de zip.
+ */
 async function baixar(url: string): Promise<Planilha | null> {
   const resposta = await fetch(url)
   if (!resposta.ok) return null
 
-  return analisarCsv(await resposta.text())
+  const bytes = await resposta.arrayBuffer()
+
+  if (ehZip(bytes)) return lerXlsx(bytes, LIMITE_LINHAS)
+  if (pareceBinario(bytes)) return null
+
+  return analisarCsv(new TextDecoder('utf-8').decode(bytes))
 }
 
 /** A planilha pronta para desenhar, ou `null` quando não foi possível ler. */

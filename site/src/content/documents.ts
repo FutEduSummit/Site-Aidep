@@ -1,6 +1,7 @@
 import { lerCategorias, lerDocumentos } from '@/lib/cms/leitura'
 import { exampleContentEnabled } from '@/lib/example-content'
 import { exampleDocuments, exampleLastUpdatedAt } from './documents-example'
+import { realDocuments } from './documents-real'
 import type { DocumentCategoryEntry, InstitutionalDocument } from './types'
 
 /**
@@ -19,8 +20,12 @@ import type { DocumentCategoryEntry, InstitutionalDocument } from './types'
  * visualização e download prontos para receber os arquivos reais.
  */
 
-/** Documentos cadastrados diretamente no código. Normalmente vazio. */
-const publicados: InstitutionalDocument[] = []
+/**
+ * Documentos cadastrados diretamente no código: os oficiais entregues
+ * pela associação, que ficam versionados em `public/documentos/reais/`
+ * em vez de passarem pelo Storage. Ver `documents-real.ts`.
+ */
+const publicados: InstitutionalDocument[] = realDocuments
 
 const reserva: InstitutionalDocument[] = exampleContentEnabled
   ? [...publicados, ...exampleDocuments]

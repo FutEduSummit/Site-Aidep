@@ -45,6 +45,24 @@ type Sentido = 'asc' | 'desc'
 
 const opcoesPorPagina = [10, 25, 50] as const
 
+/**
+ * DIVISA ENTRE AS COLUNAS
+ * =======================
+ * As seis colunas têm larguras muito diferentes — título de duas linhas,
+ * selo curto, parágrafo de conteúdo, data, prévia e dois botões. Sem fio
+ * vertical, a data de uma linha e o conteúdo da seguinte se leem como se
+ * fossem do mesmo campo. O fio mora à direita de cada coluna, e a coluna
+ * seguinte ganha respiro à esquerda para o texto não encostar nele.
+ *
+ * A primeira coluna não tem recuo à esquerda, e a última não tem fio: a
+ * tabela precisa começar e terminar rente à margem da seção, como o resto
+ * da página. Os cartões do celular não entram nisso — lá cada documento é
+ * um bloco, e não uma linha de colunas.
+ */
+const primeiraColuna = 'border-r border-(--border) pr-6'
+const colunaDoMeio = 'border-r border-(--border) px-6'
+const ultimaColuna = 'pl-6'
+
 /* ------------------------------------------------------------------ */
 /* Peças da tabela                                                     */
 /* ------------------------------------------------------------------ */
@@ -397,7 +415,7 @@ export function DocumentsExplorer({
                     <caption className="sr-only">{t('table.caption')}</caption>
                     <thead>
                       <tr className="border-y border-(--border-strong)">
-                        <th scope="col" className="py-4 pr-6">
+                        <th scope="col" className={`py-4 ${primeiraColuna}`}>
                           <Ordenador
                             campo="title"
                             rotulo={rotulosDeColuna.title}
@@ -409,7 +427,7 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className="py-4 pr-6">
+                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
                           <Ordenador
                             campo="category"
                             rotulo={rotulosDeColuna.category}
@@ -421,7 +439,7 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className="py-4 pr-6">
+                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
                           <Ordenador
                             campo="content"
                             rotulo={rotulosDeColuna.content}
@@ -433,7 +451,7 @@ export function DocumentsExplorer({
                             })}
                           />
                         </th>
-                        <th scope="col" className="py-4 pr-6">
+                        <th scope="col" className={`py-4 ${colunaDoMeio}`}>
                           <Ordenador
                             campo="date"
                             rotulo={rotulosDeColuna.date}
@@ -447,13 +465,13 @@ export function DocumentsExplorer({
                         </th>
                         <th
                           scope="col"
-                          className="py-4 pr-6 text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)"
+                          className={`py-4 ${colunaDoMeio} text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)`}
                         >
                           {t('table.preview')}
                         </th>
                         <th
                           scope="col"
-                          className="py-4 text-right text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)"
+                          className={`py-4 ${ultimaColuna} text-right text-micro font-semibold uppercase tracking-[0.14em] text-(--fg-subtle)`}
                         >
                           {t('table.download')}
                         </th>
@@ -466,7 +484,10 @@ export function DocumentsExplorer({
                           key={doc.id}
                           className="border-b border-(--border) align-top transition-colors duration-200 ease-brand hover:bg-(--overlay)"
                         >
-                          <th scope="row" className="max-w-[22rem] py-5 pr-6">
+                          <th
+                            scope="row"
+                            className={`max-w-[22rem] py-5 ${primeiraColuna}`}
+                          >
                             <div className="flex flex-col items-start gap-1.5">
                               <button
                                 type="button"
@@ -479,21 +500,25 @@ export function DocumentsExplorer({
                             </div>
                           </th>
 
-                          <td className="py-5 pr-6">
+                          <td className={`py-5 ${colunaDoMeio}`}>
                             <Selo doc={doc} categories={categories} locale={locale} />
                           </td>
 
-                          <td className="max-w-[26rem] py-5 pr-6 text-small text-(--fg-muted)">
+                          <td
+                            className={`max-w-[26rem] py-5 ${colunaDoMeio} text-small text-(--fg-muted)`}
+                          >
                             {doc.description?.[locale] || '—'}
                           </td>
 
-                          <td className="whitespace-nowrap py-5 pr-6 text-small text-(--fg-muted)">
+                          <td
+                            className={`whitespace-nowrap py-5 ${colunaDoMeio} text-small text-(--fg-muted)`}
+                          >
                             <time dateTime={doc.publishedAt}>
                               {formatDate(doc.publishedAt, localeTag[locale])}
                             </time>
                           </td>
 
-                          <td className="py-5 pr-6">
+                          <td className={`py-5 ${colunaDoMeio}`}>
                             <button
                               type="button"
                               onClick={() => setAberto(doc)}
@@ -503,14 +528,14 @@ export function DocumentsExplorer({
                               className="block transition-opacity duration-200 ease-brand hover:opacity-75"
                             >
                               <DocumentPreview
-                              doc={doc}
-                              className="h-28 w-20"
-                              sizes="80px"
-                            />
+                                doc={doc}
+                                className="h-28 w-20"
+                                sizes="80px"
+                              />
                             </button>
                           </td>
 
-                          <td className="py-5">
+                          <td className={`py-5 ${ultimaColuna}`}>
                             <div className="flex items-center justify-end gap-2">
                               <BotaoVisualizar doc={doc} rotulo={tActions('view')} aoAbrir={setAberto} />
                               <BotaoBaixar doc={doc} rotulo={tActions('download')} />

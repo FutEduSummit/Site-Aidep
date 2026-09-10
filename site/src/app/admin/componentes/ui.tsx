@@ -150,19 +150,103 @@ export function Botao({
 
 /* ------------------------------------------------------------------ */
 
+/**
+ * O DESENHO DA CHAVE
+ * ==================
+ * Trilho e botão, sem comportamento: quem escuta o clique é o elemento que
+ * envolve isto — o `Interruptor` na aparência de chave, aqui embaixo, e a
+ * chave das listas (`InterruptorDePublicacao`), que faz a gravação sozinha.
+ * Uma cópia só do desenho, para as duas não divergirem com o tempo.
+ */
+export function TrilhoDaChave({
+  ligado,
+  esmaecido = false,
+}: {
+  ligado: boolean
+  esmaecido?: boolean
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'relative flex h-6 w-11 shrink-0 items-center border transition-colors duration-150',
+        esmaecido && 'opacity-60',
+        ligado
+          ? 'border-brand-500 bg-brand-500'
+          : 'border-(--border-strong) bg-paper-3',
+      )}
+    >
+      <span
+        className={cn(
+          'block size-4 transition-transform duration-150 motion-reduce:transition-none',
+          ligado
+            ? 'translate-x-5.5 bg-(--bg)'
+            : 'translate-x-0.75 bg-(--fg-subtle)',
+        )}
+      />
+    </span>
+  )
+}
+
+/**
+ * LIGA-DESLIGA
+ * ============
+ * Duas aparências, e a diferença entre elas é o que a pergunta significa:
+ *
+ *   • `caixa` — caixa de marcar. Vale para escolher itens de uma lista,
+ *     como os projetos relacionados de uma notícia: marcar três não é
+ *     "ligar" nada, é selecionar.
+ *   • `chave` — a chave de verdade, para o que tem estado ligado ou
+ *     desligado no site: publicar ou guardar como rascunho. É a mesma
+ *     chave que aparece nas listas do painel, e reconhecer o desenho
+ *     importa mais aqui do que economizar um componente.
+ *
+ * Na aparência de chave o rótulo inteiro é o botão — texto e desenho no
+ * mesmo alvo de clique, e sem `aria` remendada por cima de um `label` que
+ * não alcança botão.
+ */
 export function Interruptor({
   id,
   rotulo,
   descricao,
   checked,
   onChange,
+  aparencia = 'caixa',
 }: {
   id: string
   rotulo: string
   descricao?: string
   checked: boolean
   onChange: (valor: boolean) => void
+  aparencia?: 'caixa' | 'chave'
 }) {
+  const texto = (
+    <span className="flex flex-col">
+      <span className="text-small font-semibold">{rotulo}</span>
+      {descricao ? (
+        <span className="text-micro leading-relaxed tracking-normal text-(--fg-subtle)">
+          {descricao}
+        </span>
+      ) : null}
+    </span>
+  )
+
+  if (aparencia === 'chave') {
+    return (
+      <button
+        id={id}
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className="flex cursor-pointer items-start gap-3 self-start text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--focus)"
+      >
+        <TrilhoDaChave ligado={checked} />
+        {texto}
+      </button>
+    )
+  }
+
   return (
     <div className="flex items-start gap-3">
       <input
@@ -173,12 +257,7 @@ export function Interruptor({
         className="mt-0.5 size-5 shrink-0 cursor-pointer appearance-none border border-(--border-strong) bg-(--bg) transition-colors duration-150 checked:border-brand-500 checked:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-(--focus)"
       />
       <label htmlFor={id} className="cursor-pointer">
-        <span className="block text-small font-semibold">{rotulo}</span>
-        {descricao ? (
-          <span className="block text-micro leading-relaxed tracking-normal text-(--fg-subtle)">
-            {descricao}
-          </span>
-        ) : null}
+        {texto}
       </label>
     </div>
   )

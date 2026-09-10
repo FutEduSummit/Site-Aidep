@@ -25,6 +25,20 @@ export type MediaAsset = {
   /** Foco do recorte, quando a foto precisar de enquadramento específico. */
   position?: string
   credit?: string
+  /**
+   * Vídeo mudo que toma o lugar da fotografia quando pode tocar — só a
+   * abertura da Página inicial usa isto hoje.
+   *
+   * A fotografia continua sendo o dado principal, e não vira detalhe do
+   * vídeo: ela é a capa que a página mostra primeiro (é ela o LCP), a que
+   * fica no ar para quem pediu menos movimento e a que aparece se o vídeo
+   * não carregar. O texto alternativo é o dela, e descreve a mesma cena.
+   */
+  video?: {
+    src: string
+    /** Duração em segundos — é ela que decide quando o rodízio vira. */
+    duration: number
+  }
 }
 
 /**
@@ -79,6 +93,13 @@ export type ProjectLocation = {
   city: Localized
   region?: string
   venue?: string
+  /**
+   * Quantos polos o projeto mantém nesta cidade. Ausente vale por um — é
+   * o caso da maioria. Aracaju tem cinco e Nossa Senhora do Socorro tem
+   * três, e é esse número que o mapa mostra na ficha da cidade em vez de
+   * repetir o mesmo ponto cinco vezes no mesmo pixel.
+   */
+  polos?: number
   /**
    * Sigla da unidade federativa. Só é necessária quando `region` não é a
    * sigla — é ela que decide entre cidades homônimas ("Palmas" existe em

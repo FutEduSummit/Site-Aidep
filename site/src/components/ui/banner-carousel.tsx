@@ -12,7 +12,14 @@ import {
 import { cn } from '@/lib/utils'
 
 /** Tempo que cada fotografia fica no ar, em milissegundos. */
-const PERMANENCIA = 6500
+export const PERMANENCIA_DA_FOTO = 6500
+
+/**
+ * Piso de permanência para o quadro de vídeo. Uma tomada de quatro
+ * segundos e meio passaria rápido demais para ser vista; abaixo deste
+ * limite o vídeo dá mais de uma volta antes de o rodízio virar.
+ */
+export const PERMANENCIA_MINIMA_DO_VIDEO = 7000
 
 /**
  * RODÍZIO DAS FOTOGRAFIAS
@@ -29,7 +36,16 @@ const PERMANENCIA = 6500
  * de vista — nesses casos a fotografia continua no ar, parada, e os
  * indicadores seguem funcionando para quem quiser passar à mão.
  */
-export function useBannerRotation(total: number, interval = PERMANENCIA) {
+export function useBannerRotation(
+  total: number,
+  /**
+   * Milissegundos que cada quadro fica no ar. Um número vale para todos;
+   * uma função recebe o índice e responde por quadro — é como a abertura
+   * dá ao quadro de vídeo o tempo da tomada inteira, em vez de cortá-la
+   * no meio.
+   */
+  interval: number | ((index: number) => number) = PERMANENCIA_DA_FOTO,
+) {
   const semMovimento = useReducedMotionSafe()
   const [index, setIndex] = useState(0)
   const [emSegundoPlano, setEmSegundoPlano] = useState(false)
@@ -45,13 +61,16 @@ export function useBannerRotation(total: number, interval = PERMANENCIA) {
 
   const parado = semMovimento || emSegundoPlano || total < 2
 
+  const permanencia =
+    typeof interval === 'function' ? interval(index % Math.max(total, 1)) : interval
+
   useEffect(() => {
     if (parado) return
     const timer = window.setTimeout(() => {
       setIndex((atual) => (atual + 1) % total)
-    }, interval)
+    }, permanencia)
     return () => window.clearTimeout(timer)
-  }, [index, interval, parado, total])
+  }, [index, permanencia, parado, total])
 
   /* Índice fora da faixa — a lista de fotos encurtou entre renderizações. */
   const atual = total > 0 ? index % total : 0
@@ -100,6 +119,7 @@ export function BannerCarousel({
   className,
 }: BannerCarouselProps) {
   const total = media.length
+  const semMovimento = useReducedMotionSafe()
 
   /* A fotografia da abertura é o maior download da página: enquanto ela
      não termina, nenhum outro quadro entra no DOM para dividir banda com
@@ -126,29 +146,83 @@ export function BannerCarousel({
       className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden', className)}
     >
       {media.slice(0, montados).map((foto, posicao) => (
-        <Image
-          key={foto.src}
-          src={foto.src}
-          alt=""
-          fill
-          priority={priority && posicao === 0}
-          sizes="100vw"
-          onLoad={posicao === 0 ? () => setAberturaPronta(true) : undefined}
-          onError={posicao === 0 ? () => setAberturaPronta(true) : undefined}
-          className={cn(
-            'object-cover transition-opacity duration-1000 ease-brand',
-            /* `scale` e não `transform`: as utilidades de escala do
-               Tailwind v4 escrevem a propriedade `scale`, e uma transição
-               declarada sobre `transform` não a animaria. */
-            'motion-safe:transition-[opacity,scale] motion-safe:duration-[1600ms]',
-            posicao === index ? 'opacity-100' : 'opacity-0 motion-safe:scale-[1.045]',
-          )}
-          style={foto.position ? { objectPosition: foto.position } : undefined}
-        />
+        <div key={foto.src} className="absolute inset-0">
+          <Image
+            src={foto.src}
+            alt=""
+            fill
+            priority={priority && posicao === 0}
+            sizes="100vw"
+            onLoad={posicao === 0 ? () => setAberturaPronta(true) : undefined}
+            onError={posicao === 0 ? () => setAberturaPronta(true) : undefined}
+            className={cn(
+              'object-cover transition-opacity duration-1000 ease-brand',
+              /* `scale` e não `transform`: as utilidades de escala do
+                 Tailwind v4 escrevem a propriedade `scale`, e uma transição
+                 declarada sobre `transform` não a animaria. */
+              'motion-safe:transition-[opacity,scale] motion-safe:duration-[1600ms]',
+              posicao === index ? 'opacity-100' : 'opacity-0 motion-safe:scale-[1.045]',
+            )}
+            style={foto.position ? { objectPosition: foto.position } : undefined}
+          />
+
+          {/* O vídeo só existe enquanto o quadro dele está no ar. É o que
+              garante um `<video>` de cada vez e nenhum byte de vídeo antes
+              da hora — a capa já está na tela e o filme entra por cima
+              quando o primeiro quadro chega. */}
+          {foto.video && posicao === index && !semMovimento ? (
+            <VideoDeFundo src={foto.video.src} position={foto.position} />
+          ) : null}
+        </div>
       ))}
       {bannerLayers(tone, strength).map((camada) => (
         <div key={camada} className={cn('absolute inset-0', camada)} />
       ))}
     </div>
+  )
+}
+
+/**
+ * O VÍDEO DA ABERTURA
+ * ===================
+ * Um `<video>` mudo, em laço, por cima da capa que já está na tela.
+ *
+ * Ele entra por fade quando o primeiro quadro chega (`onPlaying`), e não
+ * quando o elemento é montado: sem isso o vídeo pisca preto por cima da
+ * fotografia no instante em que aparece.
+ *
+ * `preload="auto"` é deliberado. O elemento só é montado quando o quadro
+ * dele entra no rodízio, então "auto" aqui quer dizer *agora que é a vez
+ * dele* — não é o mesmo que baixar as três tomadas na abertura da página.
+ *
+ * Se o vídeo falhar, o componente se apaga sozinho e a fotografia
+ * continua no lugar dele. Uma abertura sem filme é uma abertura; uma
+ * abertura com um retângulo preto, não.
+ */
+function VideoDeFundo({ src, position }: { src: string; position?: string }) {
+  const [estado, setEstado] = useState<'esperando' | 'tocando' | 'falhou'>(
+    'esperando',
+  )
+
+  if (estado === 'falhou') return null
+
+  return (
+    <video
+      src={src}
+      muted
+      loop
+      autoPlay
+      playsInline
+      preload="auto"
+      aria-hidden="true"
+      tabIndex={-1}
+      onPlaying={() => setEstado('tocando')}
+      onError={() => setEstado('falhou')}
+      className={cn(
+        'absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-brand',
+        estado === 'tocando' ? 'opacity-100' : 'opacity-0',
+      )}
+      style={position ? { objectPosition: position } : undefined}
+    />
   )
 }

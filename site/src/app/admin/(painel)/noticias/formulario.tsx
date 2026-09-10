@@ -14,7 +14,7 @@ import type { LinhaNoticia, LinhaProjeto } from '@/lib/cms/tipos'
 import { salvarNoticia } from '../../acoes'
 import { CamposTraduzidos, textoVazio } from '../../componentes/campos-traduzidos'
 import { EditorDeBlocos } from '../../componentes/editor-de-blocos'
-import { EnvioDeImagem } from '../../componentes/envio'
+import { EnvioDeImagem, type CapaDoAcervo } from '../../componentes/envio'
 import {
   Aviso,
   Botao,
@@ -27,6 +27,12 @@ import {
 type Props = {
   projetos: Pick<LinhaProjeto, 'slug' | 'nome'>[]
   inicial?: LinhaNoticia
+  /**
+   * A fotografia do acervo que o site já publica nesta notícia, quando ela
+   * não tem capa enviada pelo painel. Só de leitura: existe para a moldura
+   * mostrar o que está no ar em vez de um quadro vazio.
+   */
+  capaDoAcervo?: CapaDoAcervo | null
 }
 
 type Estado = {
@@ -97,7 +103,11 @@ function estadoInicial(inicial: LinhaNoticia | undefined): Estado {
   }
 }
 
-export function FormularioDeNoticia({ projetos, inicial }: Props) {
+export function FormularioDeNoticia({
+  projetos,
+  inicial,
+  capaDoAcervo = null,
+}: Props) {
   const router = useRouter()
   const [estado, setEstado] = useState<Estado>(() => estadoInicial(inicial))
   /* O endereço só acompanha o título enquanto a notícia é nova e ninguém
@@ -249,6 +259,7 @@ export function FormularioDeNoticia({ projetos, inicial }: Props) {
           rotulo="Capa"
           valor={estado.capa}
           pasta="noticias"
+          doAcervo={capaDoAcervo}
           onChange={(capa) => definir('capa', capa)}
         />
 
@@ -294,8 +305,13 @@ export function FormularioDeNoticia({ projetos, inicial }: Props) {
       <Cartao titulo="Publicação">
         <Interruptor
           id="publicado"
-          rotulo="Publicar no site"
-          descricao="Desligado, a notícia fica salva como rascunho e não aparece para o público."
+          aparencia="chave"
+          rotulo={estado.publicado ? 'No site' : 'Rascunho'}
+          descricao={
+            estado.publicado
+              ? 'Ligada, a chave publica a notícia no site.'
+              : 'Desligada, a notícia fica salva como rascunho e não aparece para o público.'
+          }
           checked={estado.publicado}
           onChange={(valor) => definir('publicado', valor)}
         />

@@ -29,8 +29,26 @@ const listaTraduzida = z.object({
   es: z.array(z.string()).default([]),
 })
 
-/** Endereço de arquivo já enviado ao Storage. */
-const urlDeArquivo = z.string().trim().url('Endereço de arquivo inválido.')
+/**
+ * Endereço de arquivo já publicado.
+ *
+ * Normalmente é a URL do Storage, devolvida pelo envio. Mas há conteúdo no
+ * banco cujo arquivo está versionado em `public/` e chegou por script —
+ * os documentos reais da Transparência, por exemplo, com endereço
+ * `/documentos/reais/…`. Exigir URL absoluta aqui fazia o painel recusar
+ * de salvar um documento que ele mesmo lista: o cliente abria, mudava o
+ * título e levava "Endereço de arquivo inválido" num campo que nem
+ * aparece na tela. Caminho a partir da raiz do site vale, portanto —
+ * `//` fora, que é URL sem protocolo, não caminho.
+ */
+const urlDeArquivo = z
+  .string()
+  .trim()
+  .refine(
+    (valor) =>
+      /^https?:\/\/\S+$/i.test(valor) || /^\/(?!\/)\S*$/.test(valor),
+    'Endereço de arquivo inválido.',
+  )
 
 const dataIso = z
   .string()
@@ -167,10 +185,28 @@ export type NoticiaPayload = z.infer<typeof noticiaSchema>
 /* Projeto                                                            */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Um local de atuação.
+ *
+ * `cidade`, `regiao`, `local` e `polos` são o que o painel edita. `uf` e
+ * `coords` **atravessam** o formulário sem aparecer nele: são o que
+ * resolve o que o cadastro do IBGE não tem — as sete regiões
+ * administrativas do Distrito Federal, por exemplo, que não são
+ * municípios e por isso vêm com coordenada à mão em
+ * `content/projects.ts`. Sem esta passagem, salvar o projeto pelo painel
+ * apagaria a coordenada e sete pontos sumiriam do mapa.
+ */
 const localSchema = z.object({
   cidade: traduzidoObrigatorio,
   regiao: z.string().trim().default(''),
   local: z.string().trim().default(''),
+  /** Quantos polos o projeto mantém nesta cidade. 0 e 1 valem o mesmo. */
+  polos: z.number().int().min(0).max(999).default(0),
+  uf: z.string().trim().max(40).default(''),
+  coords: z
+    .object({ lat: z.number(), lng: z.number() })
+    .nullable()
+    .default(null),
 })
 
 const metricaSchema = z.object({

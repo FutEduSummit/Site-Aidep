@@ -113,7 +113,7 @@ export function enviarMiniatura(imagem: Blob, nomeBase: string) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Medidas e miniatura                                                */
+/* Medidas e prévia automática                                        */
 /* ------------------------------------------------------------------ */
 
 /** Largura e altura reais — o `next/image` precisa delas para reservar o espaço. */
@@ -192,6 +192,40 @@ export async function miniaturaDoPdf(arquivo: File): Promise<Blob | null> {
     return imagem
   } catch (erro) {
     console.error('[aidep] não foi possível gerar a miniatura do PDF:', erro)
+    return null
+  }
+}
+
+/**
+ * Desenha a planilha como folha e devolve a imagem.
+ *
+ * Planilha não tem página para o navegador desenhar, e é por isso que o
+ * site já sabe desenhar a grade dela (ver `previaDaPlanilha` em
+ * `lib/previa-planilha.ts`). Aqui é o mesmo desenho, gerado uma vez no
+ * envio e guardado no Storage: a tabela de Transparência passa a receber
+ * uma imagem de alguns kB por linha em vez de baixar cada `.xlsx` para
+ * redesenhar a mesma grade em cada visita.
+ *
+ * Lê pelo endereço público do arquivo recém-enviado — é o mesmo caminho do
+ * site, e assim a leitura já fica no cache da sessão. Falhou, devolve
+ * `null` e o site continua desenhando sob demanda, como sempre fez.
+ */
+export async function miniaturaDaPlanilha(url: string): Promise<Blob | null> {
+  try {
+    /* Import dinâmico pelo mesmo motivo do pdfjs: o leitor de xlsx não
+       precisa entrar no pacote de quem só está escrevendo uma notícia. */
+    const { previaDaPlanilha } = await import('@/lib/previa-planilha')
+
+    const imagem = await previaDaPlanilha(url)
+    if (!imagem) return null
+
+    /* `previaDaPlanilha` devolve data URL (é o que um `<img>` espera); o
+       Storage quer bytes. `fetch` sobre data URL é a conversão mais curta
+       e não sai do navegador. */
+    const resposta = await fetch(imagem)
+    return await resposta.blob()
+  } catch (erro) {
+    console.error('[aidep] não foi possível gerar a prévia da planilha:', erro)
     return null
   }
 }

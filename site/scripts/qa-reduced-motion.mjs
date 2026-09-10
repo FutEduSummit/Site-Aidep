@@ -26,6 +26,15 @@ const browser = await puppeteer.launch({
   args: ['--no-sandbox', '--force-prefers-reduced-motion'],
 })
 
+/* Portão de pré-lançamento (src/lib/gate.ts): sem o cookie, toda rota
+   responde com a página "Site em construção". */
+await browser.setCookie({
+  name: "aidep-preview",
+  value: "liberado",
+  domain: new URL(BASE).hostname,
+  path: "/",
+})
+
 const problems = []
 
 for (const route of ROUTES) {

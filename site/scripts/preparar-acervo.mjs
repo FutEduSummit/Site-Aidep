@@ -9,6 +9,7 @@
  *
  *   fotografia  HEIC/JPEG  →  public/images/acervo/<nome>.webp
  *   vídeo       MOV 4K     →  public/videos/<nome>.mp4  +  <nome>.webp (capa)
+ *   abertura    MP4 drone  →  public/videos/<nome>.mp4  +  <nome>.webp (capa)
  *
  * Três decisões que valem explicar:
  *
@@ -37,7 +38,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import sharp from 'sharp'
-import { ORIGEM_PADRAO, fotos, videos } from './lib/acervo.mjs'
+import { ORIGEM_PADRAO, aberturas, fotos, videos } from './lib/acervo.mjs'
 
 const exec = promisify(execFile)
 
@@ -48,13 +49,48 @@ const destinoVideos = path.join(raizProjeto, 'public/videos')
 const registro = path.join(raizProjeto, 'src/content/acervo.ts')
 const temporarios = path.join(raizProjeto, 'scripts/.cache/acervo')
 
+/**
+ * COMPRESSÃO DAS FOTOGRAFIAS
+ * ==========================
+ * O acervo já esteve publicado em `quality: 78`, e a queixa foi direta:
+ * imagem de má qualidade. Em 78 o WebP põe blocos visíveis exatamente
+ * onde este acervo mais tem área lisa — camisa de uniforme, parede de
+ * ginásio, gramado ao sol.
+ *
+ * O ajuste tem três partes, e as três importam:
+ *
+ * - `quality: 88` — o joelho da curva do WebP para fotografia. De 78
+ *   para 88 o arquivo cresce cerca de 60%, e é aí que os blocos somem;
+ *   de 88 para 95 ele dobra de novo sem diferença que se veja na tela.
+ * - `smartSubsample` — sem isto o WebP joga fora três quartos da
+ *   informação de cor. É o que borrava o verde da marca contra o branco
+ *   do uniforme, e custa quase nada.
+ * - `effort: 6` — o codificador procura mais antes de decidir. É tempo
+ *   de máquina na hora de preparar o acervo, não peso para quem visita.
+ *
+ * Somado à largura maior em `lib/acervo.mjs` (2560 px nas faixas
+ * sangradas), o acervo passou de 12 MB para cerca de 30 MB — que
+ * continua sendo menos do que uma única foto do original, e nenhuma
+ * página serve mais que algumas delas.
+ */
+const QUALIDADE_DA_FOTO = {
+  quality: 88,
+  effort: 6,
+  smartSubsample: true,
+}
+
+/** Mesma conversa para a capa do vídeo, que também é fotografia. */
+const QUALIDADE_DA_CAPA = { quality: 84, effort: 6, smartSubsample: true }
+
 const soFaltantes = process.argv.includes('--faltantes')
 /* Sem `--fotos` nem `--videos`, faz os dois. */
 const apenas = process.argv.includes('--fotos')
   ? 'fotos'
   : process.argv.includes('--videos')
     ? 'videos'
-    : 'tudo'
+    : process.argv.includes('--aberturas')
+      ? 'aberturas'
+      : 'tudo'
 
 /**
  * `true` quando a etapa deve apenas ler o que já está publicado — porque
@@ -124,8 +160,16 @@ async function prepararFotos() {
       /* `rotate()` sem argumento aplica a orientação do EXIF e a descarta —
          é o que impede a foto de celular de sair deitada. */
       .rotate()
-      .resize({ width: foto.largura, withoutEnlargement: true })
-      .webp({ quality: 78, effort: 5 })
+      .resize({
+        width: foto.largura,
+        withoutEnlargement: true,
+        /* Lanczos com nitidez de volta: reduzir uma foto de 12 MP para
+           2560 px sempre come detalhe, e sem esta correção o resultado
+           chega macio demais — foi metade da queixa de qualidade. */
+        kernel: 'lanczos3',
+      })
+      .sharpen({ sigma: 0.6, m1: 0.4, m2: 1.6 })
+      .webp(QUALIDADE_DA_FOTO)
       .toFile(saida)
 
     if (temporario) await rm(caminho, { force: true })
@@ -222,7 +266,7 @@ async function prepararVideos() {
         '-v', 'error', '-ss', String(video.poster ?? 1), '-i', saidaVideo,
         '-frames:v', '1', '-update', '1', '-q:v', '2', '-y', bruto,
       ])
-      await sharp(bruto).webp({ quality: 74, effort: 5 }).toFile(saidaCapa)
+      await sharp(bruto).webp(QUALIDADE_DA_CAPA).toFile(saidaCapa)
       await rm(bruto, { force: true })
     }
 
@@ -247,9 +291,111 @@ async function prepararVideos() {
   return registrados
 }
 
+/**
+ * OS VÍDEOS DA ABERTURA
+ * =====================
+ * Outro problema, outro tratamento. Os clipes da fileira aparecem em
+ * cartões de 248 px; estes ocupam a tela inteira, atrás do título.
+ *
+ * - **1920×1080**, e não 540: aqui a largura da janela é a largura do
+ *   vídeo.
+ * - **Sem faixa de áudio** (`-an`). A abertura toca muda, por decisão e
+ *   porque nenhum navegador deixa tocar com som sem gesto do visitante.
+ *   Todo o orçamento de bytes vai para a imagem.
+ * - **Cortado** em `inicio` e `duracao`, no trecho que se sustenta em
+ *   laço. O `-ss` vem antes do `-i` de propósito: assim o ffmpeg salta
+ *   direto para o ponto em vez de decodificar tudo até lá.
+ * - **Fecho de grupo curto** (`-g 48`): o laço reinicia sem o tranco de
+ *   esperar o próximo quadro-chave.
+ */
+async function prepararAberturas() {
+  await mkdir(destinoVideos, { recursive: true })
+  const registrados = []
+
+  for (const abertura of aberturas) {
+    const entrada = path.join(origem, abertura.origem)
+    const saidaVideo = path.join(destinoVideos, `${abertura.nome}.mp4`)
+    const saidaCapa = path.join(destinoVideos, `${abertura.nome}.webp`)
+
+    if (!existsSync(entrada)) {
+      console.error(`  ! ${abertura.nome}: original não encontrado — ${abertura.origem}`)
+      continue
+    }
+
+    if (!reaproveitar('aberturas') || !existsSync(saidaVideo)) {
+      await exec(
+        'ffmpeg',
+        [
+          '-v', 'error',
+          '-ss', String(abertura.inicio ?? 0),
+          '-t', String(abertura.duracao),
+          '-i', entrada,
+          '-vf',
+          'scale=w=1920:h=1080:force_original_aspect_ratio=decrease,' +
+            'scale=trunc(iw/2)*2:trunc(ih/2)*2,fps=30',
+          '-c:v', 'libx264',
+          '-preset', 'slow',
+          '-crf', '25',
+          '-maxrate', '3200k',
+          '-bufsize', '6400k',
+          '-profile:v', 'high',
+          '-pix_fmt', 'yuv420p',
+          '-g', '48',
+          '-an',
+          '-map_metadata', '-1',
+          '-movflags', '+faststart',
+          '-y', saidaVideo,
+        ],
+        { maxBuffer: 1024 * 1024 * 16 },
+      )
+    }
+
+    if (!reaproveitar('aberturas') || !existsSync(saidaCapa)) {
+      const bruto = path.join(temporarios, `${abertura.nome}-capa.jpg`)
+      await mkdir(temporarios, { recursive: true })
+      /* O quadro sai do **original**, não do mp4 já comprimido: esta capa
+         é a primeira imagem que a página mostra, e tirá-la do arquivo de
+         1920 px seria pôr a compressão do vídeo dentro dela. O instante é
+         contado a partir do começo da tomada, então soma o corte. */
+      await exec('ffmpeg', [
+        '-v', 'error',
+        '-ss', String((abertura.inicio ?? 0) + (abertura.poster ?? 1)),
+        '-i', entrada,
+        '-frames:v', '1', '-update', '1', '-q:v', '2', '-y', bruto,
+      ])
+      await sharp(bruto)
+        .resize({ width: 2560, withoutEnlargement: true, kernel: 'lanczos3' })
+        .sharpen({ sigma: 0.6, m1: 0.4, m2: 1.6 })
+        .webp(QUALIDADE_DA_FOTO)
+        .toFile(saidaCapa)
+      await rm(bruto, { force: true })
+    }
+
+    const [{ width, height }, segundos, arquivo, capa] = await Promise.all([
+      dimensoes(saidaVideo),
+      duracao(saidaVideo),
+      stat(saidaVideo),
+      sharp(saidaCapa).metadata(),
+    ])
+
+    registrados.push({
+      nome: abertura.nome,
+      width,
+      height,
+      duracao: Math.round(segundos),
+      capa: { width: capa.width, height: capa.height },
+    })
+    console.log(
+      `  ✓ ${abertura.nome}.mp4  ${width}×${height}  ${segundos.toFixed(1)}s  ${kb(arquivo.size)}`,
+    )
+  }
+
+  return registrados
+}
+
 /* ------------------------------------------------------------------ */
 
-function gerarRegistro(fotosProntas, videosProntos) {
+function gerarRegistro(fotosProntas, videosProntos, aberturasProntas) {
   const linhasFoto = fotosProntas
     .map((f) => `  '${f.nome}': { src: '/images/acervo/${f.nome}.webp', width: ${f.width}, height: ${f.height} },`)
     .join('\n')
@@ -263,6 +409,20 @@ function gerarRegistro(fotosProntas, videosProntos) {
         `    width: ${v.width},\n` +
         `    height: ${v.height},\n` +
         `    duration: ${v.duracao},\n` +
+        `  },`,
+    )
+    .join('\n')
+
+  const linhasAbertura = aberturasProntas
+    .map(
+      (v) =>
+        `  '${v.nome}': {\n` +
+        `    src: '/videos/${v.nome}.mp4',\n` +
+        `    poster: '/videos/${v.nome}.webp',\n` +
+        `    width: ${v.width},\n` +
+        `    height: ${v.height},\n` +
+        `    duration: ${v.duracao},\n` +
+        `    capa: { width: ${v.capa.width}, height: ${v.capa.height} },\n` +
         `  },`,
     )
     .join('\n')
@@ -289,6 +449,15 @@ export type ArquivoDeVideo = ArquivoDeImagem & {
   duration: number
 }
 
+/**
+ * Vídeo horizontal da abertura da Página inicial. Diferente do clipe da
+ * fileira, aqui a capa tem medida própria: ela é publicada em 2560 px,
+ * porque é ela — e não o vídeo — a primeira imagem que a página mostra.
+ */
+export type ArquivoDeAbertura = ArquivoDeVideo & {
+  capa: { width: number; height: number }
+}
+
 export const imagensDoAcervo = {
 ${linhasFoto}
 } satisfies Record<string, ArquivoDeImagem>
@@ -297,8 +466,13 @@ export const videosDoAcervo = {
 ${linhasVideo}
 } satisfies Record<string, ArquivoDeVideo>
 
+export const aberturasDoAcervo = {
+${linhasAbertura}
+} satisfies Record<string, ArquivoDeAbertura>
+
 export type ImagemDoAcervo = keyof typeof imagensDoAcervo
 export type VideoDoAcervo = keyof typeof videosDoAcervo
+export type AberturaDoAcervo = keyof typeof aberturasDoAcervo
 `
 }
 
@@ -319,11 +493,18 @@ console.log('Fotografias')
 const fotosProntas = await prepararFotos()
 console.log('\nVídeos')
 const videosProntos = await prepararVideos()
+console.log('\nAberturas')
+const aberturasProntas = await prepararAberturas()
 
-await writeFile(registro, gerarRegistro(fotosProntas, videosProntos), 'utf8')
+await writeFile(
+  registro,
+  gerarRegistro(fotosProntas, videosProntos, aberturasProntas),
+  'utf8',
+)
 await rm(temporarios, { recursive: true, force: true })
 
 console.log(
-  `\n${fotosProntas.length} fotografias e ${videosProntos.length} vídeos publicados.` +
+  `\n${fotosProntas.length} fotografias, ${videosProntos.length} vídeos e ` +
+    `${aberturasProntas.length} aberturas publicados.` +
     `\nRegistro atualizado: src/content/acervo.ts\n`,
 )

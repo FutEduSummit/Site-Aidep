@@ -108,10 +108,24 @@
   /* ---------------------------------------------------------------------
      5. ESPAÇAMENTO / GRID / CONTAINER
      --------------------------------------------------------------------- */
+  /* ---------------------------------------------------------------------
+     O RESPIRO ENTRE AS SEÇÕES
+     -------------------------
+     `--spacing-section` é aplicado em cima **e** embaixo de cada bloco, e
+     por isso o vão entre duas seções é o dobro dele. Na medida anterior
+     (9vw, teto de 10rem) isso dava 260 px de nada entre um assunto e o
+     seguinte em um monitor comum, e a página inteira chegava a passar de
+     17 mil pixels de altura — muita rolagem para pouca informação.
+
+     A medida atual mantém o ar que separa os assuntos e corta o excesso:
+     o vão entre seções fica em torno de 170 px em 1440 px de largura. A
+     escala continua fluida (o `vw` no meio), então em tela pequena o
+     respiro encolhe junto e em monitor grande ele não dispara.
+     --------------------------------------------------------------------- */
   --spacing-gutter: clamp(1.25rem, 3.6vw, 5rem);
-  --spacing-section: clamp(4.5rem, 9vw, 10rem);
-  --spacing-section-sm: clamp(3rem, 6vw, 6rem);
-  --spacing-stack: clamp(2rem, 4vw, 4rem);
+  --spacing-section: clamp(3.5rem, 6vw, 6.5rem);
+  --spacing-section-sm: clamp(2.5rem, 4vw, 4.5rem);
+  --spacing-stack: clamp(1.75rem, 3vw, 3rem);
 
   --container-site: 96rem;
   --container-wide: 110rem;
@@ -272,16 +286,20 @@
     scroll-padding-top: 6.5rem;
     overflow-x: clip;
 
-    /* A barra de rolagem da página, na linguagem da marca: trilho no cinza
-       da papelaria e polegar no verde AIDEP. Padrão moderno primeiro —
-       Firefox e Chrome recentes leem esta propriedade; o bloco
-       `::-webkit-scrollbar` adiante atende os WebKit que ainda não a
-       implementam.
+    /* A barra de rolagem da página, na linguagem da marca: polegar no verde
+       AIDEP e trilho transparente. Padrão moderno primeiro — Firefox e
+       Chrome recentes leem esta propriedade; o bloco `::-webkit-scrollbar`
+       adiante atende os WebKit que ainda não a implementam.
+
+       O trilho é transparente de propósito: na abertura a fotografia sangra
+       até a beirada da tela, e um trilho cinza cravava uma faixa clara ao
+       lado dela. Sem fundo sobra só o verde, correndo por cima do que
+       estiver atrás da barra.
 
        A largura fica a do sistema, sem `scrollbar-width: thin`: em barra
        fina o verde vira um fio de 10px que quase não se lê, e o alvo de
        arrasto encolhe junto. */
-    scrollbar-color: var(--color-brand-500) var(--color-paper-2);
+    scrollbar-color: var(--color-brand-500) transparent;
 
     /* O espaço da barra fica reservado sempre. Sem isto, tudo o que tranca
        a rolagem da página — o menu do celular, a janela de documento, a
@@ -300,14 +318,18 @@
     }
 
     html::-webkit-scrollbar-track {
-      background-color: var(--color-paper-2);
+      background-color: transparent;
     }
 
-    /* Cantos retos, como todo o resto do sistema, e uma folga clara de cada
-       lado para o verde não encostar na borda da tela. */
+    /* Cantos retos, como todo o resto do sistema, e uma folga de cada lado
+       para o verde não encostar na borda da tela. A folga é borda
+       transparente com `background-clip: padding-box` — assim ela deixa
+       passar o que está atrás da barra, em vez de recortar o cinza da
+       papelaria. */
     html::-webkit-scrollbar-thumb {
       background-color: var(--color-brand-500);
-      border: 3px solid var(--color-paper-2);
+      border: 3px solid transparent;
+      background-clip: padding-box;
       border-radius: 0;
     }
 

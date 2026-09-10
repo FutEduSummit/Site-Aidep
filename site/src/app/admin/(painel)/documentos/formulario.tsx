@@ -266,8 +266,13 @@ export function FormularioDeDocumento({ categorias, projetos, inicial }: Props) 
       <Cartao titulo="Publicação">
         <Interruptor
           id="publicado"
-          rotulo="Visível no site"
-          descricao="Desligue para guardar como rascunho, sem aparecer na página de Transparência."
+          aparencia="chave"
+          rotulo={estado.publicado ? 'No site' : 'Rascunho'}
+          descricao={
+            estado.publicado
+              ? 'Ligada, a chave publica o documento na tabela de Transparência.'
+              : 'Desligada, o documento fica guardado no painel e não aparece na página de Transparência.'
+          }
           checked={estado.publicado}
           onChange={(valor) => definir('publicado', valor)}
         />

@@ -1,12 +1,13 @@
-import { FileText, Plus } from 'lucide-react'
-import Image from 'next/image'
+import { Plus } from 'lucide-react'
 import Link from 'next/link'
+import { DocumentPreview } from '@/components/ui/document-preview'
 import { listarCategorias, listarDocumentos } from '@/lib/admin/leitura'
 import { coresDeCategoria } from '@/lib/documentos'
-import { paraCategoria } from '@/lib/cms/mapear'
+import { paraCategoria, paraDocumento } from '@/lib/cms/mapear'
 import { cn, formatDate } from '@/lib/utils'
-import { apagarDocumento } from '../../acoes'
+import { apagarDocumento, publicarDocumento } from '../../acoes'
 import { BotaoDeRemocao } from '../../componentes/botao-de-remocao'
+import { InterruptorDePublicacao } from '../../componentes/interruptor-de-publicacao'
 import { Aviso, Botao, TituloDaPagina } from '../../componentes/ui'
 
 function textoPt(bruto: unknown): string {
@@ -26,7 +27,7 @@ export default async function DocumentosPage() {
     <>
       <TituloDaPagina
         titulo="Transparência"
-        descricao="Os documentos que aparecem na tabela da página de Transparência do site."
+        descricao="Os documentos que aparecem na tabela da página de Transparência do site. A chave de cada linha publica ou volta para rascunho na hora."
         acao={
           <Link href="/admin/documentos/novo">
             <Botao type="button">
@@ -55,23 +56,17 @@ export default async function DocumentosPage() {
                 key={documento.id}
                 className="flex flex-col gap-4 border-b border-(--border) py-4 sm:flex-row sm:items-center sm:gap-6"
               >
-                <span className="relative flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden border border-(--border) bg-paper-3">
-                  {documento.miniatura_url ? (
-                    <Image
-                      src={documento.miniatura_url}
-                      alt=""
-                      fill
-                      sizes="48px"
-                      className="object-cover object-top"
-                    />
-                  ) : (
-                    <FileText
-                      aria-hidden="true"
-                      strokeWidth={1.5}
-                      className="size-4 text-(--fg-subtle)"
-                    />
-                  )}
-                </span>
+                {/* A mesma prévia da tabela do site: a miniatura guardada
+                    quando existe e, quando não, a primeira página do PDF ou
+                    a grade da planilha desenhadas aqui no navegador (ver
+                    `DocumentPreview`). É o que faz o documento semeado
+                    direto no banco aparecer com a cara dele, e não com o
+                    ícone genérico. */}
+                <DocumentPreview
+                  doc={paraDocumento(documento)}
+                  className="h-16 w-12"
+                  sizes="48px"
+                />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                   <Link
@@ -97,13 +92,16 @@ export default async function DocumentosPage() {
                     <time dateTime={documento.publicado_em}>
                       {formatDate(documento.publicado_em, 'pt-BR')}
                     </time>
-                    {!documento.publicado ? (
-                      <span className="font-semibold text-danger">Rascunho</span>
-                    ) : null}
                   </p>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-2">
+                  <InterruptorDePublicacao
+                    id={documento.id}
+                    nome={textoPt(documento.titulo) || 'documento'}
+                    publicado={documento.publicado}
+                    aoAlternar={publicarDocumento}
+                  />
                   <Link href={`/admin/documentos/${documento.id}`}>
                     <Botao type="button" variante="contorno">
                       Editar

@@ -1,14 +1,19 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'motion/react'
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { ArrowDown } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react'
 import { MagneticButton } from '@/components/motion/magnetic'
 import { SplitTextReveal } from '@/components/motion/animated-text'
 import { ButtonAnchor } from '@/components/ui/anchor-link'
 import { ButtonLink } from '@/components/ui/button'
-import { BannerCarousel, useBannerRotation } from '@/components/ui/banner-carousel'
+import {
+  BannerCarousel,
+  PERMANENCIA_DA_FOTO,
+  PERMANENCIA_MINIMA_DO_VIDEO,
+  useBannerRotation,
+} from '@/components/ui/banner-carousel'
 import { Container, Section } from '@/components/ui/section'
 import { carrosselDaHome } from '@/content/media'
 import { symbolMark } from '@/lib/brand'
@@ -21,6 +26,21 @@ const enter = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: DURATION.base, ease: EASE, delay },
 })
+
+/**
+ * Quanto tempo o quadro `posicao` fica no ar, em milissegundos.
+ *
+ * A fotografia usa a permanência padrão do rodízio (o `undefined` deixa o
+ * hook decidir); o vídeo pede o tempo da tomada, com um piso de sete
+ * segundos para a de quatro segundos e meio não passar antes de ser
+ * vista — abaixo do piso ela simplesmente dá mais de uma volta.
+ */
+function permanenciaDoQuadro(posicao: number): number {
+  const video = carrosselDaHome[posicao]?.video
+  if (!video) return PERMANENCIA_DA_FOTO
+
+  return Math.max(video.duration * 1000, PERMANENCIA_MINIMA_DO_VIDEO)
+}
 
 /**
  * HERO DA PÁGINA INICIAL
@@ -37,7 +57,7 @@ const enter = (delay: number) => ({
  * empurraria o rodapé da abertura para fora da tela.
  *
  * A altura cheia é do bloco, não do texto: o miolo fica centrado e a
- * chamada de rolagem com os indicadores do carrossel fecham a seção na
+ * chamada de rolagem com os controles do carrossel fecham a seção na
  * base, na mesma linha — é o que segura a composição sem inflar o título.
  */
 export function HomeHero() {
@@ -56,9 +76,23 @@ export function HomeHero() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
   const grafismoY = useTransform(scrollYProgress, [0, 1], [0, 140])
 
-  const { index, goTo } = useBannerRotation(carrosselDaHome.length)
+  /* O quadro de vídeo fica no ar o tempo da tomada — com um piso, para a
+     tomada curta não passar antes de ser vista. A fotografia mantém a
+     permanência padrão do rodízio. */
+  const { index, goTo } = useBannerRotation(
+    carrosselDaHome.length,
+    permanenciaDoQuadro,
+  )
   const hasBanner = carrosselDaHome.length > 0
   const lines = t.raw('titleLines') as string[]
+  const totalDeQuadros = carrosselDaHome.length
+
+  /* As setas dão a volta no álbum: do último quadro a de avançar volta ao
+     primeiro, e do primeiro a de voltar vai ao último. O rodízio já corre
+     em laço sozinho — a navegação à mão não teria por que parar na ponta. */
+  function passarQuadro(passo: -1 | 1) {
+    goTo((index + passo + totalDeQuadros) % totalDeQuadros)
+  }
 
   return (
     <Section
@@ -146,46 +180,88 @@ export function HomeHero() {
             {t('scroll')}
           </motion.p>
 
-          {/* Indicadores em módulo — o mesmo traço inclinado do símbolo.
-              Passar à mão é o que dá controle sobre o rodízio: o alvo tem
-              44px de altura, e o quadro no ar é marcado pela cor e pela
-              largura, nunca só pela cor. */}
-          {carrosselDaHome.length > 1 ? (
+          {/* Setas de navegação do rodízio. Passar à mão é o que dá
+              controle sobre o carrossel: dois alvos de 44px, na mesma
+              linha e no mesmo desenho dos controles da fileira de vídeos.
+
+              O contador entre elas é o que os traços diziam antes — em
+              quantos quadros o álbum tem e em qual deles se está. Sem ele
+              as setas andariam às cegas. */}
+          {totalDeQuadros > 1 ? (
             <motion.div
               role="group"
               aria-label={tA11y('carouselLabel')}
-              className="ml-auto flex items-center gap-1.5"
+              className="ml-auto flex items-center gap-2"
               {...enter(1.02)}
             >
-              {carrosselDaHome.map((foto, posicao) => {
-                const ativo = posicao === index
-                return (
-                  <button
-                    key={foto.src}
-                    type="button"
-                    onClick={() => goTo(posicao)}
-                    aria-current={ativo ? 'true' : undefined}
-                    className="group/dot flex h-11 w-5 items-center justify-center"
-                  >
-                    <span className="sr-only">
-                      {tA11y('carouselGoTo', { number: posicao + 1 })}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'block h-[0.1875rem] -skew-x-12 transition-all duration-300 ease-brand',
-                        ativo
-                          ? 'w-5 bg-(--accent)'
-                          : 'w-3 bg-white/40 group-hover/dot:bg-white/80',
-                      )}
-                    />
-                  </button>
-                )
-              })}
+              <SetaDoRodizio
+                label={tA11y('carouselPrev')}
+                onClick={() => passarQuadro(-1)}
+              >
+                <ArrowLeft aria-hidden="true" strokeWidth={2} className="size-4" />
+              </SetaDoRodizio>
+
+              <p
+                aria-live="polite"
+                className="min-w-[4.5ch] text-center text-micro tabular-nums tracking-[0.14em] text-(--fg-subtle)"
+              >
+                <span className="sr-only">
+                  {tA11y('carouselPosition', {
+                    current: index + 1,
+                    total: totalDeQuadros,
+                  })}
+                </span>
+                <span aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                  <span className="mx-1 text-(--fg-subtle)/50">/</span>
+                  {String(totalDeQuadros).padStart(2, '0')}
+                </span>
+              </p>
+
+              <SetaDoRodizio
+                label={tA11y('carouselNext')}
+                onClick={() => passarQuadro(1)}
+              >
+                <ArrowRight aria-hidden="true" strokeWidth={2} className="size-4" />
+              </SetaDoRodizio>
             </motion.div>
           ) : null}
         </Container>
       </div>
     </Section>
+  )
+}
+
+/**
+ * SETA DO RODÍZIO
+ * ===============
+ * O mesmo botão quadrado dos controles da fileira de vídeos, vestido para
+ * ficar sobre fotografia: a moldura sai dos tokens da superfície escura e
+ * um véu próprio garante que o quadrado se leia mesmo sobre um realce
+ * estourado — o véu da faixa reforça a beirada de baixo, mas não é ele que
+ * sustenta o contraste de um controle de 44px.
+ */
+function SetaDoRodizio({
+  label,
+  onClick,
+  children,
+}: {
+  label: string
+  onClick: () => void
+  children: ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'inline-flex size-11 items-center justify-center border border-(--border-strong) bg-ink-950/25 text-(--fg)',
+        'transition-colors duration-200 ease-brand',
+        'hover:border-(--accent) hover:bg-(--accent) hover:text-(--accent-contrast)',
+      )}
+    >
+      {children}
+      <span className="sr-only">{label}</span>
+    </button>
   )
 }

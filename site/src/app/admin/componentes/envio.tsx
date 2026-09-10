@@ -3,6 +3,7 @@
 import { FileText, ImageIcon, Trash2, Upload } from 'lucide-react'
 import NextImage from 'next/image'
 import { useId, useRef, useState } from 'react'
+import { DocumentPreview } from '@/components/ui/document-preview'
 import type { ImagemEnviada } from '@/lib/admin/esquemas'
 import {
   enviarDocumento,
@@ -10,8 +11,10 @@ import {
   enviarMiniatura,
   formatoDoArquivo,
   medirImagem,
+  miniaturaDaPlanilha,
   miniaturaDoPdf,
 } from '@/lib/admin/storage'
+import { ehPlanilha } from '@/lib/documentos'
 import { Aviso, Botao, Campo } from './ui'
 
 function rotuloDeTamanho(bytes: number | null | undefined) {
@@ -37,13 +40,22 @@ export type DocumentoEnviado = {
 /**
  * ENVIO DO DOCUMENTO
  * ==================
- * Um passo só para o cliente: ele escolhe o PDF e o painel resolve o
- * resto — sobe o arquivo, desenha a primeira página, sobe a miniatura e
- * preenche formato e tamanho.
+ * Um passo só, e um campo só: o cliente escolhe o arquivo e o painel
+ * resolve o resto — sobe, desenha a prévia, sobe a prévia e preenche
+ * formato e tamanho.
  *
- * A miniatura é gerada no próprio navegador (ver `miniaturaDoPdf`). Se o
- * PDF não permitir, o documento fica com o ícone do formato e o cliente
- * pode enviar uma imagem à mão.
+ * A PRÉVIA NÃO SE PEDE AO CLIENTE
+ * -------------------------------
+ * Havia aqui um segundo botão, "Trocar miniatura", para enviar à mão a
+ * imagem da primeira página. Ninguém vai exportar a capa do próprio PDF
+ * para subir duas vezes o mesmo documento — e não precisa: o navegador
+ * desenha a primeira página do PDF (`miniaturaDoPdf`) e a grade da
+ * planilha (`miniaturaDaPlanilha`), que é o que a tabela do site exibe.
+ * Documento que é imagem já é a própria prévia.
+ *
+ * DOC e DOCX o navegador não abre, e ficam com o ícone do formato — como
+ * ficariam de qualquer jeito, porque a prévia não vem do arquivo. Nada
+ * disso trava o envio: prévia é conforto, o documento é o que importa.
  */
 export function EnvioDeDocumento({
   valor,
@@ -58,10 +70,28 @@ export function EnvioDeDocumento({
 }) {
   const uid = useId()
   const entradaArquivo = useRef<HTMLInputElement>(null)
-  const entradaMiniatura = useRef<HTMLInputElement>(null)
 
   const [estado, setEstado] = useState<string | null>(null)
   const [problema, setProblema] = useState<string | null>(null)
+
+  /** Sobe a imagem desenhada e devolve a prévia já medida. */
+  async function subirPrevia(
+    imagem: Blob,
+    caminhoDoArquivo: string,
+  ): Promise<ImagemEnviada> {
+    const base = caminhoDoArquivo.split('/').pop() ?? 'documento'
+    const [enviada, medidas] = await Promise.all([
+      enviarMiniatura(imagem, base),
+      medirImagem(imagem),
+    ])
+
+    return {
+      url: enviada.url,
+      path: enviada.path,
+      largura: medidas.largura,
+      altura: medidas.altura,
+    }
+  }
 
   async function receberArquivo(arquivo: File) {
     setProblema(null)
@@ -71,23 +101,19 @@ export function EnvioDeDocumento({
       const enviado = await enviarDocumento(arquivo, ano)
       const formato = formatoDoArquivo(arquivo)
 
-      let miniatura = valor.miniatura
+      /* Prévia sempre desenhada do arquivo que está entrando, nunca
+         herdada: trocar um PDF por outro e ficar com a página do anterior
+         é pior do que ficar sem prévia nenhuma. */
+      let miniatura: ImagemEnviada | null = null
 
       if (formato === 'pdf') {
-        setEstado('Gerando a miniatura da primeira página…')
+        setEstado('Desenhando a primeira página…')
         const imagem = await miniaturaDoPdf(arquivo)
-
-        if (imagem) {
-          const base = enviado.path.split('/').pop() ?? 'documento'
-          const enviada = await enviarMiniatura(imagem, base)
-          const medidas = await medirImagem(imagem)
-          miniatura = {
-            url: enviada.url,
-            path: enviada.path,
-            largura: medidas.largura,
-            altura: medidas.altura,
-          }
-        }
+        if (imagem) miniatura = await subirPrevia(imagem, enviado.path)
+      } else if (ehPlanilha(formato)) {
+        setEstado('Desenhando a prévia da planilha…')
+        const imagem = await miniaturaDaPlanilha(enviado.url)
+        if (imagem) miniatura = await subirPrevia(imagem, enviado.path)
       }
 
       onChange({
@@ -108,29 +134,6 @@ export function EnvioDeDocumento({
     }
   }
 
-  async function receberMiniatura(arquivo: File) {
-    setProblema(null)
-
-    try {
-      setEstado('Enviando a imagem…')
-      const enviada = await enviarImagem(arquivo, 'miniaturas')
-      onChange({
-        ...valor,
-        miniatura: {
-          url: enviada.url,
-          path: enviada.path,
-          largura: enviada.largura,
-          altura: enviada.altura,
-        },
-      })
-    } catch (falha) {
-      console.error(falha)
-      setProblema('Não foi possível enviar a imagem.')
-    } finally {
-      setEstado(null)
-    }
-  }
-
   const temArquivo = Boolean(valor.arquivoUrl)
 
   return (
@@ -138,27 +141,39 @@ export function EnvioDeDocumento({
       htmlFor={`${uid}-arquivo`}
       rotulo="Arquivo do documento"
       erro={erro}
-      dica="PDF, planilha ou documento de texto. Do PDF, o painel gera sozinho a miniatura que aparece na tabela do site."
+      dica="PDF, planilha ou documento de texto. A prévia que aparece na tabela do site é gerada pelo painel — não há imagem para enviar."
     >
       <div className="flex flex-col gap-4 border border-(--border-strong) p-4">
         <div className="flex flex-wrap items-start gap-4">
-          <span className="relative flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden border border-(--border) bg-paper-3">
-            {valor.miniatura ? (
-              <NextImage
-                src={valor.miniatura.url}
-                alt=""
-                fill
-                sizes="72px"
-                className="object-cover object-top"
-              />
-            ) : (
+          {temArquivo ? (
+            /* A moldura da tabela do site, com o mesmo conteúdo: a prévia
+               gerada no envio ou, se ela não veio, o desenho do próprio
+               arquivo. O cliente confere aqui o que o visitante vai ver. */
+            <DocumentPreview
+              doc={{
+                file: valor.arquivoUrl,
+                format: valor.formato,
+                thumbnail: valor.miniatura
+                  ? {
+                      src: valor.miniatura.url,
+                      width: valor.miniatura.largura,
+                      height: valor.miniatura.altura,
+                      alt: { pt: '', en: '', es: '' },
+                    }
+                  : null,
+              }}
+              className="h-24 w-18"
+              sizes="72px"
+            />
+          ) : (
+            <span className="relative flex h-24 w-18 shrink-0 items-center justify-center overflow-hidden border border-(--border) bg-paper-3">
               <FileText
                 aria-hidden="true"
                 strokeWidth={1.5}
                 className="size-6 text-(--fg-subtle)"
               />
-            )}
-          </span>
+            </span>
+          )}
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             {temArquivo ? (
@@ -189,18 +204,6 @@ export function EnvioDeDocumento({
                 <Upload aria-hidden="true" className="size-4" />
                 {temArquivo ? 'Trocar arquivo' : 'Escolher arquivo'}
               </Botao>
-
-              {temArquivo ? (
-                <Botao
-                  type="button"
-                  variante="discreto"
-                  onClick={() => entradaMiniatura.current?.click()}
-                  disabled={estado !== null}
-                >
-                  <ImageIcon aria-hidden="true" className="size-4" />
-                  Trocar miniatura
-                </Botao>
-              ) : null}
             </div>
           </div>
         </div>
@@ -220,18 +223,6 @@ export function EnvioDeDocumento({
             evento.target.value = ''
           }}
         />
-
-        <input
-          ref={entradaMiniatura}
-          type="file"
-          className="sr-only"
-          accept="image/*"
-          onChange={(evento) => {
-            const arquivo = evento.target.files?.[0]
-            if (arquivo) void receberMiniatura(arquivo)
-            evento.target.value = ''
-          }}
-        />
       </div>
     </Campo>
   )
@@ -241,6 +232,14 @@ export function EnvioDeDocumento({
 /* Imagem — capa de notícia, capa de projeto, foto de galeria          */
 /* ------------------------------------------------------------------ */
 
+/**
+ * A foto que o site publica quando nada foi enviado pelo painel: a
+ * fotografia do acervo registrada para a notícia ou o projeto (ver
+ * `lib/admin/capas.ts`). Chega resolvida do servidor, e é só de leitura —
+ * o painel mostra, não grava.
+ */
+export type CapaDoAcervo = { src: string; largura: number; altura: number }
+
 export function EnvioDeImagem({
   rotulo,
   valor,
@@ -248,6 +247,7 @@ export function EnvioDeImagem({
   pasta = 'capas',
   dica,
   proporcao = '16 / 9',
+  doAcervo = null,
 }: {
   rotulo: string
   valor: ImagemEnviada | null
@@ -255,11 +255,19 @@ export function EnvioDeImagem({
   pasta?: string
   dica?: string
   proporcao?: string
+  doAcervo?: CapaDoAcervo | null
 }) {
   const uid = useId()
   const entrada = useRef<HTMLInputElement>(null)
   const [enviando, setEnviando] = useState(false)
   const [problema, setProblema] = useState<string | null>(null)
+
+  /* Sem imagem enviada, a moldura mostra a foto do acervo que está no ar —
+     e não o ícone de "vazio", que fazia o cliente achar que a notícia
+     estava sem fotografia enquanto o site já publicava uma. A moldura
+     recorta com `fill`, então basta o endereço. */
+  const soAcervo = !valor && doAcervo !== null
+  const mostrando = valor?.url ?? doAcervo?.src ?? null
 
   async function receber(arquivo: File) {
     setProblema(null)
@@ -287,8 +295,10 @@ export function EnvioDeImagem({
       rotulo={rotulo}
       opcional
       dica={
-        dica ??
-        'Sem imagem, o site exibe o painel institucional da marca no lugar — nunca uma foto genérica.'
+        soAcervo
+          ? 'Esta é a fotografia do acervo da AIDEP que o site publica aqui hoje. Envie uma imagem só se quiser colocar outra no lugar.'
+          : (dica ??
+            'Sem imagem, o site exibe o painel institucional da marca no lugar — nunca uma foto genérica.')
       }
     >
       <div className="flex flex-col gap-3">
@@ -296,9 +306,9 @@ export function EnvioDeImagem({
           className="relative w-full max-w-md overflow-hidden border border-(--border-strong) bg-paper-3"
           style={{ aspectRatio: proporcao }}
         >
-          {valor ? (
+          {mostrando ? (
             <NextImage
-              src={valor.url}
+              src={mostrando}
               alt=""
               fill
               sizes="(max-width: 768px) 100vw, 28rem"
@@ -313,6 +323,12 @@ export function EnvioDeImagem({
               />
             </span>
           )}
+
+          {soAcervo ? (
+            <span className="absolute bottom-0 left-0 bg-(--bg)/90 px-2 py-1 text-micro font-semibold uppercase tracking-[0.12em] text-(--fg-muted)">
+              Foto do acervo — no ar
+            </span>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -323,7 +339,11 @@ export function EnvioDeImagem({
             onClick={() => entrada.current?.click()}
           >
             <Upload aria-hidden="true" className="size-4" />
-            {valor ? 'Trocar imagem' : 'Enviar imagem'}
+            {valor
+              ? 'Trocar imagem'
+              : soAcervo
+                ? 'Enviar outra imagem'
+                : 'Enviar imagem'}
           </Botao>
 
           {valor ? (

@@ -62,7 +62,9 @@
     "partnersMarquee": "AIDEP partners and supporters",
     "externalLink": "opens in a new tab",
     "carouselLabel": "Opening photographs",
-    "carouselGoTo": "Show opening photograph {number}"
+    "carouselPrev": "Previous opening photograph",
+    "carouselNext": "Next opening photograph",
+    "carouselPosition": "Photograph {current} of {total}"
   },
   "home": {
     "hero": {
@@ -72,19 +74,16 @@
         "through sport",
         "and parasport."
       ],
-      "lead": "AIDEP is an international platform for human development that brings together projects, schools, methodologies and initiatives dedicated to education, inclusion and social transformation.",
-      "statValue": "+40k",
-      "statLabel": "people reached",
-      "reach": "Operating across the whole of Brazil",
+      "lead": "Sports hubs in communities, futsal inside the school and training for the people who teach. AIDEP builds what makes sport arrive — and stay.",
       "scroll": "Scroll to explore"
     },
     "about": {
       "eyebrow": "About AIDEP",
-      "title": "A human development platform built on the ground.",
+      "title": "Structure, so sport reaches where it has not yet.",
       "paragraphs": [
-        "We bring projects, schools, methodologies and initiatives together under a single institutional structure. Sport and parasport are the means; developing people is the goal.",
-        "We do not work through isolated actions: every project enters this structure with follow-up, records and accountability.",
-        "We operate across the whole of Brazil, and our statute provides for international operation."
+        "AIDEP is a non-profit association that runs sports projects: it sets up hubs in communities, brings futsal into schools and trains the people who work with sport.",
+        "Nothing here is a one-off. Every project arrives with staff, equipment, a calendar and published accounts — that is what keeps the activity going after opening day.",
+        "The association currently works across Brazil, and its statute provides for international reach."
       ],
       "highlights": [
         {
@@ -97,15 +96,10 @@
         }
       ]
     },
-    "metrics": {
-      "eyebrow": "Impact",
-      "title": "Numbers that begin on a court.",
-      "description": "Every figure below stands for people reached by the projects of the association."
-    },
     "projects": {
       "eyebrow": "Projects",
-      "title": "Three fronts, one purpose.",
-      "description": "Each project works at a different point in the path of the people we serve: the neighbourhood, the school and knowledge."
+      "title": "The same work, along different routes.",
+      "description": "The community, the school and the training of those who teach: each project meets the same person at a different point in their life."
     },
     "approach": {
       "eyebrow": "How we work",
@@ -116,19 +110,14 @@
       "eyebrow": "Sport and parasport",
       "title": "Tools, not ends.",
       "paragraphs": [
-        "For AIDEP, sport and parasport are not the destination. They are the means through which education, inclusion and social transformation happen — in communities, in schools and in spaces of knowledge.",
-        "That is why sport and parasport sit side by side in the name of the association: the same structure, the same care and the same technical standard for everyone."
+        "Sport is not the destination. It is how training, belonging and opportunity happen — in the community, in the school and in the places where knowledge is shared.",
+        "Sport and para-sport sit together in the association’s name because they sit together in practice: the same structure, the same equipment and the same technical standard for everyone."
       ]
     },
     "videos": {
       "eyebrow": "At the hubs",
-      "title": "Filmed by the people who were there.",
-      "description": "Videos recorded at the openings, training sessions and competitions of the Coração Valente hubs, in Sergipe, Brazil."
-    },
-    "results": {
-      "eyebrow": "Results",
-      "title": "The impact, project by project.",
-      "description": "Figures reported by the association for each front of work."
+      "title": "What the court looks like from the inside.",
+      "description": "Openings, training sessions and tournaments at the Sergipe hubs, filmed on the day."
     },
     "partners": {
       "eyebrow": "Partners",
@@ -155,6 +144,22 @@
       "eyebrow": "Donations",
       "title": "Support those already on the field.",
       "description": "Your contribution sustains sports hubs, equipment, training and the continuity of the projects that serve children and teenagers."
+    },
+    "reach": {
+      "eyebrow": "Where we are",
+      "title": "Every point is a court with people on it.",
+      "description": "Spin the planet, or pick a city from the list, to see which projects run there.",
+      "summary": "{cities, plural, one {# city} other {# cities}} · {hubs, plural, one {# hub} other {# hubs}}",
+      "hubs": "{count, plural, one {# hub} other {# hubs}}",
+      "hint": "Drag to spin · scroll to zoom",
+      "close": "Close the city panel",
+      "seeProject": "See the project",
+      "globeLabel": "Globe showing the cities served by AIDEP’s projects, with Brazil highlighted.",
+      "filters": {
+        "label": "Filter the map by project",
+        "all": "All projects"
+      },
+      "openMaps": "Open in Google Maps"
     }
   },
   "approach": {
@@ -184,7 +189,7 @@
   "about": {
     "purpose": {
       "eyebrow": "Purpose",
-      "title": "Three commitments.",
+      "title": "What holds the work together.",
       "items": [
         {
           "title": "Education",
@@ -203,7 +208,7 @@
     "audience": {
       "eyebrow": "People served",
       "title": "Who AIDEP serves.",
-      "description": "More than 40 thousand people have already been reached by the projects of the association. Each group calls for its own way of welcoming, teaching and following up.",
+      "description": "Every age needs its own way of welcoming, teaching and following up — which is why the projects do not serve “the community” in general, but people at different points in their lives.",
       "groups": [
         {
           "title": "Children",
@@ -226,32 +231,20 @@
           "text": "The whole territory counts: families, schools and public facilities around every sports hub."
         }
       ]
-    },
-    "presence": {
-      "eyebrow": "Operation",
-      "title": "Where AIDEP is.",
-      "paragraphs": [
-        "The current work of the association covers the whole Brazilian territory, with projects in communities, schools and spaces of learning.",
-        "The statute of AIDEP provides for international operation, and the identity of the association was built with that reach in mind."
-      ]
     }
   },
   "impact": {
     "headline": {
-      "eyebrow": "Overview",
-      "title": "The picture of the work.",
-      "description": "Consolidated figures across every project and initiative."
-    },
-    "byProject": {
-      "eyebrow": "By project",
-      "title": "The impact of each front."
+      "eyebrow": "Impact",
+      "title": "Numbers that start on a court.",
+      "description": "The total across every project run by the association."
     }
   },
   "projects": {
     "hero": {
       "eyebrow": "Projects",
       "title": "Where transformation happens.",
-      "lead": "Three complementary fronts: the neighbourhood, the school and knowledge."
+      "lead": "The community, the school and the training of those who teach."
     },
     "labels": {
       "objective": "Objective",
@@ -625,7 +618,7 @@
     },
     "projects": {
       "title": "Projects",
-      "description": "Coração Valente Social Project, Futsal na Escola and FutEdu Summit: the three fronts of work of AIDEP."
+      "description": "Coração Valente Social Project, Futsal na Escola and FutEdu Summit: AIDEP’s projects in the community, in the school and in training."
     },
     "news": {
       "title": "News",

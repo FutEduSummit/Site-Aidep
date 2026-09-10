@@ -20,39 +20,48 @@ export type ArquivoDeVideo = ArquivoDeImagem & {
   duration: number
 }
 
+/**
+ * Vídeo horizontal da abertura da Página inicial. Diferente do clipe da
+ * fileira, aqui a capa tem medida própria: ela é publicada em 2560 px,
+ * porque é ela — e não o vídeo — a primeira imagem que a página mostra.
+ */
+export type ArquivoDeAbertura = ArquivoDeVideo & {
+  capa: { width: number; height: number }
+}
+
 export const imagensDoAcervo = {
   'polo-estancia-comemoracao': { src: '/images/acervo/polo-estancia-comemoracao.webp', width: 1620, height: 1080 },
   'polo-estancia-comemoracao-2': { src: '/images/acervo/polo-estancia-comemoracao-2.webp', width: 1620, height: 1080 },
-  'polo-estancia-time-no-campo': { src: '/images/acervo/polo-estancia-time-no-campo.webp', width: 2400, height: 1350 },
+  'polo-estancia-time-no-campo': { src: '/images/acervo/polo-estancia-time-no-campo.webp', width: 2560, height: 1440 },
   'polo-estancia-turma-reunida': { src: '/images/acervo/polo-estancia-turma-reunida.webp', width: 2000, height: 1125 },
-  'polo-estancia-roda-no-gramado': { src: '/images/acervo/polo-estancia-roda-no-gramado.webp', width: 2400, height: 1350 },
+  'polo-estancia-roda-no-gramado': { src: '/images/acervo/polo-estancia-roda-no-gramado.webp', width: 2560, height: 1440 },
   'polo-estancia-alegria': { src: '/images/acervo/polo-estancia-alegria.webp', width: 1620, height: 1080 },
   'polo-estancia-atencao': { src: '/images/acervo/polo-estancia-atencao.webp', width: 1080, height: 1620 },
   'polo-estancia-banco': { src: '/images/acervo/polo-estancia-banco.webp', width: 2000, height: 1125 },
   'polo-estancia-entrega-chuteiras': { src: '/images/acervo/polo-estancia-entrega-chuteiras.webp', width: 1800, height: 1012 },
   'polo-estancia-entrega-kit': { src: '/images/acervo/polo-estancia-entrega-kit.webp', width: 1800, height: 1012 },
   'polo-estancia-abertura': { src: '/images/acervo/polo-estancia-abertura.webp', width: 2000, height: 1125 },
-  'polo-bugio-abertura': { src: '/images/acervo/polo-bugio-abertura.webp', width: 2400, height: 1350 },
-  'polo-bugio-comunidade': { src: '/images/acervo/polo-bugio-comunidade.webp', width: 2400, height: 1350 },
+  'polo-bugio-abertura': { src: '/images/acervo/polo-bugio-abertura.webp', width: 2560, height: 1440 },
+  'polo-bugio-comunidade': { src: '/images/acervo/polo-bugio-comunidade.webp', width: 2560, height: 1440 },
   'polo-bugio-na-rua': { src: '/images/acervo/polo-bugio-na-rua.webp', width: 2000, height: 1125 },
   'polo-bugio-turma': { src: '/images/acervo/polo-bugio-turma.webp', width: 1800, height: 1012 },
-  'polo-poco-verde-plateia': { src: '/images/acervo/polo-poco-verde-plateia.webp', width: 2400, height: 1350 },
+  'polo-poco-verde-plateia': { src: '/images/acervo/polo-poco-verde-plateia.webp', width: 2560, height: 1440 },
   'polo-poco-verde-plateia-2': { src: '/images/acervo/polo-poco-verde-plateia-2.webp', width: 2000, height: 1125 },
-  'polo-poco-verde-time': { src: '/images/acervo/polo-poco-verde-time.webp', width: 2400, height: 1350 },
+  'polo-poco-verde-time': { src: '/images/acervo/polo-poco-verde-time.webp', width: 2560, height: 1440 },
   'polo-poco-verde-abertura': { src: '/images/acervo/polo-poco-verde-abertura.webp', width: 2000, height: 1125 },
-  'polo-poco-verde-cerimonia': { src: '/images/acervo/polo-poco-verde-cerimonia.webp', width: 2400, height: 1350 },
-  'futedu-summit-portico': { src: '/images/acervo/futedu-summit-portico.webp', width: 2400, height: 1350 },
+  'polo-poco-verde-cerimonia': { src: '/images/acervo/polo-poco-verde-cerimonia.webp', width: 2560, height: 1440 },
+  'futedu-summit-portico': { src: '/images/acervo/futedu-summit-portico.webp', width: 2560, height: 1440 },
   'futedu-summit-delegacoes': { src: '/images/acervo/futedu-summit-delegacoes.webp', width: 2400, height: 1600 },
   'futedu-summit-participantes': { src: '/images/acervo/futedu-summit-participantes.webp', width: 2400, height: 1600 },
   'futedu-summit-certificado': { src: '/images/acervo/futedu-summit-certificado.webp', width: 1800, height: 1200 },
   'futedu-summit-palco': { src: '/images/acervo/futedu-summit-palco.webp', width: 2000, height: 1333 },
   'futedu-summit-formacao': { src: '/images/acervo/futedu-summit-formacao.webp', width: 1280, height: 960 },
-  'futedu-summit-na-arena': { src: '/images/acervo/futedu-summit-na-arena.webp', width: 2400, height: 1035 },
+  'futedu-summit-na-arena': { src: '/images/acervo/futedu-summit-na-arena.webp', width: 2560, height: 1104 },
   'futedu-summit-time-na-arena': { src: '/images/acervo/futedu-summit-time-na-arena.webp', width: 1600, height: 1200 },
   'futedu-summit-torneio': { src: '/images/acervo/futedu-summit-torneio.webp', width: 2400, height: 1600 },
   'futedu-summit-hidratacao': { src: '/images/acervo/futedu-summit-hidratacao.webp', width: 1800, height: 1200 },
-  'futedu-summit-jogo-na-quadra': { src: '/images/acervo/futedu-summit-jogo-na-quadra.webp', width: 1800, height: 1200 },
-  'futedu-summit-painel-de-marcas': { src: '/images/acervo/futedu-summit-painel-de-marcas.webp', width: 1600, height: 1067 },
+  'futedu-summit-jogo-na-quadra': { src: '/images/acervo/futedu-summit-jogo-na-quadra.webp', width: 2000, height: 1333 },
+  'futedu-summit-roda-de-time': { src: '/images/acervo/futedu-summit-roda-de-time.webp', width: 1800, height: 1318 },
   'futsal-na-escola-turma': { src: '/images/acervo/futsal-na-escola-turma.webp', width: 1600, height: 900 },
   'futsal-na-escola-equipe': { src: '/images/acervo/futsal-na-escola-equipe.webp', width: 900, height: 1600 },
   'futsal-na-escola-uniforme': { src: '/images/acervo/futsal-na-escola-uniforme.webp', width: 900, height: 1600 },
@@ -141,5 +150,33 @@ export const videosDoAcervo = {
   },
 } satisfies Record<string, ArquivoDeVideo>
 
+export const aberturasDoAcervo = {
+  'futedu-summit-vista-aerea': {
+    src: '/videos/futedu-summit-vista-aerea.mp4',
+    poster: '/videos/futedu-summit-vista-aerea.webp',
+    width: 1920,
+    height: 1080,
+    duration: 6,
+    capa: { width: 2560, height: 1440 },
+  },
+  'futedu-summit-arena-do-alto': {
+    src: '/videos/futedu-summit-arena-do-alto.mp4',
+    poster: '/videos/futedu-summit-arena-do-alto.webp',
+    width: 1920,
+    height: 1080,
+    duration: 5,
+    capa: { width: 2560, height: 1440 },
+  },
+  'futedu-summit-feira-do-alto': {
+    src: '/videos/futedu-summit-feira-do-alto.mp4',
+    poster: '/videos/futedu-summit-feira-do-alto.webp',
+    width: 1920,
+    height: 1080,
+    duration: 5,
+    capa: { width: 2560, height: 1440 },
+  },
+} satisfies Record<string, ArquivoDeAbertura>
+
 export type ImagemDoAcervo = keyof typeof imagensDoAcervo
 export type VideoDoAcervo = keyof typeof videosDoAcervo
+export type AberturaDoAcervo = keyof typeof aberturasDoAcervo
