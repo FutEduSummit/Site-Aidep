@@ -54,6 +54,30 @@ const dataIso = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use uma data no formato AAAA-MM-DD.')
 
+/**
+ * Identificador de uma linha que já está no banco.
+ *
+ * O formato é o da coluna `uuid` do Postgres: 32 dígitos hexadecimais em
+ * grupos de 8-4-4-4-12. E é **só** isso — de propósito, em vez do
+ * `z.uuid()` do Zod, que além do formato cobra os bits de versão e de
+ * variante da RFC 4122.
+ *
+ * A diferença não é acadêmica: o Postgres aceita qualquer valor de 128
+ * bits nessa coluna, e dois documentos reais da Transparência entraram
+ * por script com identificador fora da faixa da RFC (`…-9c82-2884-…`, de
+ * "versão" 9). O `z.uuid()` recusava esses dois, o erro caía num caminho
+ * que nenhum campo da tela mostra, e o painel respondia "Confira os
+ * campos destacados." sem destacar campo nenhum — era impossível editar o
+ * documento. Quem grava é o banco, então a régua aqui é a do banco.
+ */
+const identificador = z
+  .string()
+  .trim()
+  .regex(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    'Identificador inválido.',
+  )
+
 const slug = z
   .string()
   .trim()
@@ -115,7 +139,7 @@ export const formatos = [
 ] as const
 
 export const documentoSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: identificador.optional(),
   titulo: traduzidoObrigatorio,
   /** A coluna "Conteúdo" da tabela: o que o documento traz, em uma frase. */
   conteudo: traduzido.default({ pt: '', en: '', es: '' }),
@@ -189,7 +213,7 @@ const corpoSchema = z.object({
 })
 
 export const noticiaSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: identificador.optional(),
   slug,
   titulo: traduzidoObrigatorio,
   resumo: traduzidoObrigatorio,
@@ -251,7 +275,7 @@ const fotoSchema = imagemEnviada.extend({
 })
 
 export const projetoSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: identificador.optional(),
   slug,
   /** Nome próprio — não se traduz. */
   nome: z.string().trim().min(2, 'Informe o nome do projeto.'),

@@ -46,6 +46,19 @@ function comoTexto(bruto: unknown): Localized {
 
 const hoje = () => new Date().toISOString().slice(0, 10)
 
+/**
+ * Os caminhos de erro que têm campo correspondente na tela — os únicos que
+ * podem aparecer "destacados". Precisa acompanhar os `erro={erros.…}` do
+ * formulário abaixo.
+ */
+const CAMPOS_NA_TELA = new Set([
+  'arquivoUrl',
+  'titulo.pt',
+  'categoriaId',
+  'ano',
+  'publicadoEm',
+])
+
 function estadoInicial(
   inicial: LinhaDocumento | undefined,
   categorias: LinhaCategoria[],
@@ -144,7 +157,23 @@ export function FormularioDeDocumento({ categorias, projetos, inicial }: Props) 
         mapa.arquivoUrl = 'Envie o arquivo do documento.'
       }
       setErros(mapa)
-      setAviso('Confira os campos destacados.')
+
+      /* "Confira os campos destacados." só serve quando há campo
+         destacado. Erro num dado que a tela não mostra — o identificador
+         da linha, o formato do arquivo, o tamanho em bytes — deixava o
+         formulário num beco sem saída: a mensagem mandava conferir o que
+         não estava marcado em lugar nenhum. Nesse caso o aviso diz o que
+         de fato barrou o salvamento. */
+      const escondidos = Object.entries(mapa).filter(
+        ([campo]) => !CAMPOS_NA_TELA.has(campo),
+      )
+      setAviso(
+        escondidos.length > 0
+          ? `Não foi possível salvar: ${escondidos
+              .map(([campo, mensagem]) => `${campo} — ${mensagem}`)
+              .join(' · ')}`
+          : 'Confira os campos destacados.',
+      )
       return
     }
 
