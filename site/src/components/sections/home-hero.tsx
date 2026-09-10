@@ -177,9 +177,12 @@ export function HomeHero() {
               controle sobre o carrossel: dois alvos de 44px, na mesma
               linha e no mesmo desenho dos controles da fileira de vídeos.
 
-              O contador entre elas é o que os traços diziam antes — em
-              quantos quadros o álbum tem e em qual deles se está. Sem ele
-              as setas andariam às cegas. */}
+              Sem contador entre elas. O número dizia em quantos quadros o
+              álbum tem e em qual deles se está, e a abertura não é um
+              catálogo: quem chega aqui vê a fotografia, não o tamanho da
+              pilha. Quem não vê a tela continua sabendo a posição — o
+              aviso abaixo é lido a cada troca de quadro, e só por leitor
+              de tela. */}
           {totalDeQuadros > 1 ? (
             <motion.div
               role="group"
@@ -187,29 +190,19 @@ export function HomeHero() {
               className="ml-auto flex items-center gap-2"
               {...enter(1.02)}
             >
+              <p aria-live="polite" className="sr-only">
+                {tA11y('carouselPosition', {
+                  current: index + 1,
+                  total: totalDeQuadros,
+                })}
+              </p>
+
               <SetaDoRodizio
                 label={tA11y('carouselPrev')}
                 onClick={() => passarQuadro(-1)}
               >
                 <ArrowLeft aria-hidden="true" strokeWidth={2} className="size-4" />
               </SetaDoRodizio>
-
-              <p
-                aria-live="polite"
-                className="min-w-[4.5ch] text-center text-micro tabular-nums tracking-[0.14em] text-(--fg-subtle)"
-              >
-                <span className="sr-only">
-                  {tA11y('carouselPosition', {
-                    current: index + 1,
-                    total: totalDeQuadros,
-                  })}
-                </span>
-                <span aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                  <span className="mx-1 text-(--fg-subtle)/50">/</span>
-                  {String(totalDeQuadros).padStart(2, '0')}
-                </span>
-              </p>
 
               <SetaDoRodizio
                 label={tA11y('carouselNext')}
