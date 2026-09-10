@@ -3,4 +3,9 @@
 # a web em site/public (ver site/scripts/preparar-acervo.mjs).
 /Vídeos e Fotos/
 
+# Documentos oficiais como chegaram (nomes do portal, arquivo de download).
+# O que vai para o repositório é a cópia renomeada e publicada em
+# site/public/documentos/reais (ver site/src/content/documents-real.ts).
+/Documentos-Reais/
+
 node_modules
