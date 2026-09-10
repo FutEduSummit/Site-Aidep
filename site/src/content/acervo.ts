@@ -123,7 +123,7 @@ export const imagensDoAcervo = {
   'futedu-summit-comemoracao-com-a-comissao': { src: '/images/acervo/futedu-summit-comemoracao-com-a-comissao.avif', width: 1100, height: 1650 },
   'futedu-summit-comemoracao-com-o-tecnico': { src: '/images/acervo/futedu-summit-comemoracao-com-o-tecnico.avif', width: 1600, height: 1067 },
   'futedu-summit-cumprimento-no-fim': { src: '/images/acervo/futedu-summit-cumprimento-no-fim.avif', width: 1600, height: 1188 },
-  'futedu-summit-conversa-antes-do-jogo': { src: '/images/acervo/futedu-summit-conversa-antes-do-jogo.avif', width: 1600, height: 1067 },
+  'futedu-summit-conversa-antes-do-jogo': { src: '/images/acervo/futedu-summit-conversa-antes-do-jogo.avif', width: 2560, height: 1706 },
   'futedu-summit-professor-na-trave': { src: '/images/acervo/futedu-summit-professor-na-trave.avif', width: 1060, height: 1598 },
   'futedu-summit-medalhas-no-podio': { src: '/images/acervo/futedu-summit-medalhas-no-podio.avif', width: 1600, height: 1066 },
   'futedu-summit-time-no-gramado': { src: '/images/acervo/futedu-summit-time-no-gramado.avif', width: 1600, height: 1067 },

@@ -12,11 +12,12 @@ export const classesDeLigacao =
  * ==========================
  * Entrar, pedir link de nova senha e definir a nova senha são a mesma
  * tela com outro miolo. Ficam aqui para que as três não saiam de sincronia
- * quando a fotografia, o véu ou o espaçamento mudarem.
+ * quando a fotografia ou o espaçamento mudarem.
  *
- * À esquerda a fotografia, com o texto institucional embaixo — nada é
- * sobreposto ao topo da imagem, onde a foto tem o seu ponto de interesse.
- * À direita o formulário, com o logotipo da AIDEP no papel branco.
+ * À esquerda a fotografia, e só ela: nada de título, chamada institucional
+ * ou véu por cima. Quem chega aqui é a equipe da associação, que já sabe o
+ * que este endereço é — o texto que explicava isso só cobria a imagem. À
+ * direita o formulário, com o logotipo da AIDEP no papel branco.
  */
 export function MolduraDeEntrada({
   etiqueta,
@@ -32,54 +33,27 @@ export function MolduraDeEntrada({
   rodape?: ReactNode
 }) {
   const marca = getLockup('pt', 'horizontalBlack')
-  /* Retrato de propósito: a coluna é alta e estreita. */
-  const foto = getMedia('home.sport')
+  const foto = getMedia('admin.entrada')
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       {/* Fotografia — coluna de altura inteira, só a partir de lg. */}
-      <div
-        data-surface="dark"
-        className="relative hidden overflow-hidden bg-ink-950 lg:block"
-      >
+      <div className="relative hidden overflow-hidden bg-ink-950 lg:block">
         {foto ? (
           <Image
             src={foto.src}
             alt=""
             fill
             priority
-            sizes="55vw"
+            /* 85vw, e não os 51vw que a coluna mede: a foto é 3/2 numa
+               coluna mais alta que larga, e o `object-cover` recorta pelos
+               lados. O arquivo precisa cobrir a **altura** da tela, ou
+               seja 1,5 × 100vh — que num monitor 16/9 dá justamente 84vw.
+               Pela largura da coluna a imagem chegaria esticada. */
+            sizes="85vw"
             className="object-cover"
           />
         ) : null}
-
-        {/* Véu: sem ele o contraste do texto depende da foto que estiver no
-            ar. O degradê é mais forte embaixo, onde o texto vive, e alivia
-            em cima — assim a fotografia ainda aparece. */}
-        <div aria-hidden="true" className="absolute inset-0 bg-ink-950/40" />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
-        />
-
-        {/* `justify-end`: o texto assenta no rodapé da coluna. */}
-        <div className="relative flex h-full flex-col justify-end gap-8 p-10 xl:p-14">
-          <div className="flex max-w-[34ch] flex-col gap-5">
-            <p className="text-h3 font-bold leading-tight tracking-[-0.03em] text-paper">
-              O esporte como ferramenta de desenvolvimento humano.
-            </p>
-            <p className="text-small leading-relaxed text-paper/70">
-              Este é o painel onde a associação publica suas notícias, seus
-              projetos e sua prestação de contas.
-            </p>
-          </div>
-
-          {foto?.credit ? (
-            <p className="max-w-[52ch] text-[0.6875rem] leading-relaxed text-paper/40">
-              {foto.credit}
-            </p>
-          ) : null}
-        </div>
       </div>
 
       {/* Miolo */}

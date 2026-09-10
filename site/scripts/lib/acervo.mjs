@@ -258,7 +258,13 @@ export const fotos = [
   { nome: 'futedu-summit-comemoracao-com-a-comissao', origem: 'FOTOS FUTEDU NOVAS MELHORES/7ea5c7eb-cdea-47f4-8d18-9acfaf9db6fb.JPG', largura: 1100 },
   { nome: 'futedu-summit-comemoracao-com-o-tecnico', origem: 'FOTOS FUTEDU NOVAS MELHORES/34d19c69-478b-47fb-a8e4-dbd4560e409a.JPG', largura: 1600 },
   { nome: 'futedu-summit-cumprimento-no-fim', origem: 'FOTOS FUTEDU NOVAS MELHORES/814efe3a-2887-4296-9e96-f441fbeb4922.JPG', largura: 1600 },
-  { nome: 'futedu-summit-conversa-antes-do-jogo', origem: 'FOTOS FUTEDU NOVAS MELHORES/b3d1f2d4-fd82-4d8d-ad08-ab7d98e861ff.JPG', largura: 1600 },
+  /* Esta é a fotografia da tela de entrada do painel (`admin/componentes/
+     moldura-de-entrada.tsx`), e por isso 2560 em vez dos 1600 da régua de
+     galeria: lá ela é a coluna inteira, de altura de tela cheia, e o
+     `object-cover` recorta pelos lados — em 1920×1080 com DPR 2 o recorte
+     pede 3240 px de arquivo e o teto de entrega do site é 2560. O original
+     tem 4160×2773, a folga existe. */
+  { nome: 'futedu-summit-conversa-antes-do-jogo', origem: 'FOTOS FUTEDU NOVAS MELHORES/b3d1f2d4-fd82-4d8d-ad08-ab7d98e861ff.JPG', largura: 2560 },
   { nome: 'futedu-summit-professor-na-trave', origem: 'FOTOS FUTEDU NOVAS MELHORES/c11a96a4-5d8d-4bfe-8ec6-6b65f3809372.JPG', largura: 1060 },
   { nome: 'futedu-summit-medalhas-no-podio', origem: 'FOTOS FUTEDU NOVAS MELHORES/38ce5007-0e30-4eb4-9975-f054e8c01661.JPG', largura: 1600 },
   { nome: 'futedu-summit-time-no-gramado', origem: 'FOTOS FUTEDU NOVAS MELHORES/c96bfccf-a653-460d-9282-7d91f1375aec.JPG', largura: 1600 },

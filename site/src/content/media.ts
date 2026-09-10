@@ -268,6 +268,17 @@ export const media: Record<string, MediaAsset | null> = {
     es: 'El grupo del polo de Estância celebra reunido, con el panel del proyecto al fondo.',
   }),
 
+  /* Painel — a coluna de fotografia das telas de entrada, pedir nova senha
+     e definir a nova senha (`admin/componentes/moldura-de-entrada.tsx`).
+     Ali a fotografia aparece sozinha, sem texto por cima, e é publicada em
+     2560 px porque ocupa a coluna inteira de altura de tela cheia (ver a
+     nota da curadoria em `scripts/lib/acervo.mjs`). */
+  'admin.entrada': doAcervo('futedu-summit-conversa-antes-do-jogo', {
+    pt: 'Treinador conversa com o time reunido em roda antes da partida, no gramado.',
+    en: 'A coach talks to his team huddled together before the match on the grass.',
+    es: 'El entrenador conversa con el equipo reunido en círculo antes del partido, en el césped.',
+  }),
+
   /* Projetos */
   'project.coracao-valente.cover': doAcervo('polo-estancia-turma-reunida', {
     pt: 'Turma do Coração Valente reunida no campo do polo de Estância, diante do painel do projeto.',
