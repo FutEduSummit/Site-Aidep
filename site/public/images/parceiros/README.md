@@ -18,6 +18,8 @@ tamanhos não aparece.
 | `honda.png` | [Commons — Honda logo.svg](https://commons.wikimedia.org/wiki/File:Honda_logo.svg) | Domínio público (logotipo institucional Honda) |
 | `governo-federal.png` | [Commons — Brazilian government logo (2025).svg](https://commons.wikimedia.org/wiki/File:Brazilian_government_logo_(2025).svg) | Domínio público (assinatura do Governo do Brasil, gestão 2023–2027) |
 | `curitiba.png` | [Manual de marca da Prefeitura de Curitiba](https://comunicacao.curitiba.pr.gov.br/conteudo/manual-de-identidade-visual/1219) — pacote `Logo PMC 2025.zip`, arquivo `PNG/5_PMC_cor_horizontal.png` | Arquivo oficial da Prefeitura (identidade visual 2025–2028), recortado e redimensionado |
+| `dni-sports.png` | Arquivo oficial enviado pela DNI Sports (`DNI LOGO.svg`) | Arquivo do parceiro, rasterizado do vetor e aparado |
+| `cbfs-academy.png` | Arquivo oficial enviado pela CBFS Academy (`CBFS Academy.png`) | Arquivo do parceiro, aparado; o original tem 276 px de largura e não foi ampliado |
 
 ## Como substituir por um arquivo oficial
 

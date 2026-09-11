@@ -11,7 +11,7 @@ import type { NewsArticle } from './types'
  * - **Os números** vêm do briefing oficial e são os mesmos que o site
  *   publica nas métricas de cada projeto (`content/projects.ts`): 1.800
  *   crianças em Aracaju, 700 no Distrito Federal, 600 pessoas nas
- *   escolas, 7 mil no Summit, 12 cidades no Futsal na Escola.
+ *   escolas, 7 mil no Summit, 5 cidades no Futsal na Escola.
  * - **As cidades** são as cadastradas em cada projeto.
  * - **As datas** são as dos próprios arquivos do acervo, lidas do
  *   metadado de cada vídeo: o polo do Bugio em 9 de fevereiro de 2026, a
@@ -344,11 +344,11 @@ export const realNews: NewsArticle[] = [
   /* ================================================================== */
 
   {
-    slug: 'futsal-na-escola-em-doze-cidades',
+    slug: 'futsal-na-escola-em-cinco-cidades',
     title: {
-      pt: 'Futsal na Escola está em doze cidades',
-      en: 'Futsal na Escola runs in twelve cities',
-      es: 'Futsal na Escola está en doce ciudades',
+      pt: 'Futsal na Escola está em cinco cidades',
+      en: 'Futsal na Escola runs in five cities',
+      es: 'Futsal na Escola está en cinco ciudades',
     },
     excerpt: {
       pt: 'O projeto leva o futsal para dentro da grade escolar e alcança 600 pessoas: estudantes, professores e a comunidade em volta de cada quadra.',
@@ -359,7 +359,7 @@ export const realNews: NewsArticle[] = [
       pt: [
         {
           type: 'paragraph',
-          text: 'O Futsal na Escola é o projeto da AIDEP que trabalha dentro do ambiente escolar. Hoje está em doze cidades e alcança 600 pessoas entre estudantes, professores e comunidade escolar.',
+          text: 'O Futsal na Escola é o projeto da AIDEP que trabalha dentro do ambiente escolar. Hoje está em cinco cidades e alcança 600 pessoas entre estudantes, professores e comunidade escolar.',
         },
         { type: 'heading', text: 'Por que dentro da escola' },
         {
@@ -368,7 +368,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'A quadra da escola também é o equipamento esportivo mais bem distribuído do país. Usar o que já existe é o que permite ao projeto chegar a doze cidades sem construir doze quadras.',
+          text: 'A quadra da escola também é o equipamento esportivo mais bem distribuído do país. Usar o que já existe é o que permite ao projeto chegar a cinco cidades sem construir cinco quadras.',
         },
         { type: 'heading', text: 'O que o projeto leva' },
         {
@@ -383,7 +383,7 @@ export const realNews: NewsArticle[] = [
       en: [
         {
           type: 'paragraph',
-          text: 'Futsal na Escola is AIDEP’s project inside the school environment. It currently runs in twelve cities and reaches 600 people: students, teachers and the wider school community.',
+          text: 'Futsal na Escola is AIDEP’s project inside the school environment. It currently runs in five cities and reaches 600 people: students, teachers and the wider school community.',
         },
         { type: 'heading', text: 'Why inside the school' },
         {
@@ -392,7 +392,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'The school court is also the best-distributed sports facility in the country. Using what already exists is what lets the project reach twelve cities without building twelve courts.',
+          text: 'The school court is also the best-distributed sports facility in the country. Using what already exists is what lets the project reach five cities without building five courts.',
         },
         { type: 'heading', text: 'What the project brings' },
         {
@@ -407,7 +407,7 @@ export const realNews: NewsArticle[] = [
       es: [
         {
           type: 'paragraph',
-          text: 'Futsal na Escola es el proyecto de AIDEP que trabaja dentro del entorno escolar. Hoy está en doce ciudades y alcanza a 600 personas entre estudiantes, profesores y comunidad escolar.',
+          text: 'Futsal na Escola es el proyecto de AIDEP que trabaja dentro del entorno escolar. Hoy está en cinco ciudades y alcanza a 600 personas entre estudiantes, profesores y comunidad escolar.',
         },
         { type: 'heading', text: 'Por qué dentro de la escuela' },
         {
@@ -416,7 +416,7 @@ export const realNews: NewsArticle[] = [
         },
         {
           type: 'paragraph',
-          text: 'La cancha de la escuela es también el equipamiento deportivo mejor distribuido del país. Usar lo que ya existe es lo que permite al proyecto llegar a doce ciudades sin construir doce canchas.',
+          text: 'La cancha de la escuela es también el equipamiento deportivo mejor distribuido del país. Usar lo que ya existe es lo que permite al proyecto llegar a cinco ciudades sin construir cinco canchas.',
         },
         { type: 'heading', text: 'Lo que el proyecto lleva' },
         {
@@ -432,7 +432,7 @@ export const realNews: NewsArticle[] = [
     category: { pt: 'Projetos', en: 'Projects', es: 'Proyectos' },
     date: '2026-09-04',
     author: AUTOR,
-    coverKey: 'news.futsal-na-escola-em-doze-cidades',
+    coverKey: 'news.futsal-na-escola-em-cinco-cidades',
     relatedProjectSlugs: ['futsal-na-escola'],
   },
 

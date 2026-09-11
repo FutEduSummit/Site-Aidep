@@ -37,7 +37,7 @@ export const headlineMetrics: Metric[] = [
   },
   {
     id: 'cities',
-    value: 12,
+    value: 5,
     label: {
       pt: 'cidades com o Futsal na Escola',
       en: 'cities running Futsal na Escola',

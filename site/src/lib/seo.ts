@@ -110,6 +110,9 @@ export function organizationJsonLd(locale: Locale) {
     },
     image: absoluteUrl(getOgImage(locale).url),
     email: site.contact.email,
+    /* O telefone só entra quando existe: um `telephone: null` no JSON-LD é
+       um campo vazio declarado, pior do que campo nenhum. */
+    ...(site.contact.phone ? { telephone: site.contact.phone } : {}),
     address: {
       '@type': 'PostalAddress',
       addressLocality: site.contact.city,

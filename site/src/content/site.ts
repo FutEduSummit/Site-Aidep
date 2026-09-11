@@ -26,15 +26,21 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aidepoficial.com',
 
   contact: {
-    /** Confirmado na papelaria institucional oficial. */
-    email: 'atendimento@aidepoficial.com',
+    /** Caixa de entrada que a associação acompanha. */
+    email: 'aidepassociacao@gmail.com',
     /**
-     * PROVISÓRIO — número fictício, só para o canal de telefone não ficar
-     * vazio enquanto o oficial não vem. Para trocar depois basta esta
-     * linha: ela é a única fonte do telefone no site, e o `tel:` do link
-     * sai dela sozinho. Voltar para `null` esconde o canal de novo.
+     * Telefone oficial, informado pela associação. Esta linha é a única
+     * fonte do número no site: o `tel:` do canal de contato sai dela
+     * sozinho, e `null` esconde o canal de novo.
      */
-    phone: '(46) 99999-0000' as string | null,
+    phone: '(46) 99980-0131' as string | null,
+    /**
+     * O mesmo número, em dígitos, como o `wa.me` o exige: código do país,
+     * DDD e o número, sem sinal nem pontuação. É por ele que a associação
+     * atende no WhatsApp, e é o que o botão flutuante abre. `null`
+     * esconde o botão e o canal.
+     */
+    whatsapp: '5546999800131' as string | null,
     /** Endereço completo ainda não fornecido. */
     street: null as string | null,
     city: 'Pato Branco',

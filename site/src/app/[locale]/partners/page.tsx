@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
+import { ContactChannels } from '@/components/sections/contact-channels'
 import { PageHero } from '@/components/sections/page-hero'
 import { buttonClasses } from '@/components/ui/button'
 import { PartnerLogo } from '@/components/ui/partner-logo'
@@ -170,6 +171,11 @@ export default async function PartnersPage({ params }: Props) {
               {site.social.instagram.handle}
             </a>
           </div>
+
+          {/* Os mesmos canais que fecham a Página inicial. Quem leu a
+              página inteira e decidiu conversar não deveria ter de voltar
+              à Home para achar o telefone ou o e-mail. */}
+          <ContactChannels locale={locale} />
         </Container>
       </Section>
     </>

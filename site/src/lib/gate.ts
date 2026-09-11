@@ -5,10 +5,12 @@
  * página "Site em construção" (`app/em-construcao`) e o conteúdo real só
  * aparece depois da senha.
  *
- * PARA PUBLICAR O SITE DE VERDADE: troque `gateEnabled` para `false`.
- * É a única alteração necessária — nenhuma outra parte do site depende
- * deste arquivo. Depois disso, a pasta `app/em-construcao`, a rota
- * `app/api/liberar` e este arquivo podem ser apagados.
+ * O PORTÃO ESTÁ DESLIGADO: o site responde aberto ao público. Para
+ * voltar a fechá-lo, troque `gateEnabled` para `true` — é a única
+ * alteração necessária, nenhuma outra parte do site depende deste
+ * arquivo. Quando não houver mais razão para reabri-lo, a pasta
+ * `app/em-construcao`, a rota `app/api/liberar` e este arquivo podem ser
+ * apagados.
  *
  * A senha fica chumbada aqui DE PROPÓSITO: é uma barreira de cortesia
  * para a fase de aprovação, não um mecanismo de segurança. Qualquer
@@ -17,7 +19,7 @@
  */
 
 /** Chave geral do portão. `false` = site aberto ao público. */
-export const gateEnabled: boolean = true
+export const gateEnabled: boolean = false
 
 /** Senha de acesso à pré-visualização. */
 export const gatePassword = '123'

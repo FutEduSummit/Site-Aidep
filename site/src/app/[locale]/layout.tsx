@@ -9,6 +9,7 @@ import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { ScrollReset } from "@/components/motion/scroll-reset";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { WhatsappButton } from "@/components/layout/whatsapp-button";
 import { getProjects } from "@/content/projects";
 import { site } from "@/content/site";
 import { pick } from "@/content/types";
@@ -132,6 +133,9 @@ export default async function LocaleLayout({
             </main>
 
             <Footer />
+
+            {/* Sobre a página, em toda rota: o canal que a associação atende. */}
+            <WhatsappButton label={t("whatsapp")} />
           </MotionProvider>
         </NextIntlClientProvider>
 

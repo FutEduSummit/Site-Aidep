@@ -79,6 +79,38 @@ export const partners: Partner[] = [
     },
     url: 'https://www.curitiba.pr.gov.br',
   },
+  {
+    id: 'dni-sports',
+    name: 'DNI Sports',
+    kind: 'private',
+    logo: {
+      src: '/images/parceiros/dni-sports.png',
+      width: 512,
+      height: 239,
+      alt: {
+        pt: 'DNI Sports',
+        en: 'DNI Sports',
+        es: 'DNI Sports',
+      },
+    },
+    url: null,
+  },
+  {
+    id: 'cbfs-academy',
+    name: 'CBFS Academy',
+    kind: 'private',
+    logo: {
+      src: '/images/parceiros/cbfs-academy.png',
+      width: 263,
+      height: 315,
+      alt: {
+        pt: 'CBFS Academy',
+        en: 'CBFS Academy',
+        es: 'CBFS Academy',
+      },
+    },
+    url: null,
+  },
 ]
 
 /**

@@ -187,7 +187,13 @@ export function HomeHero() {
             <motion.div
               role="group"
               aria-label={tA11y('carouselLabel')}
-              className="ml-auto flex items-center gap-2"
+              /* A margem à direita reserva o canto para o botão
+                 flutuante do WhatsApp (`layout/whatsapp-button.tsx`):
+                 ele é fixo e pousa exatamente aqui enquanto a abertura
+                 está na tela. São 56px de botão mais 20px de afastamento
+                 da borda, e o que sobra separa os dois alvos. Sem isto o
+                 botão cobria a seta de avançar — no celular, as duas. */
+              className="ml-auto mr-[4.25rem] flex items-center gap-2"
               {...enter(1.02)}
             >
               <p aria-live="polite" className="sr-only">

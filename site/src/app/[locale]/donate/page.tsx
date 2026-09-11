@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { StaggerContainer, StaggerItem } from '@/components/motion/stagger'
+import { ContactChannels } from '@/components/sections/contact-channels'
 import { PageHero } from '@/components/sections/page-hero'
 import { Accordion } from '@/components/ui/accordion'
 import { ArrowLink } from '@/components/ui/arrow-link'
@@ -146,6 +147,11 @@ export default async function DonatePage({ params }: Props) {
               }
             />
           )}
+
+          {/* Enquanto o Pix e a conta não vêm, combinar a doação é uma
+              conversa — e os canais dela são os mesmos que fecham a Página
+              inicial, escritos aqui em vez de a um clique de distância. */}
+          <ContactChannels locale={locale} />
         </Container>
       </Section>
 

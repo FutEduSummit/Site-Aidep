@@ -150,7 +150,12 @@ export function Footer() {
 
         <GrowLine />
 
-        <div className="flex flex-col gap-4 pb-10 pt-2 sm:flex-row sm:items-center sm:justify-between">
+        {/* A folga embaixo é maior do que a composição pede porque o
+            botão flutuante do WhatsApp (`layout/whatsapp-button.tsx`)
+            pousa neste canto: são 56px de botão mais o afastamento da
+            borda, que cresce com a área segura do aparelho. Sem ela o
+            botão cobria o fim da linha de direitos autorais. */}
+        <div className="flex flex-col gap-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-[52ch] text-micro uppercase tracking-[0.14em] text-(--fg-subtle)">
             {t('legalName')}
           </p>

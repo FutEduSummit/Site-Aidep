@@ -67,6 +67,8 @@ export const imagensDoAcervo = {
   'futedu-summit-hidratacao': { src: '/images/acervo/futedu-summit-hidratacao.avif', width: 1800, height: 1200 },
   'futedu-summit-jogo-na-quadra': { src: '/images/acervo/futedu-summit-jogo-na-quadra.avif', width: 2000, height: 1333 },
   'futedu-summit-roda-de-time': { src: '/images/acervo/futedu-summit-roda-de-time.avif', width: 1800, height: 1318 },
+  'futedu-summit-delegacao-inclusiva-na-arena': { src: '/images/acervo/futedu-summit-delegacao-inclusiva-na-arena.avif', width: 2560, height: 1060 },
+  'futedu-summit-delegacao-inclusiva-no-painel': { src: '/images/acervo/futedu-summit-delegacao-inclusiva-no-painel.avif', width: 1536, height: 1024 },
   'futsal-na-escola-turma': { src: '/images/acervo/futsal-na-escola-turma.avif', width: 1600, height: 900 },
   'futsal-na-escola-equipe': { src: '/images/acervo/futsal-na-escola-equipe.avif', width: 900, height: 1600 },
   'futsal-na-escola-uniforme': { src: '/images/acervo/futsal-na-escola-uniforme.avif', width: 900, height: 1600 },

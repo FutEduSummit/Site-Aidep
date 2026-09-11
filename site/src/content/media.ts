@@ -348,7 +348,7 @@ export const media: Record<string, MediaAsset | null> = {
     es: 'Grupo reunido con los profesores del proyecto antes del inicio de la actividad.',
   }),
 
-  ...capaDeNoticia('futsal-na-escola-em-doze-cidades', 'futsal-na-escola-turma', {
+  ...capaDeNoticia('futsal-na-escola-em-cinco-cidades', 'futsal-na-escola-turma', {
     pt: 'Turma do Futsal na Escola reunida na quadra coberta, com os coletes e as bolas do projeto.',
     en: 'The Futsal na Escola group gathered on the indoor court, with the project’s bibs and balls.',
     es: 'El grupo de Futsal na Escola reunido en la cancha cubierta, con los petos y los balones del proyecto.',
@@ -521,10 +521,10 @@ export const carrosselDaHome: MediaAsset[] = [
     es: 'Partido de futsal visto desde lo alto de la cancha, en el FutEdu Summit.',
   }),
 
-  doAcervo('futedu-summit-na-arena', {
-    pt: 'Delegação perfilada no gramado da arena, com as arquibancadas vazias ao fundo.',
-    en: 'A delegation lined up on the arena pitch, with the empty stands behind them.',
-    es: 'Delegación alineada en el césped de la arena, con las gradas vacías al fondo.',
+  doAcervo('futedu-summit-delegacao-inclusiva-na-arena', {
+    pt: 'Delegação de futsal inclusivo perfilada no gramado da Arena da Baixada, em Curitiba, com as arquibancadas vazias ao fundo.',
+    en: 'The inclusive futsal delegation lined up on the Arena da Baixada pitch, in Curitiba, with the empty stands behind them.',
+    es: 'Delegación de futsal inclusivo alineada en el césped de la Arena da Baixada, en Curitiba, con las gradas vacías al fondo.',
   }),
 
   doAcervo('futsal-na-escola-turma', {
@@ -551,10 +551,10 @@ export const carrosselDaHome: MediaAsset[] = [
     es: 'Niños sentados uno al lado del otro en el gimnasio de Poço Verde, siguiendo la apertura del polo.',
   }),
 
-  doAcervo('futedu-summit-participantes', {
-    pt: 'Participantes do FutEdu Summit reunidos no palco, diante do painel com as marcas do evento.',
-    en: 'FutEdu Summit participants gathered on stage, in front of the banner with the event’s brands.',
-    es: 'Participantes del FutEdu Summit reunidos en el escenario, frente al panel con las marcas del evento.',
+  doAcervo('futedu-summit-delegacao-inclusiva-no-painel', {
+    pt: 'Delegação de futsal inclusivo reunida com a organização do FutEdu Summit diante do painel do encontro.',
+    en: 'The inclusive futsal delegation together with the FutEdu Summit organisers in front of the event banner.',
+    es: 'Delegación de futsal inclusivo reunida con la organización del FutEdu Summit frente al panel del encuentro.',
   }),
 ]
 

@@ -8,30 +8,31 @@ next-intl · React Hook Form + Zod.
 
 ---
 
-## Portão de pré-lançamento (site em construção)
+## Portão de pré-lançamento (desligado)
 
-O site **está fechado ao público**. Qualquer endereço responde com a página
-_Site em construção_ e só libera o conteúdo real depois da senha.
+O site **está aberto ao público**: `gateEnabled` é `false` em
+[`src/lib/gate.ts`](src/lib/gate.ts) e todo endereço responde com o conteúdo
+real. O `robots.txt` libera a indexação, o `sitemap.xml` sai completo e só
+`/admin` continua com `X-Robots-Tag: noindex`.
 
-- **Senha:** `123` — chumbada no código, em [`src/lib/gate.ts`](src/lib/gate.ts).
-- Ao acertar a senha, um cookie (`aidep-preview`, 30 dias) libera o navegador
-  e o visitante cai exatamente na página que tentou abrir.
-- Com o portão ligado, `robots.txt` bloqueia tudo, o `sitemap.xml` sai vazio e
-  as respostas levam `X-Robots-Tag: noindex`.
+### Para fechá-lo de novo
+
+Em [`src/lib/gate.ts`](src/lib/gate.ts), troque uma linha:
+
+```ts
+export const gateEnabled: boolean = true
+```
+
+É a única alteração necessária. Com o portão ligado, qualquer endereço responde
+com a página _Site em construção_ e só libera o conteúdo depois da senha
+(`123`, chumbada no mesmo arquivo); acertá-la grava o cookie `aidep-preview`
+por 30 dias e devolve o visitante à página que ele tentou abrir.
 
 > É uma barreira de cortesia para a fase de aprovação, **não** um mecanismo de
 > segurança: quem tem acesso ao código sabe a senha. Não use para proteger
 > dados sensíveis.
 
-### Para abrir o site ao público
-
-Em [`src/lib/gate.ts`](src/lib/gate.ts), troque uma linha:
-
-```ts
-export const gateEnabled: boolean = false
-```
-
-É a única alteração necessária. Feito isso, estes arquivos podem ser apagados
+Quando não houver mais razão para reabri-lo, estes arquivos podem ser apagados
 sem afetar o site: `src/lib/gate.ts`, `src/app/em-construcao/` e
 `src/app/api/liberar/` — removendo também os `import` do portão em
 `src/proxy.ts`, `src/app/robots.ts` e `src/app/sitemap.ts`.

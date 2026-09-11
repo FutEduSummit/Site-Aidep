@@ -63,7 +63,8 @@
     "carouselLabel": "Opening photographs",
     "carouselPrev": "Previous opening photograph",
     "carouselNext": "Next opening photograph",
-    "carouselPosition": "Photograph {current} of {total}"
+    "carouselPosition": "Photograph {current} of {total}",
+    "whatsapp": "Message AIDEP on WhatsApp"
   },
   "home": {
     "hero": {
@@ -455,7 +456,7 @@
         },
         {
           "title": "Presence in schools",
-          "text": "Futsal inside the school environment, in 12 cities."
+          "text": "Futsal inside the school environment, in 5 cities."
         },
         {
           "title": "Training",

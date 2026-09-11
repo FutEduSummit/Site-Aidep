@@ -118,6 +118,17 @@ export const fotos = [
   { nome: 'futedu-summit-hidratacao', origem: 'FUTEDU/IMG_8564.JPG', largura: 1800 },
   { nome: 'futedu-summit-jogo-na-quadra', origem: 'FUTEDU/IMG_8511.JPG', largura: 2000 },
   { nome: 'futedu-summit-roda-de-time', origem: 'FUTEDU/IMG_4253.JPG.jpeg', largura: 1800 },
+  /* As duas fotografias da delegação de futsal inclusivo que abrem a
+     Página inicial. Entraram no lugar de `futedu-summit-na-arena` e
+     `futedu-summit-participantes` no rodízio do Hero, a pedido da
+     associação; as duas antigas continuam nas galerias do Summit.
+
+     A do painel chegou já tratada, em 1536×1024 — é o que o arquivo tem.
+     A `largura` de 2560 não amplia (o `resize` roda com
+     `withoutEnlargement`): ela só diz que, se um arquivo maior chegar
+     depois, vale publicá-lo inteiro. */
+  { nome: 'futedu-summit-delegacao-inclusiva-na-arena', origem: 'FOTOS FUTEDU NOVAS MELHORES/PHOTO-2025-06-21-01-46-37.jpg', largura: 2560 },
+  { nome: 'futedu-summit-delegacao-inclusiva-no-painel', origem: 'FOTOS FUTEDU NOVAS MELHORES/foto-atualizada.png', largura: 2560 },
 
   /* Futsal na Escola — quadra coberta
      Chegaram por WhatsApp e por isso já vêm em 1600 px no lado maior: a

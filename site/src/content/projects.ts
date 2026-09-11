@@ -243,15 +243,10 @@ export const projetosDoBriefing: Project[] = [
       es: ['Niños', 'Adolescentes', 'Comunidad escolar'],
     },
     /**
-     * CIDADES PROVISÓRIAS — TROCAR PELAS REAIS.
-     * O briefing informa o número (12 cidades, ver a métrica `cities`
-     * abaixo), mas não os nomes. As doze abaixo estão aqui para que o mapa
-     * de atuação possa ser conferido enquanto a lista oficial não chega;
-     * são cidades plausíveis, não as cidades atendidas.
-     *
-     * Para corrigir, basta trocar nome e sigla: a coordenada de cada ponto
-     * é resolvida sozinha pelo cadastro do IBGE (ver `lib/mapa.ts`). Mais
-     * de uma cidade no mesmo estado é normal e cada uma recebe seu ponto —
+     * CIDADES ATENDIDAS.
+     * A coordenada de cada ponto sai sozinha do cadastro do IBGE (ver
+     * `lib/mapa.ts`): basta o nome da cidade e a sigla do estado. Mais de
+     * uma cidade no mesmo estado é normal e cada uma recebe seu ponto —
      * `region` é o que separa homônimas ("Itabaiana" existe em SE e na PB).
      */
     locations: [
@@ -259,26 +254,12 @@ export const projetosDoBriefing: Project[] = [
       { city: { pt: 'Itabaiana', en: 'Itabaiana', es: 'Itabaiana' }, region: 'SE' },
       { city: { pt: 'Lagarto', en: 'Lagarto', es: 'Lagarto' }, region: 'SE' },
       { city: { pt: 'Brasília', en: 'Brasília', es: 'Brasilia' }, region: 'DF' },
-      { city: { pt: 'Goiânia', en: 'Goiânia', es: 'Goiania' }, region: 'GO' },
-      { city: { pt: 'Anápolis', en: 'Anápolis', es: 'Anapolis' }, region: 'GO' },
-      { city: { pt: 'Salvador', en: 'Salvador', es: 'Salvador' }, region: 'BA' },
-      {
-        city: {
-          pt: 'Feira de Santana',
-          en: 'Feira de Santana',
-          es: 'Feira de Santana',
-        },
-        region: 'BA',
-      },
       { city: { pt: 'Curitiba', en: 'Curitiba', es: 'Curitiba' }, region: 'PR' },
-      { city: { pt: 'Londrina', en: 'Londrina', es: 'Londrina' }, region: 'PR' },
-      { city: { pt: 'São Paulo', en: 'São Paulo', es: 'São Paulo' }, region: 'SP' },
-      { city: { pt: 'Campinas', en: 'Campinas', es: 'Campinas' }, region: 'SP' },
     ],
     metrics: [
       {
         id: 'cities',
-        value: 12,
+        value: 5,
         label: {
           pt: 'cidades com o projeto',
           en: 'cities running the project',

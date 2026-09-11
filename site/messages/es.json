@@ -63,7 +63,8 @@
     "carouselLabel": "Fotografías de la apertura",
     "carouselPrev": "Fotografía anterior de la apertura",
     "carouselNext": "Siguiente fotografía de la apertura",
-    "carouselPosition": "Fotografía {current} de {total}"
+    "carouselPosition": "Fotografía {current} de {total}",
+    "whatsapp": "Hablar con AIDEP por WhatsApp"
   },
   "home": {
     "hero": {
@@ -455,7 +456,7 @@
         },
         {
           "title": "Presencia en la escuela",
-          "text": "El futsal dentro del entorno escolar, en 12 ciudades."
+          "text": "El futsal dentro del entorno escolar, en 5 ciudades."
         },
         {
           "title": "Formación",
